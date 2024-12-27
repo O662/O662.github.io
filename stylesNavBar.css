@@ -40,5 +40,21 @@
     background-color: #575757;
 }
 
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar ul {
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .navbar-logo {
+        margin-left: 10px;
+        height: 30px; /* Adjust the height as needed */
+    }
+}
 
 
