@@ -28,9 +28,9 @@ section {
     display: block;
     /*background: black; ### Colors determined by order below*/
     color: #fff;
-    height: 50vh;
+    height: 100vh;
     width: 100%; /*100 vh also works*/
-    /*padding: 60px;*/ /*This is the padding for the text*/
+    padding: 60px; /*This is the padding for the text
     box-sizing: border-box;
     /* Ensures padding is included in the 100% width */
     position: relative;
