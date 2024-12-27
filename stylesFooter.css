@@ -1,0 +1,22 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: black;
+    color: white;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+footer {
+    background-color: #000; /* Match the background color of odd sections */
+    color: #fff;
+    padding: 60px;
+    box-sizing: border-box;
+    text-align: center; /* Center the text */
+    position: relative;
+}
+
+footer p {
+    margin: 0;
+    padding: 10px 0;
+}
