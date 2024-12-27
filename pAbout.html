@@ -3,9 +3,34 @@
 
 <head>
     <title>Page 2</title>
+
+    <!-- Import General Head Settings-->
+    <div id="head-placeholder"></div>
+    <script>
+        fetch('head.html?cache-bust=' + new Date().getTime())
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('head-placeholder').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    </script>
+    
 </head>
 
 <body>
+    <div id="navbar"></div> <!--acts as a placeholder in the code where the navbar content will be inserted.-->
+    <script>
+        fetch('navbar.html?cache-bust=' + new Date().getTime())
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    </script>
     <h1>Welcome to the About Page</h1>
     <p>This is the About page.</p> <a href="index.html">Back to Home Page</a>
 </body>
