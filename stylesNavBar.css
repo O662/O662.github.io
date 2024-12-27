@@ -1,16 +1,12 @@
-body, html {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 .navbar {
-    position: -webkit-sticky; /* For Safari */
+    position: -webkit-sticky;
+    /* For Safari */
     position: sticky;
     top: 0;
     background-color: #333;
     padding: 10px 0;
-    z-index: 1000; /* Ensures it stays on top */
+    z-index: 1000;
+    /* Ensures it stays on top */
 }
 
 .navbar ul {
@@ -36,15 +32,5 @@ body, html {
     background-color: #575757;
 }
 
-section {
-    height: 100vh; /* Full viewport height */
-    padding: 20px;
-}
 
-section:nth-of-type(odd) {
-    background-color: #000000;
-}
 
-section:nth-of-type(even) {
-    background-color: #e2e2e2;
-}

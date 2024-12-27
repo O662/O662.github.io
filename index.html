@@ -5,45 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Malcolm Ferguson</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: black;
-            color: white;
-            padding: 0px;
-        }
-
-        header {
-            text-align: left;
-        }
-
-        main {
-            background-color: black;
-            text-align: left;
-        }
-
-        footer {
-            position: relative;
-            bottom: 10;
-        }
-
-        section {
-            display: block;
-            background: black;
-            color: #fff;
-            height: 100%;
-            width: 100%;
-            padding: 60px;
-            box-sizing: border-box;
-            /* Ensures padding is included in the 100% width */
-            position: relative;
-        }
-
-        .center-text {
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="stylesNavBar.css">
+    <link rel="stylesheet" href="stylesIndex.css">
 </head>
 
 <body>
@@ -53,27 +16,30 @@
             .then(response => response.text())
             .then(data => {
                 document.getElementById('navbar').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
             });
     </script>
     <section id="header">
         <h1>Malcolm Ferguson</h1>
-        <p>Welcome to My Website!</p>
+        <p>Welcome to My Website!!</p>
         <img src="Images\Turtle Logo outline.png" alt="Description of my image" width="200" height="200">
     </section>
     <section id="About">
         <h2>About</h2>
         <p>Education & Timeline</p>
-        <a href="About.html">Go to Project Page</a>
+        <a href="pAbout.html">Go to Project Page</a>
     </section>
     <section id="Projects">
         <h2>Projects</h2>
         <p>Pardon the dust, we're cooking rn!</p>
-        <a href="Projects.html">Go to Project Page</a>
+        <a href="pProjects.html">Go to Project Page</a>
     </section>
     <section id="Works">
         <h2>Works</h2>
         <p>Pardon the dust, we're cooking rn!</p>
-        <a href="Works.html">Go to Project Page</a>
+        <a href="pWorks.html">Go to Project Page</a>
     </section>
     <section id="Goals">
         <h2>Goals</h2>

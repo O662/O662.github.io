@@ -1,0 +1,49 @@
+/*Main body Style*/
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: black;
+    color: white;
+    padding: 0px;
+    /*margin: 0;
+    box-sizing: border-box;
+    IDK if i need these*/
+}
+
+header {
+    text-align: left;
+}
+
+main {
+    background-color: black;
+    text-align: left;
+}
+
+footer {
+    position: relative;
+    bottom: 10;
+}
+
+section {
+    display: block;
+    /*background: black; ### Colors determined by order below*/
+    color: #fff;
+    height: 100%;
+    width: 100%; /*100 vh also works*/
+    padding: 60px;
+    box-sizing: border-box;
+    /* Ensures padding is included in the 100% width */
+    position: relative;
+}
+
+section:nth-of-type(odd) {
+    background-color: #000000;
+}
+
+section:nth-of-type(even) {
+    background-color: #e2e2e2;
+}
+
+.center-text {
+    text-align: center;
+}
