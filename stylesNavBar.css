@@ -1,8 +1,7 @@
 .navbar {
-    position: -webkit-sticky;
-    /* For Safari */
     position: fixed;
     top: 0;
+    width: 100%;
     background-color: #333;
     padding: 10px 0;
     z-index: 1000;
@@ -12,14 +11,15 @@
 .navbar ul {
     list-style: none;
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-end;
     padding: 0;
     margin: 0;
     overflow: hidden;
+    width: 100%;
 }
 
 .navbar li {
-    display: right;
+    display: inline;
 }
 
 .navbar a {

@@ -14,7 +14,7 @@
                 console.error('There was a problem with the fetch operation:', error);
             });
     </script>
-    
+
 </head>
 
 <body>
@@ -59,8 +59,18 @@
     </section>
 
     <footer>
-        <p>Copyright © 2024 Malcolm Ferguson</p>
-        <p>Made with love and tears ❤️</p>
+        
+        <div id="theFooter"></div> <!--acts as a placeholder in the code where the navbar content will be inserted.-->
+        <script>
+            fetch('footer.html?cache-bust=' + new Date().getTime())
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('theFooter').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        </script>
     </footer>
 
 </body>
