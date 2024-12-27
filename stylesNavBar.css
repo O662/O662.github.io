@@ -4,8 +4,15 @@
     width: 100%;
     background-color: #333;
     padding: 10px 0;
-    z-index: 1000;
-    /* Ensures it stays on top */
+    z-index: 1000; /* Ensures it stays on top */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar-logo {
+    margin-left: 20px;
+    height: 40px; /* Adjust the height as needed */
 }
 
 .navbar ul {
@@ -15,7 +22,7 @@
     padding: 0;
     margin: 0;
     overflow: hidden;
-    width: 100%;
+    width: auto;
 }
 
 .navbar li {

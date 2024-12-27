@@ -29,11 +29,18 @@
                 console.error('There was a problem with the fetch operation:', error);
             });
     </script>
+
+
     <section id="header">
         <h1>Malcolm Ferguson</h1>
         <p>Welcome to My Website!!</p>
         <img src="Images\Turtle Logo outline.png" alt="Description of my image" width="200" height="200">
     </section>
+
+
+
+
+
     <section id="About">
         <h2>About</h2>
         <p>Education & Timeline</p>
@@ -59,18 +66,20 @@
     </section>
 
     <footer>
-        
-        <div id="theFooter"></div> <!--acts as a placeholder in the code where the navbar content will be inserted.-->
-        <script>
-            fetch('footer.html?cache-bust=' + new Date().getTime())
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('theFooter').innerHTML = data;
-                })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error);
-                });
-        </script>
+        <section id=indexFoot>
+            <div id="theFooter"></div>
+            <!--acts as a placeholder in the code where the navbar content will be inserted.-->
+            <script>
+                fetch('footer.html?cache-bust=' + new Date().getTime())
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('theFooter').innerHTML = data;
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+            </script>
+        </section>
     </footer>
 
 </body>

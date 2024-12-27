@@ -5,9 +5,9 @@ body {
     background-color: black;
     color: white;
     padding: 0px;
-    /*margin: 0;
+    margin: 0;
     box-sizing: border-box;
-    IDK if i need these*/
+    /*IDK if i need these*/
 }
 
 header {
@@ -28,11 +28,10 @@ section {
     display: block;
     /*background: black; ### Colors determined by order below*/
     color: #fff;
-    height: 100vh;
+    /*height: 100vh;
     width: 100%; /*100 vh also works*/
-    padding: 60px; /*This is the padding for the text
-    box-sizing: border-box;
-    /* Ensures padding is included in the 100% width */
+    padding: 60px; /*This is the padding for the text*/
+    box-sizing: border-box; /* Ensures padding is included in the 100% width */
     position: relative;
 }
 
@@ -41,7 +40,7 @@ section:nth-of-type(odd) {
 }
 
 section:nth-of-type(even) {
-    background-color: #e2e2e2;
+    background-color: #252525;
 }
 
 .center-text {
