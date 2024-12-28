@@ -8,7 +8,7 @@ body {
 }
 
 footer {
-    background-color: #a8a8a8; /* Match the background color of odd sections */
+    background-color: #000000; /* Match the background color of odd sections */
     color: #fff;
     padding: 60px;
     box-sizing: border-box;
