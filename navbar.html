@@ -1,10 +1,21 @@
 <nav class="navbar">
-    <img src="Images\Turtle Logo outline.png?cache-bust=<?= time() ?" alt="Logo" class="navbar-logo">
+    <a href="pPortfolio.html">
+        <img src="Images/Turtle Logo outline.png?cache-bust=<?= time() ?>" alt="Logo" class="navbar-logo">
+    </a>
     <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="pAbout.html">About</a></li>
         <li><a href="pProjects.html">Projects</a></li>
-        <li><a href="pWorks.html">Works</a></li>
-        <li><a href="pContact.html">Contact</a></li>
+        <li><a href="pPublications.html">Publications</a></li>
+        <li><a href="pPublications.html">Portfolio</a></li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropbtn">Professional Documents</a>
+            <div class="dropdown-content">
+                <a href="pCV.html">CV</a>
+                <a href="pResume.html">Resume</a>
+            </div>
+        </li>
     </ul>
 </nav>
+
+<!-- Run "python -m http.server 8000" in the terminal and open "http://localhost:8000" in a browser to see the webpage.-->

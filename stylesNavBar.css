@@ -27,6 +27,7 @@
 
 .navbar li {
     display: inline;
+    position: relative; /* Needed for dropdown positioning */
 }
 
 .navbar a {
@@ -38,6 +39,35 @@
 
 .navbar a:hover {
     background-color: #575757;
+}
+
+
+.dropdown {
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #575757;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
 @media (max-width: 768px) {
