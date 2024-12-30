@@ -5,3 +5,13 @@
 <link rel="stylesheet" href="stylesNavBar.css">
 <link rel="stylesheet" href="stylesIndex.css">
 <link rel="stylesheet" href="stylesFooter.css">
+
+<script>
+    function isMobile() {
+        return /Mobi|Android/i.test(navigator.userAgent);
+    }
+
+    if (isMobile()) {
+        window.location.href = "mobile.html"; // Redirect to mobile page
+    }
+</script>
