@@ -15,6 +15,39 @@
             });
     </script>
 
+    <!--
+<script> Other variations, can delete.
+    function isMobile() {
+        return /Mobi|Android/i.test(navigator.userAgent);
+    }
+
+    if (isMobile()) {
+        window.location.href = "mobile.html"; // Redirect to mobile page
+    }
+</script> -->
+<!---
+<script>
+    function isMobile() {
+        return window.innerWidth <= 1080; // Adjust the width as needed
+    }
+
+    if (isMobile()) {
+        window.location.href = "mobile.html"; // Redirect to mobile page
+    }
+</script> -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function isMobile() {
+            return /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth <= 1080; // Adjust the width as needed
+        }
+
+        if (isMobile()) {
+            window.location.href = "mobile.html"; // Redirect to mobile page
+        }
+    });
+</script>
+
 </head>
 
 <body>
