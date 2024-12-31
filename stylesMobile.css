@@ -1,0 +1,28 @@
+.swipeView {
+    display: grid;
+    grid-template-columns: repeat(4, 100%);
+    will-change: transform;
+    align-content: center;
+    overflow-x: auto;
+    scroll-snap-coordinate: 0 0;
+    scroll-snap-points-x: repeat(100%);
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  section {
+    height: 70vh;
+    scroll-snap-align: start;
+  }
+  
+  .green {
+    background: #72bf24;
+  }
+  
+  .purple {
+    background: rgb(193, 74, 217);
+  }
+  
+  .orange {
+    background: #c50c0c;
+  }
