@@ -1,5 +1,5 @@
 <!-- Link to the external CSS file -->
-<link rel="stylesheet" href="stylesNavbar.css">
+<link rel="stylesheet" href="stylesmobileNavbar.css">
 
 <!-- The overlay -->
 <div id="mNav" class="overlay" style="width: 0%;">
@@ -9,16 +9,17 @@
 
     <!-- Overlay content -->
     <div class="overlay-content">
-        <a href="#">About</a>
-        <a href="#">Services</a>
-        <a href="#">Clients</a>
-        <a href="#">Contact</a>
+        <a href="index.html">Home</a>
+        <a href="pProjects.html">Projects</a>
     </div>
 </div>
 
-<!-- Use any element to open/show the overlay navigation menu -->
+<!-- Navigation bar -->
+<div class="navbar">
+    <div class="logo">Malcolm Ferguson</div>
+    <span class="menu-icon" onclick="openNav()">&#9776;</span> <!-- Menu symbol (☰) -->
+</div>
 
-<span onclick="openNav()">&#9776;</span> <!-- Menu symbol (☰) -->
 <script>
     function openNav() {
         console.log("openNav called");

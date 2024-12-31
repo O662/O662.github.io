@@ -2,15 +2,24 @@
 
 .navbar {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center; /* Center items vertically */
     background-color: #333;
-    padding: 10px;
+    padding: 10px 20px;
+    box-sizing: border-box;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
 }
 
 .menu-icon {
     font-size: 30px;
     cursor: pointer;
     color: white;
+    margin-left: auto; /* Push the menu icon to the right */
 }
 
 .overlay {
@@ -51,6 +60,23 @@
     top: 20px;
     right: 45px;
     font-size: 60px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 14px 20px;
+    text-align: center;
+}
+
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.navbar .logo {
+    font-size: 24px;
+    font-weight: bold;
 }
 
 /* The Actual Menu */
