@@ -4,34 +4,30 @@
 <head>
     <title>Page 2</title>
 
-    <!-- Import General Head Settings-->
-    <div id="head-placeholder"></div>
-    <script>
-        fetch('head.html?cache-bust=' + new Date().getTime())
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('head-placeholder').innerHTML = data;
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Malcolm Ferguson</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="stylesNavBar.css">
+<link rel="stylesheet" href="stylesIndex.css">
+<link rel="stylesheet" href="stylesFooter.css">
 
 </head>
 
 <body>
-    <div id="navbar"></div> <!--acts as a placeholder in the code where the navbar content will be inserted.-->
+    <!-- mobile nav Bar-->
+    <div id="mobilenavbar"></div> <!--acts as a placeholder in the code where the navbar content will be inserted.-->
     <script>
-        fetch('navbar.html?cache-bust=' + new Date().getTime())
+        fetch('mobilenavbar.html?cache-bust=' + new Date().getTime())
             .then(response => response.text())
             .then(data => {
-                document.getElementById('navbar').innerHTML = data;
+                document.getElementById('mobilenavbar').innerHTML = data;
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
             });
     </script>
-
+    <!-- Content-->
     <section id="aboutIntro">
         <h1>Welcome to the Mobile Home Page!</h1>
         <p>This is the Mobile home page for phones and small tablets!</p> <a href="index.html">Back to Home Page</a>
