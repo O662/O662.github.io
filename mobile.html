@@ -9,42 +9,38 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="stylesheet" href="stylesIndex.css">
     <link rel="stylesheet" href="stylesFooter.css">
+    <link rel="stylesheet" href="stylesMobileNavbar.css">
 
 </head>
 
 <body>
-
-    <!-- The overlay -->
-    <div id="myNav" class="overlay">
-
-        <!-- Button to close the overlay navigation -->
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-
-        <!-- Overlay content -->
-        <div class="overlay-content">
-            <a href="#">About</a>
-            <a href="#">Services</a>
-            <a href="#">Clients</a>
-            <a href="#">Contact</a>
-        </div>
-
-    </div>
-
-    <!-- Use any element to open/show the overlay navigation menu -->
-    <span onclick="openNav()">open</span>
+    <div id="navbar-placeholder"></div> <!-- Placeholder for the navbar content -->
 
     <script>
-        function openNav() {
-            document.getElementById("myNav").style.width = "100%";
-        }
-
-        function closeNav() {
-            document.getElementById("myNav").style.width = "0%";
-        }
-
+        fetch('navbarMobile.html?cache-bust=' + new Date().getTime())
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar-placeholder').innerHTML = data;
+                // Extract and execute the script from the loaded HTML
+                const script = document.createElement('script');
+                script.innerHTML = `
+                    function openNav() {
+                        console.log("openNav called");
+                        document.getElementById("mNav").style.width = "100%";
+                    }
+                    function closeNav() {
+                        console.log("closeNav called");
+                        document.getElementById("mNav").style.width = "0%";
+                    }
+                `;
+                document.body.appendChild(script);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
     </script>
 
-
+    
     <h1>Welcome to the Mobile Home Page</h1>
     <p>This is Where you will find the home page optimised for mobile viewing</p> <a href="index.html">Back to Home
         Page</a>
