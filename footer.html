@@ -1,2 +1,35 @@
-<p>Copyright &copy; <span id="current-year"></span> Malcolm Ferguson!</p>
+<p>&copy; <span id="current-year"></span> Malcolm Ferguson!</p>
 <p>Made with love and tears ❤️</p>
+<div class="footer-links">
+  <a href="https://github.com/O662" target="_blank">
+    <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub">
+  </a>
+  <a href="https://gitlab.com/O662" target="_blank">
+    <img src="https://about.gitlab.com/images/press/logo/png/gitlab-icon-rgb.png" alt="GitLab">
+  </a>
+  <a href="https://bsky.app/profile/malcolmferguson.com" target="_blank">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Bluesky_butterfly-logo.svg/180px-Bluesky_butterfly-logo.svg.png" alt="BlueSky">
+  </a>
+</div>
+
+<style>
+  .footer-links {
+    text-align: center;
+    margin-top: 10px;
+  }
+  .footer-links a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .footer-links img {
+    width: 30px; /* Set the width of the logos */
+    height: 30px; /* Set the height of the logos */
+    vertical-align: middle;
+  }
+</style>
+
+<script>
+  // Set the current year in the footer
+  document.getElementById('current-year').textContent = new Date().getFullYear();
+</script>
