@@ -5,6 +5,7 @@ body {
     background-color: black;
     color: white;
     padding: 0px;
+    padding-top: 60px; /* Adjust the value based on the height of your navbar */
     margin: 0;
     box-sizing: border-box;
     /*IDK if i need these*/

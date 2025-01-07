@@ -15,18 +15,18 @@
             });
     </script>
 
-<!-- Mobile Reader -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        function isMobile() {
-            return /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth <= 1080; // Adjust the width as needed
-        }
+    <!-- Mobile Reader -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function isMobile() {
+                return /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth <= 1080; // Adjust the width as needed
+            }
 
-        if (isMobile()) {
-            window.location.href = "mobile.html"; // Redirect to mobile page
-        }
-    });
-</script>
+            if (isMobile()) {
+                window.location.href = "mobile.html"; // Redirect to mobile page
+            }
+        });
+    </script>
 
 </head>
 
@@ -43,18 +43,34 @@
             });
     </script>
 
-
-    <section id="header">
-        <h1>Malcolm Ferguson</h1>
-        <p>Welcome to My Website!!</p>
-        <img src="Images\Turtle Logo outline.png" alt="Description of my image" width="200" height="200">
+    <section id="hero">
+        <div class="hero-container">
+            <div class="hero-image">
+                <div class="row">
+                    <img src="Images/hero_images/daniel-roe-lpjb_UMOyx8-unsplash.jpg" alt="Image 1" width="200"
+                        height="200" class="transform-image-1">
+                    <img src="Images/hero_images/patrick-bald-llZIWkNGzS4-unsplash.jpg" alt="Image 2" width="200"
+                        height="200" class="transform-image-2">
+                </div>
+                <div class="row">
+                    <img src="Images/hero_images/katie-moum-l0GRQpXwgPk-unsplash.jpg" alt="Image 3" width="200"
+                        height="200" class="transform-image-3">
+                </div>
+                <div class="row">
+                    <img src="Images/hero_images/laurel-balyeat-ExarETx4xNA-unsplash.jpg" alt="Image 4" width="200"
+                        height="200" class="transform-image-4">
+                    <img src="Images/hero_images/nitish-meena-ANo5_iE9dcU-unsplash.jpg" alt="Image 4" width="200"
+                        height="200" class="transform-image-5">
+                </div>
+            </div>
+            <div class="hero-text">
+                <h1>Malcolm Ferguson</h1>
+                <p>Welcome to My Website!!</p>
+            </div>
+        </div>
+        
     </section>
-
-
-
-
-
-    <section id="About">
+   <section id="About">
         <h2>About</h2>
         <p>Education & Timeline</p>
         <a href="pAbout.html">Go to Project Page</a>
@@ -78,7 +94,7 @@
         <p>Pardon the dust, we're cooking rn!</p>
     </section>
 
-    <footer id ="footerIndex" >
+    <footer id="footerIndex">
         <div id="theFooter"></div>
         <!--acts as a placeholder in the code where the navbar content will be inserted.-->
         <script>
