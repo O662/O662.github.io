@@ -43,7 +43,33 @@ body {
 .hero-text {
     flex: 1;
     padding: 20px;
+    padding-bottom: 20vh; /* Add padding at the bottom to lift the words */
     max-width: 50%; /* Ensure the column is not wider than 50% of the screen */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Align the text to the bottom */
+    height: 100%; /* Ensure the text container takes full height */
+    font-family: 'Arial', sans-serif; /* Set the font family */
+}
+
+.hero-title {
+    font-size: 3vw; /* Set the title size relative to the viewport width */
+    margin-bottom: 0.5vw; /* Adjust the space below the title */
+    margin-top: 1vw;
+}
+
+.hero-subtitle {
+    font-size: 2vw; /* Set the subtitle size relative to the viewport width */
+    margin-bottom: 0vw; /* Adjust the space below the title */
+    margin-top: 1vw;
+    font-weight: 300; /* Set the font weight to a lighter value */
+
+}
+
+.hero-description {
+    font-size: 1.5vw; /* Set the description size relative to the viewport width */
+    font-weight: 200; /* Set the font weight to a lighter value */
+
 }
 
 /* Image Transformations # 1 */
