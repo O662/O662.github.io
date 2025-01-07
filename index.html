@@ -41,7 +41,14 @@
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
             });
-
+        // JavaScript to change navbar color on scroll
+        window.addEventListener('scroll', function () {
+            const navbar = document.getElementById('navbar');
+            const scrollPosition = window.scrollY;
+            const maxScroll = 50; // Adjust this value as needed
+            const opacity = Math.min(scrollPosition / maxScroll, 1);
+            navbar.style.backgroundColor = `rgba(40, 40, 40, ${opacity})`;
+        });
     </script>
 
     <section id="hero">

@@ -3,7 +3,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #333;
+    height: 60px; /* Define the height of the navbar */
     background-color: rgba(0, 0, 0, 0); /* Start with a transparent background */
     transition: background-color 0.3s ease; /* Smooth transition */
     padding: 10px 0;
@@ -134,7 +134,6 @@
     text-decoration: none;
 }
 
-/* Add a grey background color on hover 
 .subnav-content a:hover {
     background-color: #eee;
     color: black;
@@ -155,6 +154,9 @@
   
   /* Dropdown button */
   .dropdown .dropbtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 16px;
     border: none;
     outline: none;
@@ -162,10 +164,14 @@
     padding: 14px 16px;
     background-color: inherit;
     font: inherit; /* Important for vertical align on mobile phones */
-    margin: 0; /* Important for vertical align on mobile phones */
+    line-height: normal; /* Ensure line-height is normal */
+    height: 100%; /* Ensure the button takes full height */
   }
 
-
+  .dropdown .dropbtn:hover {
+    background-color: #555; /* Change to your desired highlight color */
+    color: white; /* Change text color if needed */
+}
   
   /* Dropdown content (hidden by default) */
   .dropdown-content {
@@ -239,4 +245,17 @@
         height: 30px;
         /* Adjust the height as needed */
     }
+}
+
+#language-switch {
+    background-color: transparent; /* Make the background transparent */
+    border: none; /* Remove the border */
+    color: white; /* Set the text color to white */
+    padding: 10px 20px; /* Add padding */
+    font-size: 16px; /* Set the font size */
+    cursor: pointer; /* Change the cursor to pointer */
+}
+
+#language-switch:hover {
+    background-color: #575757; /* Add a hover effect */
 }
