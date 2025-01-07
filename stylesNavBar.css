@@ -3,259 +3,115 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 60px; /* Define the height of the navbar */
+    height: 60px; 
     background-color: rgba(0, 0, 0, 0); /* Start with a transparent background */
     transition: background-color 0.3s ease; /* Smooth transition */
     padding: 10px 0;
     z-index: 1000;
-    /* Ensures it stays on top */
     display: flex;
     align-items: center;
     justify-content: space-between;
 
 }
 
-.navbar-logo {
-    margin-left: 20px;
+/* Logo */
+
+.logo {
+    padding-left: 20px;
+}
+
+.logo img {
     height: 40px;
-    /* Adjust the height as needed */
+    width: 40px;
 }
 
-.navbar ul {
-    list-style: none;
+/* Main Nav Menu */
+
+.menu {
     display: flex;
-    justify-content: flex-end;
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-    width: auto;
+    gap: 20px;
 }
 
-.navbar li {
-    display: inline;
-    position: relative;
-    /* Needed for dropdown positioning */
-}
-
-.navbar a {
-    float: left;
-    color: white;
+.menu a {
+    color: #efefef;
     text-decoration: none;
-    padding: 10px 20px;
-    display: block;
-
-    font-size: 16px;
-    text-align: center;
-    text-decoration: none;
+    padding: 10px 15px;
+    transition: background-color 0.3s;
+    display: flex; /* Add flex display */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
 }
 
-.navbar a:hover {
-    background-color: #575757;
+.menu a:hover {
+    background-color: #555;
 }
 
-.navbar ul li {
+ /* Projects Mega Menu */
+
+.dropdown-content {
     position: relative;
+    display: inline-block;
 }
 
-.navbar ul li .dropdown-content {
+.projects-dropdown .dropdown-content {
     display: none;
-    position: absolute;
-    background-color: #f9f9f9;
+    position: fixed;
+    background-color: #282828;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    top: 100%;
-    /* Ensure the dropdown appears below the parent */
-    left: 0;
+    left: 0; /* Align to the left edge of the viewport */
+    width: 100vw; /* Full width of the viewport */
+    box-sizing: border-box;
 }
 
-.navbar ul li .dropdown-content li {
-    float: none;
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-}
-
-.navbar ul li .dropdown-content li a {
-    color: black;
-}
-
-.navbar ul li .dropdown-content li:hover {
-    background-color: #f1f1f1;
-}
-
-.navbar ul li:hover .dropdown-content {
+.projects-dropdown:hover .dropdown-content {
     display: block;
 }
 
-/* The subnavigation menu */
-.subnav {
-    float: left;
-    overflow: hidden;
+.mega-menu {
+    padding: 20px; /* Add some padding */
 }
 
-/* Subnav button */
-.subnav .subnavbtn {
-    font-size: 15px;
-    border: none;
-    outline: none;
-    color: white;
-    padding: 12px 16px;
-    background-color: inherit;
-    font-family: inherit;
-    margin: 0;
-}
-
-/*
-/* Add a red background color to navigation links on hover 
-.navbar a:hover,
-.subnav:hover .subnavbtn {
-    background-color: red;
-}
-*/
-
-
-/* Style the subnav content - positioned absolute */
-.subnav-content {
-    display: none;
-    position: absolute;
-    left: 0;
-    background-color: rgb(62, 62, 62);
-    width: 100%;
-    z-index: 1;
-}
-
-/* Style the subnav links */
-.subnav-content a {
-    float: right;
- /*   color: white; */
-    text-decoration: none;
-}
-
-.subnav-content a:hover {
-    background-color: #eee;
-    color: black;
-}
-
-/* When you move the mouse over the subnav container, open the subnav content */
-.subnav:hover .subnav-content {
-    display: block;
-}
-
-/* The Mega Menu (Projects) */
-
-/* The dropdown container */
-.dropdown {
-    float: left;
-    overflow: hidden;
-  }
-  
-  /* Dropdown button */
-  .dropdown .dropbtn {
+.mega-menu .row {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 16px;
-    border: none;
-    outline: none;
-    color: white;
-    padding: 14px 16px;
-    background-color: inherit;
-    font: inherit; /* Important for vertical align on mobile phones */
-    line-height: normal; /* Ensure line-height is normal */
-    height: 100%; /* Ensure the button takes full height */
-  }
-
-  .dropdown .dropbtn:hover {
-    background-color: #555; /* Change to your desired highlight color */
-    color: white; /* Change text color if needed */
+    justify-content: space-around;
 }
-  
-  /* Dropdown content (hidden by default) */
-  .dropdown-content {
+
+.mega-menu .column {
+    flex: 1;
+    padding: 10px;
+}
+
+.project-menu-image {
+    max-width: 100%; /* Ensure the image fits within the column */
+    height: 100%; /* Maintain aspect ratio */
+}
+
+/* Styles for the Professional Documents dropdown */
+.dropdown-content {
     display: none;
     position: absolute;
-    background-color: #000000;
-    width: 100%;
-    left: 0;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    background-color: #282828;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-  }
-  
-  /* Mega Menu header, if needed */
-  .dropdown-content .header {
-    background: rgb(51, 51, 51);
-    padding: 16px;
-    color: rgb(0, 0, 0);
-  }
-  
-  /* Show the dropdown menu on hover */
-  .dropdown:hover .dropdown-content {
+    right: 0; /* Align to the right edge of the viewport */
+    width: auto; /* Adjust width to fit content */
+    box-sizing: border-box;
+}
+
+.dropdown:hover .dropdown-content {
     display: block;
-  }
-  
-  /* Create three equal columns that floats next to each other */
-  .column {
-    float: left;
-    width: 33.33%;
-    padding: 10px;
-    background-color: #353535;
-    height: 250px;
-  }
-  
-  /* Style links inside the columns */
-  .column a {
-    float: none;
-    color: rgb(255, 255, 255);
-    padding: 16px;
+}
+
+.dropdown-content a {
+    color: #efefef;
+    padding: 12px 16px;
     text-decoration: none;
     display: block;
-    text-align: left;
-  }
-  
-  /* Add a background color on hover */
-  .column a:hover {
-    background-color: #000000;
-  }
-  
-  /* Clear floats after the columns */
-  .row:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-
-
-
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .navbar ul {
-        justify-content: flex-start;
-        width: 100%;
-    }
-
-    .navbar-logo {
-        margin-left: 10px;
-        height: 30px;
-        /* Adjust the height as needed */
-    }
 }
 
-#language-switch {
-    background-color: transparent; /* Make the background transparent */
-    border: none; /* Remove the border */
-    color: white; /* Set the text color to white */
-    padding: 10px 20px; /* Add padding */
-    font-size: 16px; /* Set the font size */
-    cursor: pointer; /* Change the cursor to pointer */
-}
-
-#language-switch:hover {
-    background-color: #575757; /* Add a hover effect */
+.dropdown-content a:hover {
+    background-color: #555;
 }

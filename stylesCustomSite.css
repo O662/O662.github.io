@@ -1,0 +1,38 @@
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: #282828; /* Background of the scrollbar track */
+    border-radius: 0px; /* Rounded corners for the track */
+    border: solid #282828;
+
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00674f; /* Color of the scrollbar thumb */
+    border: 3px solid transparent; /* Transparent border to make the thumb smaller */
+    border-radius: 10px; /* Rounded corners for the thumb */
+    box-shadow: inset 0 0 0 1px #00674f; /* Inner shadow to give the thumb a border-like appearance */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00674fdc; /* Color of the scrollbar thumb on hover */
+    border: 3px solid transparent; /* Transparent border to make the thumb smaller */
+    border-radius: 10px; /* Rounded corners for the thumb */
+    box-shadow: inset 0 0 0 1px #00674f; /* Inner shadow to give the thumb a border-like appearance */
+}
+
+/* Custom Text Selection Styles */
+::selection {
+    /*background: #ffcc00; /* Background color of the highlighted text */
+    background: #00674f; /* Background color of the highlighted text */
+    color: #000000; /* Text color of the highlighted text */
+}
+
+::-moz-selection {
+    /*background: #ffcc00; /* Background color of the highlighted text for Firefox */
+    background: #00674f; /* Background color of the highlighted text for Firefox */
+    color: #000000; /* Text color of the highlighted text for Firefox */
+}

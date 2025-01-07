@@ -1,56 +1,46 @@
 <link rel="stylesheet" href="stylesNavBar.css">
+<link rel="stylesheet" href="stylesCustomSite.css">
 <nav class="navbar">
-    <a href="pPortfolio.html">
-        <img src="Images/Turtle Logo outline.png?cache-bust=<?= time() ?>" alt="Logo" class="navbar-logo">
-    </a>
-    <ul>
-        <li><a href="index.html">Home</a></li>
-        <div class="dropdown">
-            <button class="dropbtn">Projects
-                <i class="fa fa-caret-down"></i>
-            </button>
-            <div class="dropdown-content">
-                <div class="header">
-                    <h2>Mega Menu</h2>
-                </div>
+    <div class="logo">
+        <img src="Images/MLogo.png" alt="Logo">
+    </div>
+    <div class="menu">
+        <a href="index.html">Home</a>
+        <div class="dropdown projects-dropdown">
+            <a href="pProjects.html" class="dropbtn">Projects</a>
+            <div class="dropdown-content mega-menu">
+                <!--<img src="Images/hero_images/uzair-kashif-RX3EZEGOzp4-unsplash.jpg" alt="Menu Image" class="menu-image">-->
                 <div class="row">
                     <div class="column">
-                        <h3>Positive Operative Bouyancy Submersable (POBS)</h3>
-                        <a href="#">See Journey</a>
-                        <a href="#">See Images</a>
-                        <a href="#">See Documentation</a>
+                        <img src="Images/hero_images/uzair-kashif-RX3EZEGOzp4-unsplash.jpg" alt="Menu Image" class="project-menu-image">
                     </div>
                     <div class="column">
-                        <h3>Defense Response Observation Network (DRON)</h3>
-                        <a href="#">See Journey</a>
-                        <a href="#">See Images</a>
-                        <a href="#">See Documentation</a>
+                        <h3>Robotics</h3>
+                        <a href="#">DRON</a>
+                        <a href="#">GERM</a>
+                        <a href="#">POBS</a>
                     </div>
                     <div class="column">
-                        <h3>Autonimous Germination Garden (GERM)</h3>
-                        <a href="#">See Journey</a>
-                        <a href="#">See Images</a>
-                        <a href="#">See Documentation</a>
+                        <h3>Personal</h3>
+                        <a href="#">Personal Website</a>
+                        <a href="#">w_o App</a>
+                        <a href="#">Folder 9</a>
                     </div>
+                    
                 </div>
             </div>
         </div>
-        <li><a href="pPublications.html">Publications</a></li>
-        <li><a href="pPortfolio.html">Portfolio</a></li>
-        <div class="subnav">
-            <button class="subnavbtn">Professional-documents <i class="fa fa-caret-down"></i></button>
-            <div class="subnav-content">
-                <aS href="Professional-documents/pCoverLetter.html">Cover Letter</a>
+        <a href="pPublications.html">Publications</a>
+        <a href="pPortfolio.html">Portfolio</a>
+        <div class="dropdown Professional-documents-dropdown">
+            <a href="#contact" class="dropbtn">Professional Documents</a>
+            <div class="dropdown-content">
+                <a href="Professional-documents/pCoverLetter.html">Cover Letter</a>
                 <a href="Professional-documents/pResume.html">Resume</a>
                 <a href="Professional-documents/pCV.html">CV</a>
-
-
             </div>
         </div>
-        <button id="language-switch" onclick="switchLanguage()">En - Fr</button>
-
-
-    </ul>
+    </div>
 </nav>
 
 <!-- Run "python -m http.server 8000" in the terminal and open "http://localhost:8000" in a browser to see the webpage.-->

@@ -3,7 +3,7 @@
 body {
     font-family: Arial, sans-serif;
     background-color: black;
-    color: white;
+    color: #efefef;
     padding: 0px;
     padding-top: 60px; /* Adjust the value based on the height of your navbar */
     margin: 0;
@@ -28,7 +28,7 @@ footer {
 section {
     display: block;
     /*background: black; ### Colors determined by order below*/
-    color: #fff;
+    color: #efefef;
     /*height: 100vh;
     width: 100%; /*100 vh also works*/
     padding: 60px; /*This is the padding for the text*/
@@ -46,4 +46,26 @@ section:nth-of-type(even) {
 
 .center-text {
     text-align: center;
+}
+
+/* Project Cards */
+.draggable-container {
+    display: flex;
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+    margin: 20px 0;
+}
+
+.draggable-item {
+    min-width: 200px;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+
+.draggable-item:active {
+    cursor: grabbing;
 }
