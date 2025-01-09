@@ -5,17 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Malcolm Ferguson</title>
     <!-- Import General Head Settings-->
-    <div id="head-placeholder"></div>
-    <script>
-        fetch('head.html?cache-bust=' + new Date().getTime())
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('head-placeholder').innerHTML = data;
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
-    </script>
+    <link rel="icon" type="image/x-icon" href="\Images\MLogo.ico">
+    <link rel="stylesheet" href="stylesNavBar.css">
+    <link rel="stylesheet" href="stylesIndex.css">
+    <link rel="stylesheet" href="stylesFooter.css">
+    <link rel="stylesheet" href="styles_index_hero.css">
+    <link rel="stylesheet" href="stylesCustomSite.css">
 
     <!-- Mobile Reader -->
     <script>
@@ -51,6 +46,25 @@
             const opacity = Math.min(scrollPosition / maxScroll, 1);
             navbar.style.backgroundColor = `rgba(40, 40, 40, ${opacity})`;
         });
+    </script>
+
+    <!-- Lightbox Popup -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-content">
+            <span class="close-btn" onclick="closeLightbox()">&times;</span>
+            <p>This site is still under development, so some things may not work as you may expect. Regardless, I appreciate you taking the time to check this site out!</p>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to show the lightbox
+        document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('lightbox').style.display = 'block';
+    });
+
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+    }
     </script>
 
     <section id="hero">
