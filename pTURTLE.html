@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malcolm Ferguson</title>
+    <!-- Import General Head Settings-->
+    <link rel="icon" type="image/x-icon" href="\Images\MLogo.ico">
+    <link rel="stylesheet" href="stylesNavBar.css">
+    <link rel="stylesheet" href="stylesIndex.css">
+    <link rel="stylesheet" href="stylesFooter.css">
+    <link rel="stylesheet" href="styles_index_hero.css">
+    <link rel="stylesheet" href="stylesCustomSite.css">
+
+    <!-- Mobile Reader -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function isMobile() {
+                return /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth <= 1080; // Adjust the width as needed
+            }
+
+            if (isMobile()) {
+                window.location.href = "mobile.html"; // Redirect to mobile page
+            }
+        });
+    </script>
+
+    
+</head>
+
+<body>
+    <div id="navbar"></div> <!--acts as a placeholder in the code where the navbar content will be inserted.-->
+    <script>
+        fetch('navbar.html?cache-bust=' + new Date().getTime())
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    </script>
+
+    <h1>Welcome to the Turtle Page</h1>
+    <p>This is Where you will find Turtle Stuff</p> <a href="index.html">Back to Home Page</a>
+</body>
+
+</html>
