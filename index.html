@@ -103,7 +103,7 @@
     </section>
     <section id="Projects">
         <h2>Projects</h2>
-        <p>Pardon the dust, we're cooking rn!</p>
+        <p>Some things I am working on!</p>
         <div class="draggable-container">
             <div class="draggable-item"
                 style="background-image: url('Images/hero_images/daniel-roe-lpjb_UMOyx8-unsplash.jpg');"></div>
@@ -116,7 +116,25 @@
             <div class="draggable-item"
                 style="background-image: url('Images/hero_images/nitish-meena-ANo5_iE9dcU-unsplash.jpg');"></div>
         </div>
-        <a href="pProjects.html">Go to Project Page</a>
+        <div class="arrow-buttons">
+            <button id="left-arrow" class="arrow-button">←</button>
+            <button id="right-arrow" class="arrow-button">→</button>
+        </div>
+        <script>
+            document.getElementById('left-arrow').addEventListener('click', function() {
+                document.querySelector('.draggable-container').scrollBy({
+                    left: -document.querySelector('.draggable-item').offsetWidth,
+                    behavior: 'smooth'
+                });
+            });
+        
+            document.getElementById('right-arrow').addEventListener('click', function() {
+                document.querySelector('.draggable-container').scrollBy({
+                    left: document.querySelector('.draggable-item').offsetWidth,
+                    behavior: 'smooth'
+                });
+            });
+        </script>
     </section>
     <section id="Works">
         <h2>Works</h2>

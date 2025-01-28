@@ -5,7 +5,8 @@ body {
     background-color: black;
     color: #efefef;
     padding: 0px;
-    padding-top: 60px; /* Adjust the value based on the height of your navbar */
+    padding-top: 60px;
+    /* Adjust the value based on the height of your navbar */
     margin: 0;
     box-sizing: border-box;
     /*IDK if i need these*/
@@ -31,8 +32,10 @@ section {
     color: #efefef;
     /*height: 100vh;
     width: 100%; /*100 vh also works*/
-    padding: 60px; /*This is the padding for the text*/
-    box-sizing: border-box; /* Ensures padding is included in the 100% width */
+    padding: 60px;
+    /*This is the padding for the text*/
+    box-sizing: border-box;
+    /* Ensures padding is included in the 100% width */
     position: relative;
 }
 
@@ -51,24 +54,53 @@ section:nth-of-type(even) {
 /* Project Cards */
 .draggable-container {
     display: flex;
+    overflow-x: auto;
     overflow: hidden;
     cursor: grab;
     -webkit-user-select: none;
     user-select: none;
     margin: 20px 0;
+    white-space: nowrap;
+    scroll-snap-type: x mandatory;
+    /* Enable snapping */
+    scroll-padding: 0 10px;
 }
 
 .draggable-item {
+    flex: 0 0 auto;
     min-width: 200px;
-    height: 200px;
+    height: 60vh;
+    width: 55vw;
+    border-radius: 10px;
     background-size: cover;
     background-position: center;
-    margin-right: 10px;
+    margin-left: 15vw;
     transition: transform 0.3s ease;
+    scroll-snap-align: center;
 }
 
 .draggable-item:active {
     cursor: grabbing;
+}
+
+.arrow-buttons {
+    text-align: right;
+    margin-top: 10px;
+}
+
+.arrow-button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin: 0 5px;
+    font-size: 40px;
+    border-radius: 10px;
+}
+
+.arrow-button:hover {
+    background-color: #202020;
 }
 
 .lightbox {
@@ -92,7 +124,8 @@ section:nth-of-type(even) {
     background-color: white;
     border-radius: 10px;
     text-align: center;
-    color: black; /* Ensure text color is visible */
+    color: black;
+    /* Ensure text color is visible */
 }
 
 .close-btn {
@@ -101,5 +134,6 @@ section:nth-of-type(even) {
     right: 20px;
     font-size: 30px;
     cursor: pointer;
-    color: black; /* Ensure close button is visible */
+    color: black;
+    /* Ensure close button is visible */
 }
