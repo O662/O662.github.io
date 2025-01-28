@@ -99,7 +99,73 @@
     <section id="About">
         <h2>About</h2>
         <p>Education & Timeline</p>
-        <a href="pAbout.html">Go to Project Page</a>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>August 2022</h3>
+                    <p>Started my undergraduate studies at Texas A&M University.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>September 2022</h3>
+                    <p>Joined TURTLE robotics, with the POBS research team.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>May 2023</h3>
+                    <p>Became the Public Relations Officer for TURTLE Robotics.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>January 2024</h3>
+                    <p>One of the founding members of DRON, TURTLE Robotics</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>September 2024</h3>
+                    <p>Took over as project lead for POBS</p>
+                </div>
+            </div>
+            <!-- Add more timeline items as needed -->
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h3>2024</h3>
+                <p>Joined the robotics research team.</p>
+            </div>
+        </div>
+        <!-- Add more timeline items as needed -->
+    </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const timelineItems = document.querySelectorAll('.timeline-item');
+        
+                const isElementInViewport = (el) => {
+                    const rect = el.getBoundingClientRect();
+                    return (
+                        rect.top >= 0 &&
+                        rect.left >= 0 &&
+                        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                    );
+                };
+        
+                const onScroll = () => {
+                    timelineItems.forEach(item => {
+                        if (isElementInViewport(item)) {
+                            item.classList.add('visible');
+                        }
+                    });
+                };
+        
+                window.addEventListener('scroll', onScroll);
+                onScroll(); // Trigger the function on page load
+            });
+        </script>
     </section>
     <section id="Projects">
         <h2>Projects</h2>

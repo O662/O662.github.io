@@ -51,6 +51,34 @@ section:nth-of-type(even) {
     text-align: center;
 }
 
+/* About section*/
+
+.timeline {
+    position: relative;
+    margin: 20px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.timeline-item {
+    opacity: 0; /* Initially hidden */
+    transform: translateY(50px); /* Initial position */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    margin-bottom: 20px;
+}
+
+.timeline-item.visible {
+    opacity: 1; /* Visible when scrolled into view */
+    transform: translateY(0); /* Move to final position */
+}
+
+.timeline-content {
+    padding: 20px;
+    background: #414141;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 /* Project Cards */
 .draggable-container {
     display: flex;
