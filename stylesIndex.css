@@ -92,6 +92,10 @@ section:nth-of-type(even) {
     scroll-snap-type: x mandatory;
     /* Enable snapping */
     scroll-padding: 0 10px;
+
+    scroll-behavior: smooth;
+    transition: scroll-left 0.2s;
+    cursor: grab;
 }
 
 .draggable-item {
@@ -108,6 +112,12 @@ section:nth-of-type(even) {
 }
 
 .draggable-item:active {
+    cursor: grabbing;
+}
+
+.draggable-container.dragging {
+    scroll-behavior: auto;
+    transition: none;
     cursor: grabbing;
 }
 
