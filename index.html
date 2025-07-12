@@ -53,6 +53,10 @@
         <div class="lightbox-content">
             <span class="close-btn" onclick="closeLightbox()">&times;</span>
             <p>This site is still under development, so some things may not work as you may expect. Regardless, I appreciate you taking the time to check this site out!</p>
+            <div class="dismiss-btn-row">
+                <button class="dismiss-btn" onclick="closeLightbox()">This is outrageous!</button>
+                <button class="dismiss-btn" onclick="closeLightbox()">Okay, good to know!</button>
+            </div>
         </div>
     </div>
 
@@ -187,7 +191,7 @@
             <button id="right-arrow" class="arrow-button">→</button>
         </div>
         <script>
-            // ...existing code...
+            // Arrow button scroll
             document.getElementById('left-arrow').addEventListener('click', function() {
                 document.querySelector('.draggable-container').scrollBy({
                     left: -document.querySelector('.draggable-item').offsetWidth,
@@ -202,73 +206,37 @@
                 });
             });
 
-            // --- Smooth Drag-to-Scroll ---
+            // Native-feel drag-to-scroll
             const container = document.querySelector('.draggable-container');
-            let isDragging = false;
-            let startX = 0;
-            let scrollStart = 0;
-            let targetScroll = 0;
-            let animationFrame;
+            let isDown = false;
+            let startX;
+            let scrollLeft;
 
-            function animateScroll() {
-                // Lerp towards the target scroll position
-                container.scrollLeft += (targetScroll - container.scrollLeft) * .01;
-                if (Math.abs(targetScroll - container.scrollLeft) > 0.5) {
-                    animationFrame = requestAnimationFrame(animateScroll);
-                } else {
-                    container.scrollLeft = targetScroll;
-                    cancelAnimationFrame(animationFrame);
-                }
-            }
-
-            container.addEventListener('mousedown', (e) => {
-                isDragging = true;
+            container.addEventListener('pointerdown', (e) => {
+                isDown = true;
+                container.setPointerCapture(e.pointerId);
                 container.classList.add('dragging');
-                startX = e.pageX - container.offsetLeft;
-                scrollStart = container.scrollLeft;
-                targetScroll = container.scrollLeft;
-                cancelAnimationFrame(animationFrame);
-                e.preventDefault();
+                startX = e.clientX;
+                scrollLeft = container.scrollLeft;
             });
 
-            window.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                const x = e.pageX - container.offsetLeft;
-                const walk = (x - startX) * 1.2; // Adjust multiplier for speed
-                targetScroll = scrollStart - walk;
-                animateScroll();
+            container.addEventListener('pointermove', (e) => {
+                if (!isDown) return;
+                const x = e.clientX;
+                const walk = (x - startX) * 1.2; // Adjust for speed
+                container.scrollLeft = scrollLeft - walk;
             });
 
-            window.addEventListener('mouseup', () => {
-                if (!isDragging) return;
-                isDragging = false;
+            container.addEventListener('pointerup', (e) => {
+                isDown = false;
                 container.classList.remove('dragging');
-                animateScroll();
+                container.releasePointerCapture(e.pointerId);
             });
 
-            // Touch support
-            container.addEventListener('touchstart', (e) => {
-                isDragging = true;
-                container.classList.add('dragging');
-                startX = e.touches[0].pageX - container.offsetLeft;
-                scrollStart = container.scrollLeft;
-                targetScroll = container.scrollLeft;
-                cancelAnimationFrame(animationFrame);
-            });
-
-            container.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                const x = e.touches[0].pageX - container.offsetLeft;
-                const walk = (x - startX) * 1.2;
-                targetScroll = scrollStart - walk;
-                animateScroll();
-            });
-
-            container.addEventListener('touchend', () => {
-                if (!isDragging) return;
-                isDragging = false;
+            container.addEventListener('pointerleave', (e) => {
+                isDown = false;
                 container.classList.remove('dragging');
-                animateScroll();
+                container.releasePointerCapture(e.pointerId);
             });
         </script>
     </section>
