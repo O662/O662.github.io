@@ -82,8 +82,8 @@
 }
 
 .loading-subtitle {
-    color: #ffffff;
-    font-size: 3vw;
+    color: #ffffff !important;
+    font-size: 3vw !important;
     font-family: 'Arial', sans-serif;
     margin-bottom: 20px;
     margin-top: 0;
