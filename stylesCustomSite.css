@@ -72,7 +72,7 @@
     width: 40px;
     height: 30px;
     background: transparent;
-    border: 3px solid #00674f;
+    border: 3px solid #ffffff;
     border-radius: 8px;
     top: 5px;
     left: 20px;
@@ -86,7 +86,7 @@
     width: 50px;
     height: 35px;
     background: transparent;
-    border: 3px solid #00674f;
+    border: 3px solid #ffffff;
     border-radius: 5px;
     top: 40px;
     left: 15px;
@@ -108,15 +108,15 @@
     }
     45% {
         box-shadow: 
-            8px 8px 0 -5px #00674f,   /* Left eye */
-            24px 8px 0 -5px #00674f,  /* Right eye */
-            16px 18px 0 -6px #00674f; /* Mouth */
+            8px 8px 0 -5px #ffffff,   /* Left eye */
+            24px 8px 0 -5px #ffffff,  /* Right eye */
+            16px 18px 0 -6px #ffffff; /* Mouth */
     }
     100% {
         box-shadow: 
-            8px 8px 0 -5px #00674f,
-            24px 8px 0 -5px #00674f,
-            16px 18px 0 -6px #00674f;
+            8px 8px 0 -5px #ffffff,
+            24px 8px 0 -5px #ffffff,
+            16px 18px 0 -6px #ffffff;
     }
 }
 
@@ -135,30 +135,30 @@
     }
     45% {
         box-shadow: 
-            -15px 15px 0 -8px #00674f,  /* Left arm */
-            65px 15px 0 -8px #00674f,   /* Right arm */
-            10px 50px 0 -6px #00674f,   /* Left leg */
-            30px 50px 0 -6px #00674f;   /* Right leg */
+            -15px 15px 0 -8px #ffffff,  /* Left arm */
+            65px 15px 0 -8px #ffffff,   /* Right arm */
+            10px 50px 0 -6px #ffffff,   /* Left leg */
+            30px 50px 0 -6px #ffffff;   /* Right leg */
     }
     60% {
         box-shadow: 
-            -15px 15px 0 -8px #00674f,
-            65px 15px 0 -8px #00674f,
-            10px 50px 0 -6px #00674f,
-            30px 50px 0 -6px #00674f,
-            15px 15px 0 -7px #00674f,   /* Left button */
-            25px 15px 0 -7px #00674f,   /* Middle button */
-            35px 15px 0 -7px #00674f;   /* Right button */
+            -15px 15px 0 -8px #ffffff,
+            65px 15px 0 -8px #ffffff,
+            10px 50px 0 -6px #ffffff,
+            30px 50px 0 -6px #ffffff,
+            15px 15px 0 -7px #ffffff,   /* Left button */
+            25px 15px 0 -7px #ffffff,   /* Middle button */
+            35px 15px 0 -7px #ffffff;   /* Right button */
     }
     100% {
         box-shadow: 
-            -15px 15px 0 -8px #00674f,
-            65px 15px 0 -8px #00674f,
-            10px 50px 0 -6px #00674f,
-            30px 50px 0 -6px #00674f,
-            15px 15px 0 -7px #00674f,
-            25px 15px 0 -7px #00674f,
-            35px 15px 0 -7px #00674f;
+            -15px 15px 0 -8px #ffffff,
+            65px 15px 0 -8px #ffffff,
+            10px 50px 0 -6px #ffffff,
+            30px 50px 0 -6px #ffffff,
+            15px 15px 0 -7px #ffffff,
+            25px 15px 0 -7px #ffffff,
+            35px 15px 0 -7px #ffffff;
     }
 }
 
