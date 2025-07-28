@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="styles_index_hero.css">
     <link rel="stylesheet" href="stylesCustomSite.css">
 
-    <!-- Mobile Reader -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             function isMobile() {
@@ -20,7 +19,7 @@
             }
 
             if (isMobile()) {
-                window.location.href = "mobile.html"; // Redirect to mobile page
+                window.location.href = "mobile.html"; 
             }
         });
     </script>
@@ -28,7 +27,7 @@
 </head>
 
 <body>
-    <div id="navbar" class="navbar"></div> <!-- Add the class "navbar" -->
+    <div id="navbar" class="navbar"></div> 
     <script>
         fetch('navbar.html?cache-bust=' + new Date().getTime())
             .then(response => response.text())
@@ -38,17 +37,16 @@
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
             });
-        // JavaScript to change navbar color on scroll
+        
         window.addEventListener('scroll', function () {
             const navbar = document.getElementById('navbar');
             const scrollPosition = window.scrollY;
-            const maxScroll = 50; // Adjust this value as needed
+            const maxScroll = 50; 
             const opacity = Math.min(scrollPosition / maxScroll, 1);
             navbar.style.backgroundColor = `rgba(40, 40, 40, ${opacity})`;
         });
     </script>
 
-    <!-- Lightbox Popup -->
     <div id="lightbox" class="lightbox">
         <div class="lightbox-content">
             <span class="close-btn" onclick="closeLightbox()">&times;</span>
@@ -61,7 +59,6 @@
     </div>
 
     <script>
-        // JavaScript to show the lightbox
         document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('lightbox').style.display = 'block';
     });
@@ -101,7 +98,7 @@
 
     </section>
     <section id="About">
-        <h2>About</h2>
+        <h1>About</h1>
         <p>Education & Timeline</p>
         <div class="timeline">
             <div class="timeline-item">
@@ -134,7 +131,6 @@
                     <p>Took over as project lead for POBS</p>
                 </div>
             </div>
-            <!-- Add more timeline items as needed -->
         </div>
         <div class="timeline-item">
             <div class="timeline-content">
@@ -142,7 +138,6 @@
                 <p>Joined the robotics research team.</p>
             </div>
         </div>
-        <!-- Add more timeline items as needed -->
     </div>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -167,83 +162,49 @@
                 };
         
                 window.addEventListener('scroll', onScroll);
-                onScroll(); // Trigger the function on page load
+                onScroll(); 
             });
         </script>
     </section>
     <section id="Projects">
-        <h2>Projects</h2>
+        <h1>Projects</h1>
         <p>Some things I am working on!</p>
-        <div class="draggable-container">
-            <div class="draggable-item draggable-item-1"></div>
-            <div class="draggable-item draggable-item-2"></div>
-            <div class="draggable-item draggable-item-3"></div>
-            <div class="draggable-item draggable-item-4"></div>
-            <div class="draggable-item draggable-item-5"></div>
+        <div class="projects-grid">
+            <div class="project-card project-card-1">
+                <div class="project-overlay">
+                    <h3>Project 1</h3>
+                    <p>Description coming soon...</p>
+                </div>
+            </div>
+            <div class="project-card project-card-2">
+                <div class="project-overlay">
+                    <h3>Project 2</h3>
+                    <p>Description coming soon...</p>
+                </div>
+            </div>
+            <div class="project-card project-card-3">
+                <div class="project-overlay">
+                    <h3>Project 3</h3>
+                    <p>Description coming soon...</p>
+                </div>
+            </div>
+            <div class="project-card project-card-4">
+                <div class="project-overlay">
+                    <h3>Project 4</h3>
+                    <p>Description coming soon...</p>
+                </div>
+            </div>
+            <div class="project-card project-card-5">
+                <div class="project-overlay">
+                    <h3>Project 5</h3>
+                    <p>Description coming soon...</p>
+                </div>
+            </div>
         </div>
-        <div class="arrow-buttons">
-            <button id="left-arrow" class="arrow-button">←</button>
-            <button id="right-arrow" class="arrow-button">→</button>
-        </div>
-        <script>
-            // Arrow button scroll
-            document.getElementById('left-arrow').addEventListener('click', function() {
-                document.querySelector('.draggable-container').scrollBy({
-                    left: -document.querySelector('.draggable-item').offsetWidth,
-                    behavior: 'smooth'
-                });
-            });
-
-            document.getElementById('right-arrow').addEventListener('click', function() {
-                document.querySelector('.draggable-container').scrollBy({
-                    left: document.querySelector('.draggable-item').offsetWidth,
-                    behavior: 'smooth'
-                });
-            });
-
-            // Native-feel drag-to-scroll
-            const container = document.querySelector('.draggable-container');
-            let isDown = false;
-            let startX;
-            let scrollLeft;
-
-            container.addEventListener('pointerdown', (e) => {
-                isDown = true;
-                container.setPointerCapture(e.pointerId);
-                container.classList.add('dragging');
-                startX = e.clientX;
-                scrollLeft = container.scrollLeft;
-            });
-
-            container.addEventListener('pointermove', (e) => {
-                if (!isDown) return;
-                const x = e.clientX;
-                const walk = (x - startX) * 1.2; // Adjust for speed
-                container.scrollLeft = scrollLeft - walk;
-            });
-
-            container.addEventListener('pointerup', (e) => {
-                isDown = false;
-                container.classList.remove('dragging');
-                container.releasePointerCapture(e.pointerId);
-            });
-
-            container.addEventListener('pointerleave', (e) => {
-                isDown = false;
-                container.classList.remove('dragging');
-                container.releasePointerCapture(e.pointerId);
-            });
-        </script>
-    </section>
-    <section id="Works">
-        <h2>Works</h2>
-        <p>Pardon the dust, we're cooking rn!</p>
-        <a href="pPublications.html">Go to Project Page</a>
     </section>
 
     <footer id="footerIndex">
         <div id="theFooter"></div>
-        <!--acts as a placeholder in the code where the navbar content will be inserted.-->
         <script>
             fetch('footer.html?cache-bust=' + new Date().getTime())
                 .then(response => response.text())
