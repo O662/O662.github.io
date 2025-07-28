@@ -126,6 +126,26 @@ section:nth-of-type(even) {
     cursor: grabbing;
 }
 
+.draggable-item-1 {
+    background-image: url('Images/hero_images/daniel-roe-lpjb_UMOyx8-unsplash.jpg');
+}
+
+.draggable-item-2 {
+    background-image: url('Images/hero_images/patrick-bald-llZIWkNGzS4-unsplash.jpg');
+}
+
+.draggable-item-3 {
+    background-image: url('Images/hero_images/katie-moum-l0GRQpXwgPk-unsplash.jpg');
+}
+
+.draggable-item-4 {
+    background-image: url('Images/hero_images/laurel-balyeat-ExarETx4xNA-unsplash.jpg');
+}
+
+.draggable-item-5 {
+    background-image: url('Images/hero_images/nitish-meena-ANo5_iE9dcU-unsplash.jpg');
+}
+
 .arrow-buttons {
     text-align: right;
     margin-top: 10px;
