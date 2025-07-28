@@ -22,11 +22,35 @@
                 window.location.href = "mobile.html"; 
             }
         });
+
+        // Loading Screen Script
+        window.addEventListener('load', function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const body = document.body;
+            
+            // Add a minimum loading time to show the animation
+            setTimeout(function() {
+                loadingScreen.classList.add('fade-out');
+                body.classList.remove('loading');
+                
+                // Remove the loading screen from DOM after transition
+                setTimeout(function() {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 1000); // Show loader for at least 1 second
+        });
     </script>
 
 </head>
 
-<body>
+<body class="loading">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loader"></div>
+        <div class="loading-text">Loading...</div>
+        <div class="loading-subtitle">Malcolm Ferguson</div>
+    </div>
+
     <div id="navbar" class="navbar"></div> 
     <script>
         fetch('navbar.html?cache-bust=' + new Date().getTime())
