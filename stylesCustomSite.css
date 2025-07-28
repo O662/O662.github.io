@@ -82,11 +82,13 @@
 }
 
 .loading-subtitle {
-    color: #00674f;
-    font-size: 0.9rem;
+    color: #ffffff;
+    font-size: 3vw;
     font-family: 'Arial', sans-serif;
-    margin-top: 5px;
-    opacity: 0.6;
+    margin-bottom: 20px;
+    margin-top: 0;
+    opacity: 1;
+    order: -1;
 }
 
 /* Hide main content while loading */
