@@ -77,10 +77,12 @@ section:nth-of-type(even) {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* All H1 elements to match hero title size */
 h1 {
-    font-size: 3vw; 
-    margin-bottom: 0.5vw;
-    margin-top: 1vw;
+    font-size: 3vw !important; 
+    margin-bottom: 0.5vw !important;
+    margin-top: 1vw !important;
+    font-weight: normal !important;
 }
 
 .projects-grid {
