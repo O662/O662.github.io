@@ -77,14 +77,6 @@ section:nth-of-type(even) {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* All H1 elements to match hero title size */
-h1 {
-    font-size: 3vw !important; 
-    margin-bottom: 0.5vw !important;
-    margin-top: 1vw !important;
-    font-weight: normal !important;
-}
-
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -232,4 +224,15 @@ h1 {
 
 .dismiss-btn {
     margin: 0; /* Remove top margin since flex handles spacing */
+}
+
+/* Force all H1 elements to match hero title size - HIGH PRIORITY */
+html body h1, 
+h1,
+section h1 {
+    font-size: 3vw !important; 
+    margin-bottom: 0.5vw !important;
+    margin-top: 1vw !important;
+    font-weight: bold !important;
+    line-height: 1.2 !important;
 }
