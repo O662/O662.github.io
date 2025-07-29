@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="stylesFooter.css">
     <link rel="stylesheet" href="styles_index_hero.css">
     <link rel="stylesheet" href="stylesCustomSite.css">
+    <link rel="stylesheet" href="stylesPortfolio.css">
 
     <!-- Mobile Reader -->
     <script>
@@ -43,11 +44,54 @@
     </script>
 
     <section id="aboutIntro">
-        <h1>Welcome to the About Page</h1>
-        <p>This is the About page.</p> <a href="index.html">Back to Home Page</a>
+        <h1>Portfolio</h1>
+        <p>Welcome to my portfolio. Here you can explore my various projects and design work.</p>
     </section>
 
+    <section id="website-designs">
+        <h2>Website Designs</h2>
+        <p>Conceptual and creative website designs showcasing different styles and approaches.</p>
+        
+        <div class="portfolio-grid">
+            <div class="portfolio-item">
+                <div class="portfolio-card">
+                    <div class="portfolio-image">
+                        <div class="coffee-preview">☕</div>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3>Café au lait</h3>
+                        <p>A warm and inviting coffee shop website design featuring rich coffee-inspired colors and elegant typography.</p>
+                        <a href="website-designs/cafe-au-lait.html" class="portfolio-link">View Design</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Placeholder for future website designs -->
+            <div class="portfolio-item">
+                <div class="portfolio-card placeholder">
+                    <div class="portfolio-content">
+                        <h3>More Designs Coming Soon</h3>
+                        <p>Additional website designs will be showcased here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <footer id="footerIndex">
+        <div id="theFooter"></div>
+        <script>
+            fetch('footer.html?cache-bust=' + new Date().getTime())
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('theFooter').innerHTML = data;
+                    document.getElementById('current-year').textContent = new Date().getFullYear();
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        </script>
+    </footer>
 
 
 </body>

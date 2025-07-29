@@ -1,0 +1,218 @@
+/* Café au lait - Coffee Shop Website Design */
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background-color: #1a1311;
+    color: #f4f1eb;
+    padding: 0;
+    padding-top: 60px;
+    margin: 0;
+    box-sizing: border-box;
+    line-height: 1.6;
+}
+
+/* Hero Section */
+#hero {
+    background: linear-gradient(135deg, #2c1810 0%, #4a2c1a 50%, #6b3e2a 100%);
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+}
+
+#hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(244,241,235,0.1)"/></svg>') repeat;
+    background-size: 50px 50px;
+    opacity: 0.3;
+}
+
+.hero-container {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 40px 20px;
+}
+
+.hero-container h1 {
+    font-size: 4em;
+    margin-bottom: 20px;
+    color: #d4a574;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-weight: normal;
+    letter-spacing: 2px;
+}
+
+.hero-subtitle {
+    font-size: 1.4em;
+    color: #f4f1eb;
+    font-style: italic;
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* Content Sections */
+section {
+    padding: 80px 60px;
+    position: relative;
+}
+
+section:nth-of-type(even) {
+    background-color: #0f0c0a;
+}
+
+section:nth-of-type(odd) {
+    background-color: #1a1311;
+}
+
+.content-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h2 {
+    font-size: 2.5em;
+    color: #d4a574;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: normal;
+}
+
+h3 {
+    font-size: 1.8em;
+    color: #b8956f;
+    margin-bottom: 20px;
+    margin-top: 40px;
+}
+
+p {
+    font-size: 1.1em;
+    line-height: 1.8;
+    color: #e6e0d4;
+    margin-bottom: 20px;
+}
+
+/* Design Features */
+.design-features {
+    background: linear-gradient(135deg, #2a1e16 0%, #3d2b1f 100%);
+    padding: 40px;
+    border-radius: 15px;
+    margin-top: 40px;
+    border-left: 5px solid #d4a574;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.design-features ul {
+    list-style: none;
+    padding: 0;
+}
+
+.design-features li {
+    padding: 10px 0;
+    font-size: 1.1em;
+    color: #e6e0d4;
+    position: relative;
+    padding-left: 30px;
+}
+
+.design-features li::before {
+    content: '☕';
+    position: absolute;
+    left: 0;
+    color: #d4a574;
+    font-size: 1.2em;
+}
+
+/* Preview Section */
+.preview-placeholder {
+    background: linear-gradient(135deg, #2a1e16 0%, #3d2b1f 100%);
+    border: 2px dashed #d4a574;
+    border-radius: 15px;
+    padding: 80px 40px;
+    text-align: center;
+    margin-top: 40px;
+    transition: all 0.3s ease;
+}
+
+.preview-placeholder:hover {
+    background: linear-gradient(135deg, #3d2b1f 0%, #4a3528 100%);
+    border-color: #e6c896;
+}
+
+.preview-placeholder p {
+    font-size: 1.3em;
+    color: #b8956f;
+    font-style: italic;
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1000px) {
+    .hero-container h1 {
+        font-size: 3em;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2em;
+    }
+    
+    section {
+        padding: 60px 40px;
+    }
+    
+    h2 {
+        font-size: 2em;
+    }
+    
+    .design-features {
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-container h1 {
+        font-size: 2.5em;
+    }
+    
+    section {
+        padding: 40px 20px;
+    }
+    
+    h2 {
+        font-size: 1.8em;
+    }
+    
+    .design-features {
+        padding: 20px 15px;
+    }
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1311;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d4a574;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #e6c896;
+}

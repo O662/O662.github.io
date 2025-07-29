@@ -1,0 +1,154 @@
+/* Portfolio Page Styles */
+
+#website-designs {
+    padding: 60px;
+    background-color: #252525;
+}
+
+#website-designs h2 {
+    font-size: 2.5em;
+    color: #efefef;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#website-designs p {
+    text-align: center;
+    color: #e0e0e0;
+    font-size: 1.2em;
+    margin-bottom: 40px;
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.portfolio-item {
+    position: relative;
+}
+
+.portfolio-card {
+    background: linear-gradient(135deg, #414141 0%, #353535 100%);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    border-left: 4px solid #00674f;
+}
+
+.portfolio-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.portfolio-image {
+    height: 200px;
+    background: linear-gradient(135deg, #2c1810 0%, #4a2c1a 50%, #6b3e2a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.coffee-preview {
+    font-size: 4em;
+    color: #d4a574;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.portfolio-content {
+    padding: 30px;
+}
+
+.portfolio-content h3 {
+    color: #efefef;
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    margin-top: 0;
+}
+
+.portfolio-content p {
+    color: #e0e0e0;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-align: left;
+    font-size: 1em;
+}
+
+.portfolio-link {
+    display: inline-block;
+    background: #00674f;
+    color: #efefef;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    border: 2px solid #00674f;
+}
+
+.portfolio-link:hover {
+    background: transparent;
+    color: #00674f;
+    transform: translateY(-2px);
+}
+
+/* Placeholder card styling */
+.portfolio-card.placeholder {
+    border-left: 4px solid #666;
+    opacity: 0.7;
+}
+
+.portfolio-card.placeholder .portfolio-content {
+    text-align: center;
+    padding: 50px 30px;
+}
+
+.portfolio-card.placeholder h3 {
+    color: #bbb;
+}
+
+.portfolio-card.placeholder p {
+    color: #999;
+    text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 800px) {
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    #website-designs {
+        padding: 40px 20px;
+    }
+    
+    #website-designs h2 {
+        font-size: 2em;
+    }
+}
+
+/* Section styling consistency */
+#aboutIntro {
+    padding: 60px;
+    background-color: #000000;
+    text-align: center;
+}
+
+#aboutIntro h1 {
+    font-size: 3em;
+    color: #efefef;
+    margin-bottom: 20px;
+}
+
+#aboutIntro p {
+    font-size: 1.2em;
+    color: #e0e0e0;
+    max-width: 600px;
+    margin: 0 auto;
+}

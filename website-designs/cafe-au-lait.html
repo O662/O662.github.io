@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Café au lait - Malcolm Ferguson</title>
+    <!-- Import General Head Settings-->
+    <link rel="icon" type="image/x-icon" href="../Images/MLogo.ico">
+    <link rel="stylesheet" href="../stylesNavBar.css">
+    <link rel="stylesheet" href="../stylesFooter.css">
+    <link rel="stylesheet" href="../stylesCustomSite.css">
+    <link rel="stylesheet" href="cafe-au-lait.css">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function isMobile() {
+                return /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth <= 1080;
+            }
+
+            if (isMobile()) {
+                window.location.href = "../mobile.html"; 
+            }
+        });
+    </script>
+
+</head>
+
+<body>
+    <div id="navbar" class="navbar"></div> 
+    <script>
+        fetch('../navbar.html?cache-bust=' + new Date().getTime())
+            .then(response => response.text())
+            .then(data => {
+                // Fix relative paths in navbar for subdirectory
+                const fixedData = data
+                    .replace(/href="index\.html"/g, 'href="../index.html"')
+                    .replace(/href="pProjects\.html"/g, 'href="../pProjects.html"')
+                    .replace(/href="pPortfolio\.html"/g, 'href="../pPortfolio.html"')
+                    .replace(/href="Professional-documents\//g, 'href="../Professional-documents/')
+                    .replace(/src="Images\//g, 'src="../Images/')
+                    .replace(/href="stylesNavBar\.css"/g, 'href="../stylesNavBar.css"')
+                    .replace(/href="stylesCustomSite\.css"/g, 'href="../stylesCustomSite.css"');
+                
+                document.getElementById('navbar').innerHTML = fixedData;
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        
+        window.addEventListener('scroll', function () {
+            const navbar = document.getElementById('navbar');
+            const scrollPosition = window.scrollY;
+            const maxScroll = 50; 
+            const opacity = Math.min(scrollPosition / maxScroll, 1);
+            navbar.style.backgroundColor = `rgba(40, 40, 40, ${opacity})`;
+        });
+    </script>
+
+    <main>
+        <section id="hero">
+            <div class="hero-container">
+                <h1>Café au lait</h1>
+                <p class="hero-subtitle">A warm and inviting coffee shop website design</p>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="content-container">
+                <h2>About This Design</h2>
+                <p>Café au lait is a conceptual website design for a cozy coffee shop. This design focuses on creating a warm, welcoming atmosphere that captures the essence of a perfect coffee experience.</p>
+                
+                <div class="design-features">
+                    <h3>Design Features</h3>
+                    <ul>
+                        <li>Warm color palette inspired by coffee tones</li>
+                        <li>Responsive design for all devices</li>
+                        <li>Modern typography and clean layout</li>
+                        <li>Interactive elements and smooth animations</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="preview">
+            <div class="content-container">
+                <h2>Design Preview</h2>
+                <div class="preview-placeholder">
+                    <p>Design mockups and previews will be added here</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="footerIndex">
+        <div id="theFooter"></div>
+        <script>
+            fetch('../footer.html?cache-bust=' + new Date().getTime())
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('theFooter').innerHTML = data;
+                    document.getElementById('current-year').textContent = new Date().getFullYear();
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        </script>
+    </footer>
+</body>
+
+</html>
