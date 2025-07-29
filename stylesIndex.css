@@ -259,6 +259,11 @@ section:nth-of-type(even) {
     margin: 0;
 }
 
+/* Add extra margin to the last timeline item for viewing all images */
+.timeline-item:last-child {
+    margin-bottom: 45vh;
+}
+
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

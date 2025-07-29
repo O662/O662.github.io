@@ -57,6 +57,8 @@
             .then(response => response.text())
             .then(data => {
                 document.getElementById('navbar').innerHTML = data;
+                // Initial section title update after navbar loads
+                updateCurrentSectionTitle();
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
@@ -68,7 +70,46 @@
             const maxScroll = 50; 
             const opacity = Math.min(scrollPosition / maxScroll, 1);
             navbar.style.backgroundColor = `rgba(40, 40, 40, ${opacity})`;
+            
+            // Update section title in navbar
+            updateCurrentSectionTitle();
         });
+
+        function updateCurrentSectionTitle() {
+            const sections = document.querySelectorAll('section[id]');
+            const sectionTitleElement = document.getElementById('current-section-title');
+            
+            if (!sectionTitleElement) return; // Exit if navbar hasn't loaded yet
+            
+            let currentSection = '';
+            let isInHeroSection = false;
+            
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                const sectionTop = rect.top;
+                const sectionHeight = rect.height;
+                
+                // Consider a section active if it occupies the top 30% of the viewport
+                if (sectionTop <= window.innerHeight * 0.3 && sectionTop + sectionHeight > window.innerHeight * 0.3) {
+                    const sectionId = section.getAttribute('id');
+                    if (sectionId === 'hero') {
+                        isInHeroSection = true;
+                    } else if (sectionId === 'About') {
+                        currentSection = 'About';
+                    } else if (sectionId === 'Projects') {
+                        currentSection = 'Projects';
+                    }
+                }
+            });
+            
+            // Hide the section title when in hero section, show it for others
+            if (isInHeroSection) {
+                sectionTitleElement.style.opacity = '0';
+            } else {
+                sectionTitleElement.style.opacity = '1';
+                sectionTitleElement.textContent = currentSection;
+            }
+        }
     </script>
 
     <div id="lightbox" class="lightbox">
@@ -186,7 +227,15 @@
                 const isElementInViewport = (el) => {
                     const rect = el.getBoundingClientRect();
                     const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-                    return rect.top <= windowHeight * 0.5 && rect.bottom >= windowHeight * 0.3;
+                    // More generous detection - items appear when they're 80% into view from bottom
+                    return rect.top <= windowHeight * 0.8 && rect.bottom >= 0;
+                };
+
+                const isElementInActiveZone = (el) => {
+                    const rect = el.getBoundingClientRect();
+                    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+                    // Image switches when item hits top 25% of screen
+                    return rect.top <= windowHeight * 0.25 && rect.bottom >= windowHeight * 0.25;
                 };
 
                 const updateTimelineProgress = () => {
@@ -195,6 +244,7 @@
                     let activeItem = null;
                     
                     timelineItems.forEach((item, index) => {
+                        // Check for visibility (for animations)
                         if (isElementInViewport(item)) {
                             if (!item.classList.contains('visible')) {
                                 // Add staggered delay for each item
@@ -204,11 +254,11 @@
                             }
                             visibleItems++;
                             lastVisibleItem = item;
-                            
-                            // Set the first visible item as active
-                            if (!activeItem) {
-                                activeItem = item;
-                            }
+                        }
+                        
+                        // Check for active zone (for image switching)
+                        if (isElementInActiveZone(item)) {
+                            activeItem = item;
                         }
                     });
 
@@ -218,14 +268,17 @@
                         const title = activeItem.querySelector('h3').textContent;
                         const description = activeItem.querySelector('p').textContent;
                         
-                        // Update image with fade effect
-                        activeImage.style.opacity = '0.7';
-                        setTimeout(() => {
-                            activeImage.src = `Images/hero_images/${imageName}`;
-                            activeTitle.textContent = title;
-                            activeDescription.textContent = description;
-                            activeImage.style.opacity = '1';
-                        }, 300);
+                        // Only update if it's different from current
+                        if (activeImage.src !== `${window.location.origin}/Images/hero_images/${imageName}`) {
+                            // Update image with fade effect
+                            activeImage.style.opacity = '0.7';
+                            setTimeout(() => {
+                                activeImage.src = `Images/hero_images/${imageName}`;
+                                activeTitle.textContent = title;
+                                activeDescription.textContent = description;
+                                activeImage.style.opacity = '1';
+                            }, 300);
+                        }
                     }
 
                     // Calculate the height for the connecting line

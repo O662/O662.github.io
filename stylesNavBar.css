@@ -18,11 +18,22 @@
 
 .logo {
     padding-left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 .logo img {
     height: 40px;
     width: 40px;
+}
+
+.section-title {
+    color: #efefef;
+    font-size: 1.2em;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    transition: opacity 0.3s ease;
 }
 
 /* Main Nav Menu */
