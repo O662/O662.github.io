@@ -14,7 +14,7 @@ body {
 /* Hero Section */
 #hero {
     background: linear-gradient(135deg, #2c1810 0%, #4a2c1a 50%, #6b3e2a 100%);
-    min-height: 70vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -37,11 +37,21 @@ body {
 .hero-container {
     position: relative;
     z-index: 2;
-    max-width: 800px;
+    max-width: 1200px;
     padding: 40px 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 60px;
 }
 
-.hero-container h1 {
+.hero-content {
+    flex: 1;
+    text-align: left;
+}
+
+.hero-content h1 {
     font-size: 4em;
     margin-bottom: 20px;
     color: #d4a574;
@@ -155,12 +165,38 @@ p {
 
 /* Responsive Design */
 @media (max-width: 1000px) {
-    .hero-container h1 {
+    .hero-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 40px;
+    }
+    
+    .hero-content h1 {
         font-size: 3em;
     }
     
     .hero-subtitle {
         font-size: 1.2em;
+    }
+    
+    .reservation-form {
+        max-width: 100%;
+        min-width: auto;
+    }
+    
+    .checkout-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .coffee-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        padding: 20px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
     }
     
     section {
@@ -177,8 +213,21 @@ p {
 }
 
 @media (max-width: 600px) {
-    .hero-container h1 {
+    .hero-content h1 {
         font-size: 2.5em;
+    }
+    
+    .hero-container {
+        padding: 20px;
+    }
+    
+    .coffee-grid {
+        grid-template-columns: 1fr;
+        padding: 15px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
     }
     
     section {
@@ -215,4 +264,386 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #e6c896;
+}
+
+/* Reservation Form Styles */
+.reservation-form {
+    background: linear-gradient(135deg, rgba(45, 24, 16, 0.95), rgba(74, 44, 26, 0.95));
+    padding: 30px;
+    border-radius: 15px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(212, 165, 116, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    max-width: 350px;
+    min-width: 300px;
+}
+
+.reservation-form h3 {
+    color: #d4a574;
+    margin-bottom: 20px;
+    margin-top: 0;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: #f4f1eb;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.form-group select,
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid rgba(212, 165, 116, 0.3);
+    border-radius: 8px;
+    background: rgba(26, 19, 17, 0.8);
+    color: #f4f1eb;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+    outline: none;
+    border-color: #d4a574;
+    background: rgba(26, 19, 17, 0.95);
+}
+
+.form-group select option {
+    background: #1a1311;
+    color: #f4f1eb;
+}
+
+.reserve-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #d4a574, #b8956f);
+    color: #1a1311;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.reserve-btn:hover {
+    background: linear-gradient(135deg, #e6c896, #d4a574);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(212, 165, 116, 0.3);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #1a1311 0%, #2a1e16 100%);
+    margin: 2% auto;
+    padding: 0;
+    border-radius: 15px;
+    max-width: 900px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(212, 165, 116, 0.3);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #d4a574, #b8956f);
+    padding: 20px 30px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #1a1311;
+    font-size: 1.8em;
+    text-align: left;
+}
+
+.close-modal {
+    color: #1a1311;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-modal:hover {
+    color: #2a1e16;
+}
+
+/* Coffee Menu Grid */
+.coffee-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 30px;
+}
+
+.coffee-item {
+    background: linear-gradient(135deg, #2a1e16, #3d2b1f);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    border: 2px solid rgba(212, 165, 116, 0.2);
+    transition: all 0.3s ease;
+}
+
+.coffee-item:hover {
+    border-color: #d4a574;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(212, 165, 116, 0.2);
+}
+
+.coffee-item h4 {
+    color: #d4a574;
+    margin-bottom: 10px;
+    font-size: 1.3em;
+}
+
+.coffee-item p {
+    color: #e6e0d4;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+}
+
+.coffee-item .price {
+    display: block;
+    color: #f4f1eb;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.coffee-item button {
+    background: #d4a574;
+    color: #1a1311;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.coffee-item button:hover {
+    background: #e6c896;
+}
+
+/* Cart Summary */
+.cart-summary {
+    padding: 30px;
+    border-top: 2px solid rgba(212, 165, 116, 0.3);
+    background: rgba(42, 30, 22, 0.5);
+}
+
+.cart-summary h3 {
+    color: #d4a574;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+    color: #e6e0d4;
+}
+
+.item-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.item-controls button {
+    background: #d4a574;
+    color: #1a1311;
+    border: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.item-controls .remove-btn {
+    background: #c44;
+    color: white;
+}
+
+.cart-total {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 1.3em;
+    color: #d4a574;
+}
+
+.checkout-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #d4a574, #b8956f);
+    color: #1a1311;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.checkout-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+.checkout-btn:not(:disabled):hover {
+    background: linear-gradient(135deg, #e6c896, #d4a574);
+}
+
+/* Checkout Styles */
+.checkout-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 30px;
+}
+
+.order-summary, .payment-form {
+    background: rgba(42, 30, 22, 0.3);
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid rgba(212, 165, 116, 0.2);
+}
+
+.checkout-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    color: #e6e0d4;
+    border-bottom: 1px solid rgba(212, 165, 116, 0.1);
+}
+
+.reservation-details {
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(212, 165, 116, 0.1);
+    border-radius: 8px;
+}
+
+.reservation-details h4 {
+    color: #d4a574;
+    margin-bottom: 10px;
+}
+
+.reservation-details p {
+    margin: 5px 0;
+    color: #e6e0d4;
+}
+
+.final-total {
+    text-align: center;
+    margin-top: 20px;
+    color: #d4a574;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 15px;
+}
+
+.complete-order-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #d4a574, #b8956f);
+    color: #1a1311;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.complete-order-btn:hover {
+    background: linear-gradient(135deg, #e6c896, #d4a574);
+}
+
+/* Success Modal */
+.success-content {
+    text-align: center;
+    padding: 50px 30px;
+}
+
+.success-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+    color: #4CAF50;
+}
+
+.success-content h2 {
+    color: #d4a574;
+    margin-bottom: 20px;
+}
+
+.success-content p {
+    color: #e6e0d4;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+}
+
+.order-number {
+    background: rgba(212, 165, 116, 0.2);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    color: #d4a574;
+}
+
+.new-order-btn {
+    background: linear-gradient(135deg, #d4a574, #b8956f);
+    color: #1a1311;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.new-order-btn:hover {
+    background: linear-gradient(135deg, #e6c896, #d4a574);
 }

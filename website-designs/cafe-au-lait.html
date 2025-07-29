@@ -60,8 +60,54 @@
     <main>
         <section id="hero">
             <div class="hero-container">
-                <h1>Café au lait</h1>
-                <p class="hero-subtitle">A warm and inviting coffee shop website design</p>
+                <div class="hero-content">
+                    <h1>Café au lait</h1>
+                    <p class="hero-subtitle">A warm and inviting coffee shop website design</p>
+                </div>
+                
+                <!-- Reservation Form -->
+                <div class="reservation-form" id="reservationForm">
+                    <h3>Make a Reservation</h3>
+                    <form id="reservationFormData">
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <select id="location" name="location" required>
+                                <option value="">Choose Location</option>
+                                <option value="downtown">Downtown Café</option>
+                                <option value="university">University District</option>
+                                <option value="riverside">Riverside Location</option>
+                                <option value="mall">Shopping Mall</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="time">Preferred Time</label>
+                            <select id="time" name="time" required>
+                                <option value="">Select Time</option>
+                                <option value="07:00">7:00 AM</option>
+                                <option value="08:00">8:00 AM</option>
+                                <option value="09:00">9:00 AM</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="13:00">1:00 PM</option>
+                                <option value="14:00">2:00 PM</option>
+                                <option value="15:00">3:00 PM</option>
+                                <option value="16:00">4:00 PM</option>
+                                <option value="17:00">5:00 PM</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="customerName">Your Name</label>
+                            <input type="text" id="customerName" name="customerName" placeholder="Enter your name" required>
+                        </div>
+                        
+                        <button type="button" class="reserve-btn" onclick="proceedToOrder()">
+                            ☕ Order Coffee
+                        </button>
+                    </form>
+                </div>
             </div>
         </section>
 
@@ -92,6 +138,140 @@
         </section>
     </main>
 
+    <!-- Coffee Menu Modal -->
+    <div id="coffeeMenuModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>☕ Coffee Menu</h2>
+                <span class="close-modal" onclick="closeModal('coffeeMenuModal')">&times;</span>
+            </div>
+            
+            <div class="coffee-grid">
+                <div class="coffee-item" data-price="4.50">
+                    <h4>Café au Lait</h4>
+                    <p>Classic coffee with steamed milk</p>
+                    <span class="price">$4.50</span>
+                    <button onclick="addToCart('Café au Lait', 4.50)">Add to Cart</button>
+                </div>
+                
+                <div class="coffee-item" data-price="5.00">
+                    <h4>Cappuccino</h4>
+                    <p>Espresso with steamed milk foam</p>
+                    <span class="price">$5.00</span>
+                    <button onclick="addToCart('Cappuccino', 5.00)">Add to Cart</button>
+                </div>
+                
+                <div class="coffee-item" data-price="4.75">
+                    <h4>Latte</h4>
+                    <p>Smooth espresso with steamed milk</p>
+                    <span class="price">$4.75</span>
+                    <button onclick="addToCart('Latte', 4.75)">Add to Cart</button>
+                </div>
+                
+                <div class="coffee-item" data-price="3.25">
+                    <h4>Americano</h4>
+                    <p>Espresso with hot water</p>
+                    <span class="price">$3.25</span>
+                    <button onclick="addToCart('Americano', 3.25)">Add to Cart</button>
+                </div>
+                
+                <div class="coffee-item" data-price="5.50">
+                    <h4>Mocha</h4>
+                    <p>Chocolate and espresso delight</p>
+                    <span class="price">$5.50</span>
+                    <button onclick="addToCart('Mocha', 5.50)">Add to Cart</button>
+                </div>
+                
+                <div class="coffee-item" data-price="4.25">
+                    <h4>Macchiato</h4>
+                    <p>Espresso marked with milk foam</p>
+                    <span class="price">$4.25</span>
+                    <button onclick="addToCart('Macchiato', 4.25)">Add to Cart</button>
+                </div>
+            </div>
+            
+            <div class="cart-summary" id="cartSummary">
+                <h3>Your Order</h3>
+                <div id="cartItems"></div>
+                <div class="cart-total">
+                    <strong>Total: $<span id="cartTotal">0.00</span></strong>
+                </div>
+                <button class="checkout-btn" onclick="proceedToCheckout()" disabled id="checkoutBtn">
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🛒 Checkout</h2>
+                <span class="close-modal" onclick="closeModal('checkoutModal')">&times;</span>
+            </div>
+            
+            <div class="checkout-content">
+                <div class="order-summary">
+                    <h3>Order Summary</h3>
+                    <div id="checkoutItems"></div>
+                    <div class="reservation-details">
+                        <h4>Reservation Details</h4>
+                        <p><strong>Name:</strong> <span id="checkoutName"></span></p>
+                        <p><strong>Location:</strong> <span id="checkoutLocation"></span></p>
+                        <p><strong>Time:</strong> <span id="checkoutTime"></span></p>
+                    </div>
+                    <div class="final-total">
+                        <h3>Total: $<span id="checkoutTotal">0.00</span></h3>
+                    </div>
+                </div>
+                
+                <div class="payment-form">
+                    <h3>Payment Information</h3>
+                    <form id="paymentForm">
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiry">Expiry</label>
+                                <input type="text" id="expiry" placeholder="MM/YY" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" placeholder="123" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cardName">Name on Card</label>
+                            <input type="text" id="cardName" placeholder="John Doe" required>
+                        </div>
+                        
+                        <button type="button" class="complete-order-btn" onclick="completeOrder()">
+                            Complete Order
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content success-content">
+            <div class="success-icon">✅</div>
+            <h2>Order Confirmed!</h2>
+            <p>Thank you for your order! Your coffee will be ready at the selected time.</p>
+            <div class="order-number">
+                <strong>Order #: <span id="orderNumber"></span></strong>
+            </div>
+            <button onclick="resetOrder()" class="new-order-btn">Place New Order</button>
+        </div>
+    </div>
+
     <footer id="footerIndex">
         <div id="theFooter"></div>
         <script>
@@ -106,6 +286,223 @@
                 });
         </script>
     </footer>
+
+    <script>
+        // Reservation and Order Management System
+        let cart = [];
+        let reservationData = {};
+
+        function proceedToOrder() {
+            const form = document.getElementById('reservationFormData');
+            const formData = new FormData(form);
+            
+            // Validate form
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            // Store reservation data
+            reservationData = {
+                location: formData.get('location'),
+                time: formData.get('time'),
+                customerName: formData.get('customerName')
+            };
+            
+            // Show coffee menu modal
+            document.getElementById('coffeeMenuModal').style.display = 'block';
+        }
+
+        function addToCart(name, price) {
+            const existingItem = cart.find(item => item.name === name);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ name, price, quantity: 1 });
+            }
+            
+            updateCartDisplay();
+        }
+
+        function removeFromCart(name) {
+            cart = cart.filter(item => item.name !== name);
+            updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p>Your cart is empty</p>';
+                cartTotal.textContent = '0.00';
+                checkoutBtn.disabled = true;
+                return;
+            }
+            
+            let html = '';
+            let total = 0;
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                html += `
+                    <div class="cart-item">
+                        <span>${item.name}</span>
+                        <div class="item-controls">
+                            <button onclick="updateQuantity('${item.name}', -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button onclick="updateQuantity('${item.name}', 1)">+</button>
+                            <span class="item-price">$${itemTotal.toFixed(2)}</span>
+                            <button onclick="removeFromCart('${item.name}')" class="remove-btn">×</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            cartItems.innerHTML = html;
+            cartTotal.textContent = total.toFixed(2);
+            checkoutBtn.disabled = false;
+        }
+
+        function updateQuantity(name, change) {
+            const item = cart.find(item => item.name === name);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(name);
+                } else {
+                    updateCartDisplay();
+                }
+            }
+        }
+
+        function proceedToCheckout() {
+            if (cart.length === 0) return;
+            
+            // Close menu modal and open checkout modal
+            document.getElementById('coffeeMenuModal').style.display = 'none';
+            document.getElementById('checkoutModal').style.display = 'block';
+            
+            // Update checkout display
+            updateCheckoutDisplay();
+        }
+
+        function updateCheckoutDisplay() {
+            const checkoutItems = document.getElementById('checkoutItems');
+            const checkoutName = document.getElementById('checkoutName');
+            const checkoutLocation = document.getElementById('checkoutLocation');
+            const checkoutTime = document.getElementById('checkoutTime');
+            const checkoutTotal = document.getElementById('checkoutTotal');
+            
+            // Display reservation details
+            checkoutName.textContent = reservationData.customerName;
+            checkoutLocation.textContent = getLocationDisplayName(reservationData.location);
+            checkoutTime.textContent = reservationData.time;
+            
+            // Display order items
+            let html = '';
+            let total = 0;
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                html += `
+                    <div class="checkout-item">
+                        <span>${item.quantity}x ${item.name}</span>
+                        <span>$${itemTotal.toFixed(2)}</span>
+                    </div>
+                `;
+            });
+            
+            checkoutItems.innerHTML = html;
+            checkoutTotal.textContent = total.toFixed(2);
+        }
+
+        function getLocationDisplayName(value) {
+            const locations = {
+                'downtown': 'Downtown Café',
+                'university': 'University District',
+                'riverside': 'Riverside Location',
+                'mall': 'Shopping Mall'
+            };
+            return locations[value] || value;
+        }
+
+        function completeOrder() {
+            const paymentForm = document.getElementById('paymentForm');
+            
+            if (!paymentForm.checkValidity()) {
+                paymentForm.reportValidity();
+                return;
+            }
+            
+            // Generate order number
+            const orderNumber = 'CF' + Math.random().toString(36).substr(2, 6).toUpperCase();
+            document.getElementById('orderNumber').textContent = orderNumber;
+            
+            // Close checkout modal and show success modal
+            document.getElementById('checkoutModal').style.display = 'none';
+            document.getElementById('successModal').style.display = 'block';
+        }
+
+        function resetOrder() {
+            // Reset all data
+            cart = [];
+            reservationData = {};
+            
+            // Reset forms
+            document.getElementById('reservationFormData').reset();
+            document.getElementById('paymentForm').reset();
+            
+            // Close all modals
+            closeModal('successModal');
+            
+            // Reset displays
+            updateCartDisplay();
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modals = ['coffeeMenuModal', 'checkoutModal', 'successModal'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Format card number input
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            if (formattedValue.length > 19) formattedValue = formattedValue.slice(0, 19);
+            e.target.value = formattedValue;
+        });
+
+        // Format expiry input
+        document.getElementById('expiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.slice(0, 2) + '/' + value.slice(2, 4);
+            }
+            e.target.value = value;
+        });
+
+        // Limit CVV input
+        document.getElementById('cvv').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
+        });
+    </script>
 </body>
 
 </html>
