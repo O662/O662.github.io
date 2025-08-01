@@ -1714,52 +1714,189 @@ html {
     opacity: 0.5;
 }
 
-/* Update reservation button */
-.reserve-btn {
-    width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, #d4a574, #b8956f);
-    color: #1a1311;
-    border: none;
-    border-radius: 8px;
+/* About Section - Updated with Image */
+#about {
+    padding: 80px 60px;
+    background: linear-gradient(135deg, #2a1e16 0%, #1a1311 100%);
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.about-text h2 {
+    font-size: 2.5em;
+    color: #d4a574;
+    margin-bottom: 30px;
+    margin-top: 0;
+}
+
+.about-text p {
+    color: #e0e0e0;
     font-size: 1.1em;
+    line-height: 1.8;
+    margin-bottom: 25px;
+}
+
+.about-image {
+    position: relative;
+}
+
+.image-container {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease;
+}
+
+.image-container:hover {
+    transform: translateY(-10px);
+}
+
+.image-container img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.image-container:hover img {
+    transform: scale(1.05);
+}
+
+.image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(26, 19, 17, 0.9));
+    padding: 30px 25px 25px 25px;
+    color: white;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.image-container:hover .image-overlay {
+    transform: translateY(0);
+}
+
+.overlay-content h4 {
+    color: #d4a574;
+    margin: 0 0 10px 0;
+    font-size: 1.3em;
     font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
 }
 
-.reserve-btn:hover {
-    background: linear-gradient(135deg, #e6c896, #d4a574);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(212, 165, 116, 0.3);
+.overlay-content p {
+    margin: 0;
+    color: #e0e0e0;
+    font-size: 0.95em;
+    opacity: 0.9;
 }
 
-/* Mobile responsive for floating cart */
+.design-features {
+    margin-top: 40px;
+    padding: 30px;
+    background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, rgba(212, 165, 116, 0.05) 100%);
+    border-radius: 15px;
+    border: 2px solid rgba(212, 165, 116, 0.2);
+}
+
+.design-features h3 {
+    color: #d4a574;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+.design-features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.design-features li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 12px;
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+
+.design-features li::before {
+    content: '☕';
+    position: absolute;
+    left: 0;
+    color: #d4a574;
+    font-size: 1.2em;
+}
+
+.design-features li:last-child {
+    margin-bottom: 0;
+}
+
+/* Responsive Design for About Section */
+@media (max-width: 1000px) {
+    #about {
+        padding: 60px 30px;
+    }
+    
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .about-text {
+        order: 2;
+    }
+    
+    .about-image {
+        order: 1;
+    }
+    
+    .image-container img {
+        height: 300px;
+    }
+}
+
 @media (max-width: 600px) {
-    .floating-cart {
-        bottom: 20px;
-        right: 20px;
-        width: 55px;
-        height: 55px;
+    .about-content {
+        gap: 30px;
     }
     
-    .cart-icon {
-        font-size: 1.3em;
+    .about-text h2 {
+        font-size: 2em;
     }
     
-    .cart-actions {
-        flex-direction: column;
+    .about-text p {
+        font-size: 1em;
     }
     
-    .cart-item-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+    .design-features {
+        padding: 20px;
+        margin-top: 30px;
     }
     
-    .cart-item-controls {
-        align-self: flex-end;
+    .image-container img {
+        height: 250px;
+    }
+    
+    .image-overlay {
+        padding: 20px 15px 15px 15px;
+    }
+    
+    .overlay-content h4 {
+        font-size: 1.1em;
+    }
+    
+    .overlay-content p {
+        font-size: 0.9em;
     }
 }
