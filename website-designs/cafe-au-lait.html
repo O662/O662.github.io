@@ -232,8 +232,16 @@
         </section>
     </main>
 
-    <!-- Coffee Menu Modal -->
-    <div id="coffeeMenuModal" class="modal">
+    <!-- Floating Cart Button -->
+    <div id="floating-cart" class="floating-cart">
+        <div class="cart-icon">
+            🛒
+        </div>
+        <div class="cart-count" id="cart-count">0</div>
+    </div>
+
+    <!-- Coffee Menu Modal (modified) -->
+    <div id="coffee-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>☕ Coffee Menu</h2>
@@ -293,6 +301,23 @@
                 <button class="checkout-btn" onclick="proceedToCheckout()" disabled id="checkoutBtn">
                     Proceed to Checkout
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal (new) -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Your Cart</h2>
+                <span class="close-modal" onclick="closeCartModal()">&times;</span>
+            </div>
+            <div class="cart-content">
+                <div id="cart-items-display"></div>
+                <div class="cart-actions">
+                    <button class="add-more-btn" onclick="openCoffeeMenu()">Add More Items</button>
+                    <button class="checkout-btn" id="cart-checkout-btn" onclick="proceedToCheckout()">Proceed to Checkout</button>
+                </div>
             </div>
         </div>
     </div>
@@ -382,220 +407,384 @@
     </footer>
 
     <script>
-        // Reservation and Order Management System
-        let cart = [];
-        let reservationData = {};
+let cart = [];
+let reservationData = {};
 
-        function proceedToOrder() {
-            const form = document.getElementById('reservationFormData');
-            const formData = new FormData(form);
-            
-            // Validate form
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
-            }
-            
-            // Store reservation data
-            reservationData = {
-                location: formData.get('location'),
-                time: formData.get('time'),
-                customerName: formData.get('customerName')
-            };
-            
-            // Show coffee menu modal
-            document.getElementById('coffeeMenuModal').style.display = 'block';
+// Update cart count display
+function updateCartCount() {
+    const cartCount = document.getElementById('cart-count');
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    
+    cartCount.textContent = totalItems;
+    
+    if (totalItems > 0) {
+        cartCount.classList.add('show');
+    } else {
+        cartCount.classList.remove('show');
+    }
+}
+
+// Open cart modal
+function openCartModal() {
+    displayCartItems();
+    document.getElementById('cart-modal').style.display = 'block';
+}
+
+// Close cart modal
+function closeCartModal() {
+    document.getElementById('cart-modal').style.display = 'none';
+}
+
+// Display cart items in the cart modal
+function displayCartItems() {
+    const cartDisplay = document.getElementById('cart-items-display');
+    const checkoutBtn = document.getElementById('cart-checkout-btn');
+    
+    if (cart.length === 0) {
+        cartDisplay.innerHTML = `
+            <div class="empty-cart-message">
+                <div class="cart-emoji">🛒</div>
+                <p>Your cart is empty</p>
+                <p>Add some delicious coffee to get started!</p>
+            </div>
+        `;
+        if (checkoutBtn) checkoutBtn.disabled = true;
+        return;
+    }
+    
+    let total = 0;
+    let cartHTML = '';
+    
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        
+        cartHTML += `
+            <div class="cart-item-row">
+                <div class="cart-item-info">
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-price">$${item.price.toFixed(2)} each</div>
+                </div>
+                <div class="cart-item-controls">
+                    <button onclick="updateCartQuantity(${index}, -1)">-</button>
+                    <span class="cart-quantity">${item.quantity}</span>
+                    <button onclick="updateCartQuantity(${index}, 1)">+</button>
+                    <button class="remove-btn" onclick="removeFromCart(${index})">×</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    cartHTML += `
+        <div class="cart-total-display">
+            <div class="cart-total-amount">Total: $${total.toFixed(2)}</div>
+        </div>
+    `;
+    
+    cartDisplay.innerHTML = cartHTML;
+    if (checkoutBtn) checkoutBtn.disabled = false;
+}
+
+// Updated proceed to order function (now opens cart instead of coffee menu)
+function proceedToOrder() {
+    const location = document.getElementById('location').value;
+    const time = document.getElementById('time').value;
+    const customerName = document.getElementById('customerName').value;
+    
+    if (!location || !time || !customerName) {
+        alert('Please fill in all reservation details first!');
+        return;
+    }
+    
+    reservationData = { location, time, customerName };
+    
+    // Open cart modal instead of coffee menu
+    openCartModal();
+}
+
+// Open coffee menu (new function for "Add More Items" button)
+function openCoffeeMenu() {
+    closeCartModal(); // Close cart modal first
+    document.getElementById('coffee-modal').style.display = 'block';
+    updateCartDisplay(); // Update the coffee modal cart display
+}
+
+// Updated add to cart function - THIS IS THE KEY FIX
+function addToCart(name, price) {
+    const existingItem = cart.find(item => item.name === name);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({ name, price, quantity: 1 });
+    }
+    
+    updateCartCount();
+    updateCartDisplay(); // Update coffee modal cart
+    updateCoffeeModalCart(); // Update coffee modal specifically
+    
+    // If cart modal is open, update it too
+    const cartModal = document.getElementById('cart-modal');
+    if (cartModal && cartModal.style.display === 'block') {
+        displayCartItems();
+    }
+}
+
+// NEW FUNCTION: Update the coffee modal cart display
+function updateCoffeeModalCart() {
+    const cartItems = document.getElementById('cartItems');
+    const cartTotal = document.getElementById('cartTotal');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    
+    if (!cartItems) return; // Exit if coffee modal elements don't exist
+    
+    if (cart.length === 0) {
+        cartItems.innerHTML = '<p>Your cart is empty</p>';
+        cartTotal.textContent = '0.00';
+        if (checkoutBtn) checkoutBtn.disabled = true;
+        return;
+    }
+    
+    let html = '';
+    let total = 0;
+    
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        
+        html += `
+            <div class="cart-item">
+                <span>${item.name}</span>
+                <div class="item-controls">
+                    <button onclick="updateQuantityInModal(${index}, -1)">-</button>
+                    <span>${item.quantity}</span>
+                    <button onclick="updateQuantityInModal(${index}, 1)">+</button>
+                    <span class="item-price">$${itemTotal.toFixed(2)}</span>
+                    <button onclick="removeFromCartInModal(${index})" class="remove-btn">×</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    cartItems.innerHTML = html;
+    cartTotal.textContent = total.toFixed(2);
+    if (checkoutBtn) checkoutBtn.disabled = false;
+}
+
+// NEW FUNCTION: Update quantity from coffee modal
+function updateQuantityInModal(index, change) {
+    cart[index].quantity += change;
+    
+    if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+    }
+    
+    updateCartCount();
+    updateCoffeeModalCart();
+}
+
+// NEW FUNCTION: Remove from cart in coffee modal
+function removeFromCartInModal(index) {
+    cart.splice(index, 1);
+    updateCartCount();
+    updateCoffeeModalCart();
+}
+
+// Update cart display (unified function)
+function updateCartDisplay() {
+    updateCoffeeModalCart(); // Update coffee modal
+    
+    // If cart modal is open, update it
+    const cartModal = document.getElementById('cart-modal');
+    if (cartModal && cartModal.style.display === 'block') {
+        displayCartItems();
+    }
+}
+
+// Updated cart quantity function (for cart modal)
+function updateCartQuantity(index, change) {
+    cart[index].quantity += change;
+    
+    if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+    }
+    
+    updateCartCount();
+    displayCartItems();
+    updateCoffeeModalCart(); // Also update coffee modal if it's open
+}
+
+// Updated remove from cart function (for cart modal)
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCartCount();
+    displayCartItems();
+    updateCoffeeModalCart(); // Also update coffee modal if it's open
+}
+
+// Updated proceed to checkout function
+function proceedToCheckout() {
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+    }
+    
+    if (!reservationData.customerName) {
+        alert('Please complete your reservation details first!');
+        closeCartModal();
+        return;
+    }
+    
+    closeCartModal();
+    document.getElementById('coffee-modal').style.display = 'none'; // Close coffee modal too
+    document.getElementById('checkoutModal').style.display = 'block';
+    updateCheckoutDisplay();
+}
+
+// Add the missing functions for checkout
+function updateCheckoutDisplay() {
+    const checkoutItems = document.getElementById('checkoutItems');
+    const checkoutName = document.getElementById('checkoutName');
+    const checkoutLocation = document.getElementById('checkoutLocation');
+    const checkoutTime = document.getElementById('checkoutTime');
+    const checkoutTotal = document.getElementById('checkoutTotal');
+    
+    // Display reservation details
+    if (checkoutName) checkoutName.textContent = reservationData.customerName;
+    if (checkoutLocation) checkoutLocation.textContent = getLocationDisplayName(reservationData.location);
+    if (checkoutTime) checkoutTime.textContent = reservationData.time;
+    
+    // Display order items
+    let html = '';
+    let total = 0;
+    
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        
+        html += `
+            <div class="checkout-item">
+                <span>${item.quantity}x ${item.name}</span>
+                <span>$${itemTotal.toFixed(2)}</span>
+            </div>
+        `;
+    });
+    
+    if (checkoutItems) checkoutItems.innerHTML = html;
+    if (checkoutTotal) checkoutTotal.textContent = total.toFixed(2);
+}
+
+function getLocationDisplayName(value) {
+    const locations = {
+        'downtown': 'Downtown Café',
+        'university': 'University District',
+        'riverside': 'Riverside Location',
+        'mall': 'Shopping Mall'
+    };
+    return locations[value] || value;
+}
+
+function completeOrder() {
+    const paymentForm = document.getElementById('paymentForm');
+    
+    if (!paymentForm.checkValidity()) {
+        paymentForm.reportValidity();
+        return;
+    }
+    
+    // Generate order number
+    const orderNumber = 'CF' + Math.random().toString(36).substr(2, 6).toUpperCase();
+    document.getElementById('orderNumber').textContent = orderNumber;
+    
+    // Close checkout modal and show success modal
+    document.getElementById('checkoutModal').style.display = 'none';
+    document.getElementById('successModal').style.display = 'block';
+}
+
+function resetOrder() {
+    // Reset all data
+    cart = [];
+    reservationData = {};
+    
+    // Reset forms
+    document.getElementById('reservationFormData').reset();
+    document.getElementById('paymentForm').reset();
+    
+    // Close all modals
+    closeModal('successModal');
+    
+    // Reset displays
+    updateCartCount();
+    updateCartDisplay();
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+// Add event listener for floating cart button
+document.addEventListener('DOMContentLoaded', function() {
+    const floatingCart = document.getElementById('floating-cart');
+    if (floatingCart) {
+        floatingCart.addEventListener('click', openCartModal);
+    }
+    updateCartCount(); // Initialize cart count
+    
+    // Initialize cart displays
+    updateCoffeeModalCart();
+});
+
+// Close modals when clicking outside
+window.addEventListener('click', function(event) {
+    const coffeeModal = document.getElementById('coffee-modal');
+    const cartModal = document.getElementById('cart-modal');
+    const checkoutModal = document.getElementById('checkoutModal');
+    const successModal = document.getElementById('successModal');
+    
+    if (event.target === coffeeModal) {
+        coffeeModal.style.display = 'none';
+    }
+    if (event.target === cartModal) {
+        cartModal.style.display = 'none';
+    }
+    if (event.target === checkoutModal) {
+        checkoutModal.style.display = 'none';
+    }
+    if (event.target === successModal) {
+        successModal.style.display = 'none';
+    }
+});
+
+// Format card number input
+const cardNumber = document.getElementById('cardNumber');
+if (cardNumber) {
+    cardNumber.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+        let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+        if (formattedValue.length > 19) formattedValue = formattedValue.slice(0, 19);
+        e.target.value = formattedValue;
+    });
+}
+
+// Format expiry input
+const expiry = document.getElementById('expiry');
+if (expiry) {
+    expiry.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.slice(0, 2) + '/' + value.slice(2, 4);
         }
+        e.target.value = value;
+    });
+}
 
-        function addToCart(name, price) {
-            const existingItem = cart.find(item => item.name === name);
-            
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ name, price, quantity: 1 });
-            }
-            
-            updateCartDisplay();
-        }
-
-        function removeFromCart(name) {
-            cart = cart.filter(item => item.name !== name);
-            updateCartDisplay();
-        }
-
-        function updateCartDisplay() {
-            const cartItems = document.getElementById('cartItems');
-            const cartTotal = document.getElementById('cartTotal');
-            const checkoutBtn = document.getElementById('checkoutBtn');
-            
-            if (cart.length === 0) {
-                cartItems.innerHTML = '<p>Your cart is empty</p>';
-                cartTotal.textContent = '0.00';
-                checkoutBtn.disabled = true;
-                return;
-            }
-            
-            let html = '';
-            let total = 0;
-            
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
-                
-                html += `
-                    <div class="cart-item">
-                        <span>${item.name}</span>
-                        <div class="item-controls">
-                            <button onclick="updateQuantity('${item.name}', -1)">-</button>
-                            <span>${item.quantity}</span>
-                            <button onclick="updateQuantity('${item.name}', 1)">+</button>
-                            <span class="item-price">$${itemTotal.toFixed(2)}</span>
-                            <button onclick="removeFromCart('${item.name}')" class="remove-btn">×</button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            cartItems.innerHTML = html;
-            cartTotal.textContent = total.toFixed(2);
-            checkoutBtn.disabled = false;
-        }
-
-        function updateQuantity(name, change) {
-            const item = cart.find(item => item.name === name);
-            if (item) {
-                item.quantity += change;
-                if (item.quantity <= 0) {
-                    removeFromCart(name);
-                } else {
-                    updateCartDisplay();
-                }
-            }
-        }
-
-        function proceedToCheckout() {
-            if (cart.length === 0) return;
-            
-            // Close menu modal and open checkout modal
-            document.getElementById('coffeeMenuModal').style.display = 'none';
-            document.getElementById('checkoutModal').style.display = 'block';
-            
-            // Update checkout display
-            updateCheckoutDisplay();
-        }
-
-        function updateCheckoutDisplay() {
-            const checkoutItems = document.getElementById('checkoutItems');
-            const checkoutName = document.getElementById('checkoutName');
-            const checkoutLocation = document.getElementById('checkoutLocation');
-            const checkoutTime = document.getElementById('checkoutTime');
-            const checkoutTotal = document.getElementById('checkoutTotal');
-            
-            // Display reservation details
-            checkoutName.textContent = reservationData.customerName;
-            checkoutLocation.textContent = getLocationDisplayName(reservationData.location);
-            checkoutTime.textContent = reservationData.time;
-            
-            // Display order items
-            let html = '';
-            let total = 0;
-            
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
-                
-                html += `
-                    <div class="checkout-item">
-                        <span>${item.quantity}x ${item.name}</span>
-                        <span>$${itemTotal.toFixed(2)}</span>
-                    </div>
-                `;
-            });
-            
-            checkoutItems.innerHTML = html;
-            checkoutTotal.textContent = total.toFixed(2);
-        }
-
-        function getLocationDisplayName(value) {
-            const locations = {
-                'downtown': 'Downtown Café',
-                'university': 'University District',
-                'riverside': 'Riverside Location',
-                'mall': 'Shopping Mall'
-            };
-            return locations[value] || value;
-        }
-
-        function completeOrder() {
-            const paymentForm = document.getElementById('paymentForm');
-            
-            if (!paymentForm.checkValidity()) {
-                paymentForm.reportValidity();
-                return;
-            }
-            
-            // Generate order number
-            const orderNumber = 'CF' + Math.random().toString(36).substr(2, 6).toUpperCase();
-            document.getElementById('orderNumber').textContent = orderNumber;
-            
-            // Close checkout modal and show success modal
-            document.getElementById('checkoutModal').style.display = 'none';
-            document.getElementById('successModal').style.display = 'block';
-        }
-
-        function resetOrder() {
-            // Reset all data
-            cart = [];
-            reservationData = {};
-            
-            // Reset forms
-            document.getElementById('reservationFormData').reset();
-            document.getElementById('paymentForm').reset();
-            
-            // Close all modals
-            closeModal('successModal');
-            
-            // Reset displays
-            updateCartDisplay();
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        // Close modals when clicking outside
-        window.onclick = function(event) {
-            const modals = ['coffeeMenuModal', 'checkoutModal', 'successModal'];
-            modals.forEach(modalId => {
-                const modal = document.getElementById(modalId);
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
-        }
-
-        // Format card number input
-        document.getElementById('cardNumber').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
-            if (formattedValue.length > 19) formattedValue = formattedValue.slice(0, 19);
-            e.target.value = formattedValue;
-        });
-
-        // Format expiry input
-        document.getElementById('expiry').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length >= 2) {
-                value = value.slice(0, 2) + '/' + value.slice(2, 4);
-            }
-            e.target.value = value;
-        });
-
-        // Limit CVV input
-        document.getElementById('cvv').addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
-        });
+// Limit CVV input
+const cvv = document.getElementById('cvv');
+if (cvv) {
+    cvv.addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
+    });
+}
     </script>
 </body>
 

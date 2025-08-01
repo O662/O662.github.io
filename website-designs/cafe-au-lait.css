@@ -245,140 +245,181 @@ p {
     margin: 0;
 }
 
-/* Responsive Design */
-@media (max-width: 1000px) {
-    .hero-container {
-        flex-direction: column;
-        text-align: center;
-        gap: 40px;
-    }
-    
-    .hero-content h1 {
-        font-size: 3em;
-    }
-    
-    .hero-subtitle {
-        font-size: 1.2em;
-    }
-    
-    .reservation-form {
-        max-width: 100%;
-        min-width: auto;
-    }
-    
-    .checkout-content {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .coffee-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        padding: 20px;
-    }
-    
-    .modal-content {
-        width: 95%;
-        margin: 5% auto;
-    }
-    
-    .menu-categories {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
-    
-    .menu-category {
-        padding: 25px 20px;
-    }
-    
-    section {
-        padding: 60px 40px;
-    }
-    
-    h2 {
-        font-size: 2em;
-    }
-    
-    .design-features {
-        padding: 30px 20px;
-    }
+/* Floating Cart Button */
+.floating-cart {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #d4a574, #b8956f);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(212, 165, 116, 0.4);
+    transition: all 0.3s ease;
+    z-index: 999;
+    border: 3px solid rgba(244, 241, 235, 0.2);
 }
 
-@media (max-width: 600px) {
-    .hero-content h1 {
-        font-size: 2.5em;
-    }
-    
-    .hero-container {
-        padding: 20px;
-    }
-    
-    .coffee-grid {
-        grid-template-columns: 1fr;
-        padding: 15px;
-    }
-    
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-    
-    .menu-categories {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .menu-category {
-        padding: 20px 15px;
-    }
-    
-    .menu-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-    
-    .item-info {
-        margin-right: 0;
-    }
-    
-    .menu-item .price {
-        text-align: left;
-        min-width: auto;
-    }
-    
-    section {
-        padding: 40px 20px;
-    }
-    
-    h2 {
-        font-size: 1.8em;
-    }
-    
-    .design-features {
-        padding: 20px 15px;
-    }
+.floating-cart:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 35px rgba(212, 165, 116, 0.6);
+    background: linear-gradient(135deg, #e6c896, #d4a574);
 }
 
-/* Smooth scrolling */
-html {
-    scroll-behavior: smooth;
+.cart-icon {
+    font-size: 1.5em;
+    color: #1a1311;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-    width: 12px;
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #c44;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8em;
+    font-weight: bold;
+    border: 2px solid #1a1311;
+    transform: scale(0);
+    transition: transform 0.3s ease;
 }
 
-::-webkit-scrollbar-track {
-    background: #1a1311;
+.cart-count.show {
+    transform: scale(1);
 }
 
-::-webkit-scrollbar-thumb {
+/* Cart Modal Styles */
+.cart-content {
+    padding: 30px;
+    min-height: 200px;
+}
+
+#cart-items-display {
+    margin-bottom: 30px;
+}
+
+.cart-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+    color: #e6e0d4;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-name {
+    color: #f4f1eb;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.cart-item-price {
+    color: #d4a574;
+    font-size: 0.9em;
+}
+
+.cart-item-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cart-item-controls button {
     background: #d4a574;
+    color: #1a1311;
+    border: none;
+    width: 30px;
+    height: 30px;
     border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
 }
 
-::-webkit-scrollbar-thumb:hover {
+.cart-item-controls button:hover {
     background: #e6c896;
+}
+
+.cart-item-controls .remove-btn {
+    background: #c44;
+    color: white;
+}
+
+.cart-item-controls .remove-btn:hover {
+    background: #d55;
+}
+
+.cart-quantity {
+    min-width: 20px;
+    text-align: center;
+    color: #f4f1eb;
+    font-weight: bold;
+}
+
+.cart-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.add-more-btn {
+    flex: 1;
+    padding: 12px;
+    background: rgba(212, 165, 116, 0.2);
+    color: #d4a574;
+    border: 2px solid #d4a574;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.add-more-btn:hover {
+    background: rgba(212, 165, 116, 0.3);
+    border-color: #e6c896;
+    color: #e6c896;
+}
+
+.cart-total-display {
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(212, 165, 116, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(212, 165, 116, 0.3);
+}
+
+.cart-total-amount {
+    font-size: 1.4em;
+    color: #d4a574;
+    font-weight: bold;
+}
+
+.empty-cart-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #b8956f;
+    font-style: italic;
+}
+
+.empty-cart-message .cart-emoji {
+    font-size: 3em;
+    margin-bottom: 15px;
+    opacity: 0.5;
 }
 
 /* Reservation Form Styles */
@@ -761,4 +802,367 @@ html {
 
 .new-order-btn:hover {
     background: linear-gradient(135deg, #e6c896, #d4a574);
+}
+
+/* Responsive Design */
+@media (max-width: 1000px) {
+    .hero-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 40px;
+    }
+    
+    .hero-content h1 {
+        font-size: 3em;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2em;
+    }
+    
+    .reservation-form {
+        max-width: 100%;
+        min-width: auto;
+    }
+    
+    .checkout-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .coffee-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        padding: 20px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+    }
+    
+    .menu-categories {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .menu-category {
+        padding: 25px 20px;
+    }
+    
+    section {
+        padding: 60px 40px;
+    }
+    
+    h2 {
+        font-size: 2em;
+    }
+    
+    .design-features {
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-content h1 {
+        font-size: 2.5em;
+    }
+    
+    .hero-container {
+        padding: 20px;
+    }
+    
+    .coffee-grid {
+        grid-template-columns: 1fr;
+        padding: 15px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .menu-categories {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .menu-category {
+        padding: 20px 15px;
+    }
+    
+    .menu-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .item-info {
+        margin-right: 0;
+    }
+    
+    .menu-item .price {
+        text-align: left;
+        min-width: auto;
+    }
+    
+    section {
+        padding: 40px 20px;
+    }
+    
+    h2 {
+        font-size: 1.8em;
+    }
+    
+    .design-features {
+        padding: 20px 15px;
+    }
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1311;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d4a574;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #e6c896;
+}
+
+/* Floating Cart Button */
+.floating-cart {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #d4a574, #b8956f);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(212, 165, 116, 0.4);
+    transition: all 0.3s ease;
+    z-index: 999;
+    border: 3px solid rgba(244, 241, 235, 0.2);
+}
+
+.floating-cart:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 35px rgba(212, 165, 116, 0.6);
+    background: linear-gradient(135deg, #e6c896, #d4a574);
+}
+
+.cart-icon {
+    font-size: 1.5em;
+    color: #1a1311;
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #c44;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8em;
+    font-weight: bold;
+    border: 2px solid #1a1311;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+}
+
+.cart-count.show {
+    transform: scale(1);
+}
+
+/* Cart Modal Styles */
+.cart-content {
+    padding: 30px;
+    min-height: 200px;
+}
+
+#cart-items-display {
+    margin-bottom: 30px;
+}
+
+.cart-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+    color: #e6e0d4;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-name {
+    color: #f4f1eb;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.cart-item-price {
+    color: #d4a574;
+    font-size: 0.9em;
+}
+
+.cart-item-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cart-item-controls button {
+    background: #d4a574;
+    color: #1a1311;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.cart-item-controls button:hover {
+    background: #e6c896;
+}
+
+.cart-item-controls .remove-btn {
+    background: #c44;
+    color: white;
+}
+
+.cart-item-controls .remove-btn:hover {
+    background: #d55;
+}
+
+.cart-quantity {
+    min-width: 20px;
+    text-align: center;
+    color: #f4f1eb;
+    font-weight: bold;
+}
+
+.cart-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.add-more-btn {
+    flex: 1;
+    padding: 12px;
+    background: rgba(212, 165, 116, 0.2);
+    color: #d4a574;
+    border: 2px solid #d4a574;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.add-more-btn:hover {
+    background: rgba(212, 165, 116, 0.3);
+    border-color: #e6c896;
+    color: #e6c896;
+}
+
+.cart-total-display {
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(212, 165, 116, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(212, 165, 116, 0.3);
+}
+
+.cart-total-amount {
+    font-size: 1.4em;
+    color: #d4a574;
+    font-weight: bold;
+}
+
+.empty-cart-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #b8956f;
+    font-style: italic;
+}
+
+.empty-cart-message .cart-emoji {
+    font-size: 3em;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+/* Update reservation button */
+.reserve-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #d4a574, #b8956f);
+    color: #1a1311;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.reserve-btn:hover {
+    background: linear-gradient(135deg, #e6c896, #d4a574);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(212, 165, 116, 0.3);
+}
+
+/* Mobile responsive for floating cart */
+@media (max-width: 600px) {
+    .floating-cart {
+        bottom: 20px;
+        right: 20px;
+        width: 55px;
+        height: 55px;
+    }
+    
+    .cart-icon {
+        font-size: 1.3em;
+    }
+    
+    .cart-actions {
+        flex-direction: column;
+    }
+    
+    .cart-item-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .cart-item-controls {
+        align-self: flex-end;
+    }
 }
