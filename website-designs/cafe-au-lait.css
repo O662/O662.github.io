@@ -1134,62 +1134,383 @@ p {
     transform: translateY(-2px);
 }
 
-/* Responsive Design for New Sections */
+/* Locations Map Section */
+#locations {
+    padding: 80px 60px;
+    background: linear-gradient(135deg, #1a1311 0%, #2a1e16 100%);
+}
+
+#locations h2 {
+    font-size: 2.5em;
+    color: #d4a574;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#locations > .content-container > p {
+    text-align: center;
+    color: #e0e0e0;
+    font-size: 1.2em;
+    margin-bottom: 50px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.locations-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto 50px auto;
+}
+
+.map-container {
+    background: linear-gradient(135deg, #2a1e16 0%, #3d2b1f 100%);
+    border-radius: 15px;
+    padding: 30px;
+    border: 2px solid rgba(212, 165, 116, 0.2);
+    position: relative;
+    min-height: 500px;
+}
+
+.map-placeholder {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: linear-gradient(135deg, #414141 0%, #353535 100%);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.map-header {
+    text-align: center;
+    padding: 20px;
+    background: rgba(212, 165, 116, 0.1);
+    border-bottom: 2px solid rgba(212, 165, 116, 0.2);
+}
+
+.map-header h3 {
+    color: #d4a574;
+    margin: 0 0 10px 0;
+    font-size: 1.4em;
+}
+
+.map-header p {
+    color: #e0e0e0;
+    margin: 0;
+    font-size: 0.9em;
+}
+
+.location-markers {
+    position: relative;
+    height: 300px;
+    background: 
+        radial-gradient(circle at 30% 40%, rgba(212, 165, 116, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(212, 165, 116, 0.08) 0%, transparent 50%),
+        linear-gradient(135deg, #2a1e16 0%, #1a1311 100%);
+}
+
+.location-marker {
+    position: absolute;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.location-marker:hover {
+    transform: scale(1.2);
+}
+
+.location-marker.active {
+    transform: scale(1.3);
+}
+
+.marker-pin {
+    font-size: 2em;
+    text-align: center;
+    margin-bottom: 5px;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.marker-label {
+    background: rgba(212, 165, 116, 0.9);
+    color: #1a1311;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-align: center;
+    min-width: 70px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Position markers on the map */
+.location-marker.downtown {
+    top: 120px;
+    left: 120px;
+}
+
+.location-marker.university {
+    top: 80px;
+    right: 100px;
+}
+
+.location-marker.riverside {
+    bottom: 100px;
+    left: 80px;
+}
+
+.location-marker.mall {
+    bottom: 120px;
+    right: 120px;
+}
+
+.map-legend {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(26, 19, 17, 0.9);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(212, 165, 116, 0.3);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: #e0e0e0;
+    font-size: 0.8em;
+}
+
+.legend-item:last-child {
+    margin-bottom: 0;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.downtown-color { background: #d4a574; }
+.university-color { background: #b8956f; }
+.riverside-color { background: #e6c896; }
+.mall-color { background: #9c8366; }
+
+.location-details {
+    background: linear-gradient(135deg, #414141 0%, #353535 100%);
+    border-radius: 15px;
+    padding: 30px;
+    border: 2px solid rgba(212, 165, 116, 0.2);
+    transition: all 0.3s ease;
+}
+
+.location-info {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.location-info h3 {
+    color: #d4a574;
+    margin-bottom: 20px;
+    margin-top: 0;
+    font-size: 1.6em;
+    border-bottom: 2px solid rgba(212, 165, 116, 0.3);
+    padding-bottom: 10px;
+}
+
+.location-address {
+    margin-bottom: 25px;
+}
+
+.location-address p {
+    color: #e0e0e0;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.location-features h4 {
+    color: #b8956f;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.location-features ul {
+    list-style: none;
+    padding: 0;
+}
+
+.location-features li {
+    color: #e0e0e0;
+    padding: 8px 0;
+    font-size: 0.95em;
+    border-bottom: 1px solid rgba(212, 165, 116, 0.1);
+}
+
+.location-features li:last-child {
+    border-bottom: none;
+}
+
+.directions-cta {
+    text-align: center;
+    margin-top: 40px;
+    padding: 30px;
+    background: linear-gradient(135deg, #2a1e16 0%, #3d2b1f 100%);
+    border-radius: 15px;
+    border: 2px solid rgba(212, 165, 116, 0.2);
+}
+
+.directions-cta p {
+    color: #e0e0e0;
+    margin-bottom: 25px;
+    font-size: 1.1em;
+}
+
+.map-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.map-link {
+    background: linear-gradient(135deg, #d4a574, #b8956f);
+    color: #1a1311;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    font-size: 0.95em;
+}
+
+.map-link:hover {
+    background: linear-gradient(135deg, #e6c896, #d4a574);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(212, 165, 116, 0.3);
+}
+
+.google-maps:hover {
+    background: linear-gradient(135deg, #4285f4, #3367d6);
+    color: white;
+}
+
+.apple-maps:hover {
+    background: linear-gradient(135deg, #007aff, #0056cc);
+    color: white;
+}
+
+.waze:hover {
+    background: linear-gradient(135deg, #33ccff, #0099cc);
+    color: white;
+}
+
+/* Responsive Design for Locations */
 @media (max-width: 1000px) {
-    #facilities,
-    #events,
-    #social-media {
+    #locations {
         padding: 60px 30px;
     }
     
-    .facilities-grid,
-    .events-grid {
+    .locations-container {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 30px;
     }
     
-    .facility-item,
-    .event-card {
+    .map-container,
+    .location-details {
         padding: 20px;
     }
     
-    .event-card {
-        flex-direction: column;
-        text-align: center;
+    .location-markers {
+        height: 250px;
     }
     
-    .event-date {
-        min-width: auto;
+    /* Adjust marker positions for smaller screens */
+    .location-marker.downtown {
+        top: 80px;
+        left: 80px;
     }
     
-    .instagram-section {
-        padding: 30px 20px;
+    .location-marker.university {
+        top: 60px;
+        right: 60px;
     }
     
-    .instagram-header {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
+    .location-marker.riverside {
+        bottom: 80px;
+        left: 60px;
     }
     
-    .instagram-feed {
-        grid-template-columns: repeat(2, 1fr);
+    .location-marker.mall {
+        bottom: 80px;
+        right: 80px;
     }
 }
 
 @media (max-width: 600px) {
-    .instagram-feed {
-        grid-template-columns: 1fr;
+    .map-links {
+        flex-direction: column;
+        align-items: center;
     }
     
-    .facility-item,
-    .event-card {
-        padding: 15px;
+    .map-link {
+        width: 200px;
+        text-align: center;
     }
     
-    .facilities-grid,
-    .events-grid {
-        grid-template-columns: 1fr;
+    .location-markers {
+        height: 200px;
+    }
+    
+    .marker-pin {
+        font-size: 1.5em;
+    }
+    
+    .marker-label {
+        font-size: 0.7em;
+        min-width: 60px;
+        padding: 3px 6px;
+    }
+    
+    /* Further adjust markers for mobile */
+    .location-marker.downtown {
+        top: 60px;
+        left: 50px;
+    }
+    
+    .location-marker.university {
+        top: 40px;
+        right: 40px;
+    }
+    
+    .location-marker.riverside {
+        bottom: 60px;
+        left: 40px;
+    }
+    
+    .location-marker.mall {
+        bottom: 60px;
+        right: 50px;
+    }
+    
+    .map-legend {
+        bottom: 10px;
+        right: 10px;
+        padding: 10px;
+    }
+}
+
+/* Animation for location info switching */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 

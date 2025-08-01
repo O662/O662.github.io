@@ -437,14 +437,148 @@
             </div>
         </section>
 
-        <section id="preview">
+        <section id="locations">
             <div class="content-container">
-                <h2>Design Preview</h2>
-                <div class="preview-placeholder">
-                    <p>Design mockups and previews will be added here</p>
+                <h2>Find Us</h2>
+                <p>Visit any of our four convenient locations across the city. Each café offers the same premium coffee experience with its own unique local charm.</p>
+                
+                <div class="locations-container">
+                    <div class="map-container">
+                        <div class="map-placeholder">
+                            <div class="map-header">
+                                <h3>📍 Our Locations</h3>
+                                <p>Click on any location to view details</p>
+                            </div>
+                            
+                            <div class="location-markers">
+                                <div class="location-marker downtown" onclick="selectLocation('downtown')">
+                                    <div class="marker-pin">📍</div>
+                                    <div class="marker-label">Downtown</div>
+                                </div>
+                                
+                                <div class="location-marker university" onclick="selectLocation('university')">
+                                    <div class="marker-pin">📍</div>
+                                    <div class="marker-label">University</div>
+                                </div>
+                                
+                                <div class="location-marker riverside" onclick="selectLocation('riverside')">
+                                    <div class="marker-pin">📍</div>
+                                    <div class="marker-label">Riverside</div>
+                                </div>
+                                
+                                <div class="location-marker mall" onclick="selectLocation('mall')">
+                                    <div class="marker-pin">📍</div>
+                                    <div class="marker-label">Mall</div>
+                                </div>
+                            </div>
+                            
+                            <div class="map-legend">
+                                <div class="legend-item">
+                                    <span class="legend-color downtown-color"></span>
+                                    <span>Downtown Café</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color university-color"></span>
+                                    <span>University District</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color riverside-color"></span>
+                                    <span>Riverside Location</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color mall-color"></span>
+                                    <span>Shopping Mall</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="location-details">
+                        <div class="location-info" id="location-downtown">
+                            <h3>☕ Downtown Café</h3>
+                            <div class="location-address">
+                                <p><strong>📍 Address:</strong> 123 Main Street, Downtown<br>City Center, ST 12345</p>
+                                <p><strong>📞 Phone:</strong> (555) 123-4567</p>
+                                <p><strong>🕒 Hours:</strong> Mon-Fri: 6:00 AM - 10:00 PM<br>Sat-Sun: 7:00 AM - 11:00 PM</p>
+                            </div>
+                            <div class="location-features">
+                                <h4>Features:</h4>
+                                <ul>
+                                    <li>🏢 Business district location</li>
+                                    <li>💻 Executive meeting rooms</li>
+                                    <li>🚇 Metro station nearby</li>
+                                    <li>🅿️ Parking garage access</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="location-info" id="location-university" style="display: none;">
+                            <h3>📚 University District</h3>
+                            <div class="location-address">
+                                <p><strong>📍 Address:</strong> 456 College Avenue<br>University District, ST 12346</p>
+                                <p><strong>📞 Phone:</strong> (555) 234-5678</p>
+                                <p><strong>🕒 Hours:</strong> Mon-Thu: 6:00 AM - 12:00 AM<br>Fri-Sun: 7:00 AM - 1:00 AM</p>
+                            </div>
+                            <div class="location-features">
+                                <h4>Features:</h4>
+                                <ul>
+                                    <li>🎓 Student-friendly pricing</li>
+                                    <li>📖 24/7 study areas</li>
+                                    <li>🔌 Extra power outlets</li>
+                                    <li>🚌 Campus shuttle stop</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="location-info" id="location-riverside" style="display: none;">
+                            <h3>🌊 Riverside Location</h3>
+                            <div class="location-address">
+                                <p><strong>📍 Address:</strong> 789 Riverside Drive<br>Waterfront District, ST 12347</p>
+                                <p><strong>📞 Phone:</strong> (555) 345-6789</p>
+                                <p><strong>🕒 Hours:</strong> Daily: 6:30 AM - 9:00 PM</p>
+                            </div>
+                            <div class="location-features">
+                                <h4>Features:</h4>
+                                <ul>
+                                    <li>🌅 Scenic river views</li>
+                                    <li>🌳 Outdoor seating area</li>
+                                    <li>🚴 Bike parking available</li>
+                                    <li>🎨 Local art gallery space</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="location-info" id="location-mall" style="display: none;">
+                            <h3>🛍️ Shopping Mall</h3>
+                            <div class="location-address">
+                                <p><strong>📍 Address:</strong> 321 Shopping Plaza<br>Retail District, ST 12348</p>
+                                <p><strong>📞 Phone:</strong> (555) 456-7890</p>
+                                <p><strong>🕒 Hours:</strong> Mon-Sat: 9:00 AM - 10:00 PM<br>Sunday: 10:00 AM - 8:00 PM</p>
+                            </div>
+                            <div class="location-features">
+                                <h4>Features:</h4>
+                                <ul>
+                                    <li>🛒 Shopping convenience</li>
+                                    <li>👨‍👩‍👧‍👦 Family-friendly space</li>
+                                    <li>🎬 Near movie theater</li>
+                                    <li>🅿️ Free mall parking</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="directions-cta">
+                    <p>Need directions? Click below to open in your preferred map app:</p>
+                    <div class="map-links">
+                        <a href="#" class="map-link google-maps">📍 Google Maps</a>
+                        <a href="#" class="map-link apple-maps">🗺️ Apple Maps</a>
+                        <a href="#" class="map-link waze">🚗 Waze</a>
+                    </div>
                 </div>
             </div>
         </section>
+
     </main>
 
     <!-- Floating Cart Button -->
