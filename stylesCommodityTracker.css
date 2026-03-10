@@ -1,0 +1,335 @@
+/* =============================================
+   Commodity Tracker Styles
+   ============================================= */
+
+/* Page container */
+.commodity-tracker {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 30px 60px;
+}
+
+/* Header */
+.tracker-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.tracker-header h1 {
+    font-size: 2.4rem;
+    margin-bottom: 6px;
+    color: #efefef;
+}
+
+.tracker-subtitle {
+    color: #888;
+    font-size: 1rem;
+    margin: 0 0 10px;
+}
+
+.data-status {
+    font-size: 0.82rem;
+    color: #aaa;
+    min-height: 20px;
+}
+
+.data-status.live {
+    color: #2ecc71;
+}
+
+.data-status.demo {
+    color: #f39c12;
+}
+
+/* Selected commodity banner */
+.selected-commodity-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 12px 24px;
+    margin-bottom: 24px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 10px;
+    flex-wrap: wrap;
+}
+
+.selected-commodity-info.hidden {
+    display: none;
+}
+
+.selected-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #efefef;
+}
+
+.selected-price {
+    font-size: 1.2rem;
+    color: #ccc;
+    font-family: 'Courier New', monospace;
+}
+
+.selected-change {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 4px;
+}
+
+.selected-change.positive {
+    color: #2ecc71;
+    background: rgba(46, 204, 113, 0.12);
+}
+
+.selected-change.negative {
+    color: #e74c3c;
+    background: rgba(231, 76, 60, 0.12);
+}
+
+/* =============================================
+   Charts Section
+   ============================================= */
+
+.charts-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.chart-wrapper {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+}
+
+.chart-wrapper h2 {
+    font-size: 1.1rem;
+    color: #aaa;
+    margin: 0 0 14px;
+    font-weight: 500;
+}
+
+.chart-box {
+    position: relative;
+    height: 320px;
+}
+
+.chart-box canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.chart-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(26, 26, 26, 0.85);
+    border-radius: 8px;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.chart-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.chart-overlay p {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+/* =============================================
+   Commodity Groups
+   ============================================= */
+
+.commodity-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.commodity-group {
+    padding: 0;
+}
+
+.group-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #ccc;
+    margin: 0 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.group-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.precious-dot {
+    background: #FFD700;
+}
+
+.industrial-dot {
+    background: #5DADE2;
+}
+
+.energy-dot {
+    background: #E74C3C;
+}
+
+.agriculture-dot {
+    background: #27AE60;
+}
+
+/* Commodity Cards Grid */
+.commodity-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+}
+
+/* Individual Commodity Card */
+.commodity-card {
+    background: #1e1e1e;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.commodity-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 10px 0 0 10px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+/* Group accent colors on card left edge */
+.commodity-card.precious::before {
+    background: #FFD700;
+}
+
+.commodity-card.industrial::before {
+    background: #5DADE2;
+}
+
+.commodity-card.energy::before {
+    background: #E74C3C;
+}
+
+.commodity-card.agriculture::before {
+    background: #27AE60;
+}
+
+.commodity-card:hover {
+    border-color: #444;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.commodity-card:hover::before {
+    opacity: 1;
+}
+
+.commodity-card.active {
+    border-color: #00674f;
+    box-shadow: 0 0 0 1px #00674f, 0 4px 16px rgba(0, 103, 79, 0.2);
+}
+
+.commodity-card.active::before {
+    opacity: 1;
+}
+
+.card-name {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #ddd;
+    margin-bottom: 8px;
+}
+
+.card-price {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #efefef;
+    font-family: 'Courier New', monospace;
+    margin-bottom: 4px;
+}
+
+.card-unit {
+    font-size: 0.72rem;
+    color: #666;
+    font-weight: 400;
+}
+
+.card-change {
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.card-change.positive {
+    color: #2ecc71;
+}
+
+.card-change.negative {
+    color: #e74c3c;
+}
+
+.card-loading {
+    color: #555;
+    font-size: 0.8rem;
+}
+
+/* =============================================
+   Responsive
+   ============================================= */
+
+@media (max-width: 900px) {
+    .charts-container {
+        grid-template-columns: 1fr;
+    }
+
+    .commodity-tracker {
+        padding: 24px 16px 40px;
+    }
+
+    .tracker-header h1 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .commodity-cards {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    .chart-box {
+        height: 240px;
+    }
+
+    .selected-commodity-info {
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+    }
+}

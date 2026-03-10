@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commodity Tracker - Malcolm Ferguson</title>
+    <link rel="icon" type="image/x-icon" href="Images/MLogo.ico">
+    <link rel="stylesheet" href="stylesNavBar.css">
+    <link rel="stylesheet" href="stylesIndex.css">
+    <link rel="stylesheet" href="stylesFooter.css">
+    <link rel="stylesheet" href="stylesCustomSite.css">
+    <link rel="stylesheet" href="stylesCommodityTracker.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div id="navbar"></div>
+    <script>
+        fetch('navbar.html?cache-bust=' + new Date().getTime())
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Navbar fetch error:', error);
+            });
+    </script>
+
+    <!-- Main Content -->
+    <div class="commodity-tracker">
+
+        <!-- Header -->
+        <div class="tracker-header">
+            <h1>Commodity Tracker</h1>
+            <p class="tracker-subtitle">Real-time commodity prices and trends</p>
+            <div id="data-status" class="data-status"></div>
+        </div>
+
+        <!-- Selected Commodity Info -->
+        <div id="selected-commodity-info" class="selected-commodity-info hidden">
+            <span id="selected-name" class="selected-name"></span>
+            <span id="selected-price" class="selected-price"></span>
+            <span id="selected-change" class="selected-change"></span>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-container">
+            <div class="chart-wrapper">
+                <h2>Today</h2>
+                <div class="chart-box">
+                    <canvas id="chart-1day"></canvas>
+                    <div id="overlay-1day" class="chart-overlay">
+                        <p>Select a commodity below to view its chart</p>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <h2>90 Days</h2>
+                <div class="chart-box">
+                    <canvas id="chart-90day"></canvas>
+                    <div id="overlay-90day" class="chart-overlay">
+                        <p>Select a commodity below to view its chart</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Commodity Groups -->
+        <div class="commodity-groups">
+            <!-- Precious Metals -->
+            <div class="commodity-group">
+                <h2 class="group-title"><span class="group-dot precious-dot"></span>Precious Metals</h2>
+                <div class="commodity-cards" id="group-precious"></div>
+            </div>
+
+            <!-- Industrial Metals -->
+            <div class="commodity-group">
+                <h2 class="group-title"><span class="group-dot industrial-dot"></span>Industrial Metals</h2>
+                <div class="commodity-cards" id="group-industrial"></div>
+            </div>
+
+            <!-- Energy -->
+            <div class="commodity-group">
+                <h2 class="group-title"><span class="group-dot energy-dot"></span>Energy</h2>
+                <div class="commodity-cards" id="group-energy"></div>
+            </div>
+
+            <!-- Agriculture -->
+            <div class="commodity-group">
+                <h2 class="group-title"><span class="group-dot agriculture-dot"></span>Agriculture</h2>
+                <div class="commodity-cards" id="group-agriculture"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer"></footer>
+    <script>
+        fetch('footer.html?cache-bust=' + new Date().getTime())
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Footer fetch error:', error);
+            });
+    </script>
+
+    <!-- Commodity Tracker Logic -->
+    <script src="jsCommodityTracker.js"></script>
+</body>
+
+</html>
