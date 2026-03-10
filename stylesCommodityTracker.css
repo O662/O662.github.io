@@ -110,8 +110,46 @@
 .chart-wrapper h2 {
     font-size: 1.1rem;
     color: #aaa;
-    margin: 0 0 14px;
+    margin: 0;
     font-weight: 500;
+}
+
+.chart-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* Range selector buttons */
+.range-selector {
+    display: flex;
+    gap: 4px;
+}
+
+.range-btn {
+    background: #252525;
+    border: 1px solid #333;
+    color: #888;
+    font-size: 0.78rem;
+    padding: 4px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    font-family: inherit;
+}
+
+.range-btn:hover {
+    color: #ccc;
+    border-color: #555;
+}
+
+.range-btn.active {
+    background: #00674f;
+    border-color: #00674f;
+    color: #fff;
 }
 
 .chart-box {

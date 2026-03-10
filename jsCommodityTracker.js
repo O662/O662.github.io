@@ -6,52 +6,71 @@
    ============================================================= */
 
 // ── Commodity Definitions (grouped by type) ─────────────────
+// No hardcoded prices – all prices are fetched dynamically.
+// _fallbackBase is only used as a last-resort seed for simulated
+// data when the API is completely unreachable and no live quote
+// has been received yet. Once a live quote arrives it is used instead.
 const COMMODITY_GROUPS = {
     precious: {
         label: 'Precious Metals',
         color: '#FFD700',
         items: [
-            { symbol: 'GC=F', name: 'Gold',     unit: '$/oz',  basePrice: 2380 },
-            { symbol: 'SI=F', name: 'Silver',   unit: '$/oz',  basePrice: 28.5 },
-            { symbol: 'PL=F', name: 'Platinum', unit: '$/oz',  basePrice: 1015 },
+            { symbol: 'GC=F', name: 'Gold',     unit: '$/oz',  _fallbackBase: 2380 },
+            { symbol: 'SI=F', name: 'Silver',   unit: '$/oz',  _fallbackBase: 28.5 },
+            { symbol: 'PL=F', name: 'Platinum', unit: '$/oz',  _fallbackBase: 1015 },
         ],
     },
     industrial: {
         label: 'Industrial Metals',
         color: '#5DADE2',
         items: [
-            { symbol: 'HG=F',  name: 'Copper',  unit: '$/lb',  basePrice: 4.25 },
-            { symbol: 'MZN=F', name: 'Zinc',    unit: '$/lb',  basePrice: 1.28 },
-            { symbol: 'MCU=F', name: 'Cobalt',  unit: '$/lb',  basePrice: 13.6 },
-            { symbol: 'MPB=F', name: 'Lead',    unit: '$/lb',  basePrice: 0.96 },
+            { symbol: 'HG=F',  name: 'Copper',  unit: '$/lb',  _fallbackBase: 4.25 },
+            { symbol: 'MZN=F', name: 'Zinc',    unit: '$/lb',  _fallbackBase: 1.28 },
+            { symbol: 'MCU=F', name: 'Cobalt',  unit: '$/lb',  _fallbackBase: 13.6 },
+            { symbol: 'MPB=F', name: 'Lead',    unit: '$/lb',  _fallbackBase: 0.96 },
         ],
     },
     energy: {
         label: 'Energy',
         color: '#E74C3C',
         items: [
-            { symbol: 'CL=F', name: 'Crude Oil',   unit: '$/bbl',   basePrice: 72.4 },
-            { symbol: 'NG=F', name: 'Natural Gas',  unit: '$/MMBtu', basePrice: 2.55 },
+            { symbol: 'CL=F', name: 'Crude Oil',   unit: '$/bbl',   _fallbackBase: 72.4 },
+            { symbol: 'NG=F', name: 'Natural Gas',  unit: '$/MMBtu', _fallbackBase: 2.55 },
         ],
     },
     agriculture: {
         label: 'Agriculture',
         color: '#27AE60',
         items: [
-            { symbol: 'CC=F', name: 'Cocoa',    unit: '$/ton', basePrice: 4050 },
-            { symbol: 'KC=F', name: 'Coffee',   unit: '$/lb',  basePrice: 2.22 },
-            { symbol: 'SB=F', name: 'Sugar',    unit: '¢/lb',  basePrice: 22.3 },
-            { symbol: 'ZS=F', name: 'Soybeans', unit: '$/bu',  basePrice: 12.45 },
-            { symbol: 'ZW=F', name: 'Wheat',    unit: '$/bu',  basePrice: 6.52 },
+            { symbol: 'CC=F', name: 'Cocoa',    unit: '$/ton', _fallbackBase: 4050 },
+            { symbol: 'KC=F', name: 'Coffee',   unit: '$/lb',  _fallbackBase: 2.22 },
+            { symbol: 'SB=F', name: 'Sugar',    unit: '¢/lb',  _fallbackBase: 22.3 },
+            { symbol: 'ZS=F', name: 'Soybeans', unit: '$/bu',  _fallbackBase: 12.45 },
+            { symbol: 'ZW=F', name: 'Wheat',    unit: '$/bu',  _fallbackBase: 6.52 },
         ],
     },
 };
+
+/** Return the best known base price for a commodity.
+ *  Prefers the live quote price, falls back to _fallbackBase. */
+function getBasePrice(commodity) {
+    return commodity._quote?.price ?? commodity._fallbackBase;
+}
 
 // ── State ───────────────────────────────────────────────────
 let selectedCommodity = null;   // { groupKey, index, ...commodity }
 let chart1Day = null;
 let chart90Day = null;
 let isLiveData = false;
+let currentRange = '3mo';       // default range for the second chart
+
+// Range options for the second chart
+const RANGE_OPTIONS = [
+    { key: '1mo',  label: '30 Days',  yahooRange: '1mo',  yahooInterval: '1d',  timeUnit: 'day',  days: 30  },
+    { key: '3mo',  label: '90 Days',  yahooRange: '3mo',  yahooInterval: '1d',  timeUnit: 'week', days: 90  },
+    { key: '6mo',  label: '6 Months', yahooRange: '6mo',  yahooInterval: '1d',  timeUnit: 'month',days: 180 },
+    { key: 'ytd',  label: 'YTD',      yahooRange: 'ytd',  yahooInterval: '1d',  timeUnit: 'month',days: null },
+];
 
 // ── CORS Proxies (tried in order) ───────────────────────────
 const CORS_PROXIES = [
@@ -119,10 +138,10 @@ function generateDemoTimestamps1Day() {
     return points.length > 0 ? points : [now.getTime()];
 }
 
-function generateDemoTimestamps90Day() {
+function generateDemoTimestampsNDay(days) {
     const points = [];
     const now = new Date();
-    for (let d = 90; d >= 0; d--) {
+    for (let d = days; d >= 0; d--) {
         const t = new Date(now);
         t.setDate(t.getDate() - d);
         t.setHours(16, 0, 0, 0);
@@ -142,16 +161,28 @@ function generateDemoPrices(base, count, volatility = 0.004) {
 }
 
 function getDemoData(commodity, range) {
-    const is1d = range === '1d';
-    const timestamps = is1d ? generateDemoTimestamps1Day() : generateDemoTimestamps90Day();
-    const vol = is1d ? 0.003 : 0.012;
-    const closes = generateDemoPrices(commodity.basePrice, timestamps.length, vol);
-    return { timestamps, closes };
+    const base = getBasePrice(commodity);
+    if (range === '1d') {
+        const timestamps = generateDemoTimestamps1Day();
+        return { timestamps, closes: generateDemoPrices(base, timestamps.length, 0.003) };
+    }
+    // For multi-day ranges, determine how many calendar days to simulate
+    let days = 90;
+    if (range === '1mo')  days = 30;
+    if (range === '6mo')  days = 180;
+    if (range === 'ytd') {
+        const now = new Date();
+        const jan1 = new Date(now.getFullYear(), 0, 1);
+        days = Math.ceil((now - jan1) / 86400000);
+    }
+    const timestamps = generateDemoTimestampsNDay(days);
+    return { timestamps, closes: generateDemoPrices(base, timestamps.length, 0.012) };
 }
 
 function getDemoQuote(commodity) {
-    const swing = commodity.basePrice * (Math.random() - 0.48) * 0.015;
-    const price = +(commodity.basePrice + swing).toFixed(2);
+    const base = getBasePrice(commodity);
+    const swing = base * (Math.random() - 0.48) * 0.015;
+    const price = +(base + swing).toFixed(2);
     const prevClose = +(price - price * (Math.random() - 0.45) * 0.012).toFixed(2);
     return { price, prevClose };
 }
@@ -252,8 +283,9 @@ const CHART_COLORS = {
     agriculture: { line: '#27AE60', fill: 'rgba(39, 174, 96, 0.08)' },
 };
 
-function buildChartConfig(labels, data, groupKey, is1Day) {
+function buildChartConfig(labels, data, groupKey, timeUnit) {
     const colors = CHART_COLORS[groupKey] || CHART_COLORS.precious;
+    const is1Day = timeUnit === 'hour';
     return {
         type: 'line',
         data: {
@@ -291,12 +323,13 @@ function buildChartConfig(labels, data, groupKey, is1Day) {
                 x: {
                     type: 'time',
                     time: {
-                        unit: is1Day ? 'hour' : 'week',
+                        unit: timeUnit,
                         tooltipFormat: is1Day ? 'HH:mm' : 'MMM d, yyyy',
                         displayFormats: {
                             hour: 'HH:mm',
                             day: 'MMM d',
                             week: 'MMM d',
+                            month: 'MMM yyyy',
                         },
                     },
                     grid: { color: 'rgba(255,255,255,0.04)' },
@@ -314,32 +347,38 @@ function buildChartConfig(labels, data, groupKey, is1Day) {
     };
 }
 
-async function updateCharts(groupKey, commodity) {
-    // Fetch (or generate demo) data for both ranges in parallel
-    const [data1d, data90d] = await Promise.all([
-        fetchChartData(commodity.symbol, '1d', '5m').then(d => d || getDemoData(commodity, '1d')),
-        fetchChartData(commodity.symbol, '3mo', '1d').then(d => d || getDemoData(commodity, '90d')),
-    ]);
-
-    // 1-Day chart
+/** Update only the 1-day chart */
+async function update1DayChart(groupKey, commodity) {
+    const data1d = await fetchChartData(commodity.symbol, '1d', '5m')
+        .then(d => d || getDemoData(commodity, '1d'));
     const labels1d = data1d.timestamps.map(t => new Date(t));
-    const closes1d = data1d.closes;
     if (chart1Day) chart1Day.destroy();
     chart1Day = new Chart(
         document.getElementById('chart-1day'),
-        buildChartConfig(labels1d, closes1d, groupKey, true),
+        buildChartConfig(labels1d, data1d.closes, groupKey, 'hour'),
     );
     document.getElementById('overlay-1day')?.classList.add('hidden');
+}
 
-    // 90-Day chart
-    const labels90d = data90d.timestamps.map(t => new Date(t));
-    const closes90d = data90d.closes;
+/** Update only the range chart (30d / 90d / 6mo / YTD) */
+async function updateRangeChart(groupKey, commodity) {
+    const opt = RANGE_OPTIONS.find(o => o.yahooRange === currentRange) || RANGE_OPTIONS[1];
+    const dataRange = await fetchChartData(commodity.symbol, opt.yahooRange, opt.yahooInterval)
+        .then(d => d || getDemoData(commodity, opt.key === 'ytd' ? 'ytd' : opt.yahooRange));
+    const labels = dataRange.timestamps.map(t => new Date(t));
     if (chart90Day) chart90Day.destroy();
     chart90Day = new Chart(
         document.getElementById('chart-90day'),
-        buildChartConfig(labels90d, closes90d, groupKey, false),
+        buildChartConfig(labels, dataRange.closes, groupKey, opt.timeUnit),
     );
     document.getElementById('overlay-90day')?.classList.add('hidden');
+}
+
+async function updateCharts(groupKey, commodity) {
+    await Promise.all([
+        update1DayChart(groupKey, commodity),
+        updateRangeChart(groupKey, commodity),
+    ]);
 }
 
 // ── Selection Logic ─────────────────────────────────────────
@@ -373,8 +412,36 @@ async function selectCommodity(groupKey, idx) {
     await updateCharts(groupKey, commodity);
 }
 
+// ── Range Selector Logic ────────────────────────────────────
+function initRangeSelector() {
+    const container = document.getElementById('range-selector');
+    if (!container) return;
+    container.innerHTML = '';
+
+    for (const opt of RANGE_OPTIONS) {
+        const btn = document.createElement('button');
+        btn.className = `range-btn${opt.yahooRange === currentRange ? ' active' : ''}`;
+        btn.textContent = opt.label;
+        btn.dataset.range = opt.yahooRange;
+        btn.addEventListener('click', async () => {
+            if (opt.yahooRange === currentRange) return;
+            currentRange = opt.yahooRange;
+            container.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (selectedCommodity) {
+                document.getElementById('overlay-90day')?.classList.remove('hidden');
+                document.querySelector('#overlay-90day p').textContent = 'Loading chart…';
+                const commodity = COMMODITY_GROUPS[selectedCommodity.groupKey].items[selectedCommodity.idx];
+                await updateRangeChart(selectedCommodity.groupKey, commodity);
+            }
+        });
+        container.appendChild(btn);
+    }
+}
+
 // ── Initialise ──────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     renderCards();
     loadQuotes();
+    initRangeSelector();
 });
