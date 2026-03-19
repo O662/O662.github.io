@@ -1,18 +1,18 @@
 /* Portfolio Page Styles */
 
-#website-designs {
+.portfolio-section {
     padding: 60px;
     background-color: #252525;
 }
 
-#website-designs h2 {
+.portfolio-section h2 {
     font-size: 2.5em;
     color: #efefef;
     text-align: center;
     margin-bottom: 20px;
 }
 
-#website-designs p {
+.portfolio-section p {
     text-align: center;
     color: #e0e0e0;
     font-size: 1.2em;
@@ -52,6 +52,36 @@
     align-items: center;
     justify-content: center;
     position: relative;
+}
+
+.portfolio-image.architecture-preview {
+    background: linear-gradient(135deg, #1e2a30 0%, #2c3e45 50%, #42545a 100%);
+}
+
+.architecture-preview-text {
+    font-size: 2.2em;
+    letter-spacing: 0.2em;
+    color: #efefef;
+    font-weight: bold;
+}
+
+.portfolio-image.writings-preview {
+    background: linear-gradient(135deg, #1f1f2b 0%, #2c2c3a 50%, #3a3a4f 100%);
+}
+
+.writings-preview-text {
+    font-size: 2em;
+    letter-spacing: 0.2em;
+    color: #efefef;
+    font-weight: bold;
+}
+
+.writings-card .portfolio-content p {
+    text-align: left;
+}
+
+.writings-empty .portfolio-content p {
+    text-align: center;
 }
 
 .coffee-preview {
@@ -124,11 +154,11 @@
         gap: 30px;
     }
     
-    #website-designs {
+    .portfolio-section {
         padding: 40px 20px;
     }
     
-    #website-designs h2 {
+    .portfolio-section h2 {
         font-size: 2em;
     }
 }

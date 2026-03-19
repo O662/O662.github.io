@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Writings Viewer</title>
+    <link rel="stylesheet" href="stylesWritingsViewer.css">
+</head>
+<body>
+    <header class="viewer-header">
+        <div>
+            <h1 id="viewer-title">Writings Viewer</h1>
+            <p class="viewer-subtitle">Adjust fonts, size, and colors for comfortable reading.</p>
+        </div>
+        <a class="viewer-back" href="pPortfolio.html#writings">Back to Writings</a>
+    </header>
+
+    <section class="viewer-controls" aria-label="Reader controls">
+        <label>
+            Font
+            <select id="font-family">
+                <option value="Georgia, serif">Georgia</option>
+                <option value=""""Merriweather"", serif">Merriweather</option>
+                <option value=""""Times New Roman"", serif">Times New Roman</option>
+                <option value=""""Arial"", sans-serif">Arial</option>
+                <option value=""""Helvetica"", sans-serif">Helvetica</option>
+            </select>
+        </label>
+        <label>
+            Size
+            <input id="font-size" type="range" min="14" max="24" value="18">
+        </label>
+        <label>
+            Line height
+            <input id="line-height" type="range" min="1.3" max="2.0" step="0.05" value="1.6">
+        </label>
+        <label>
+            Background
+            <input id="bg-color" type="color" value="#f6f2ea">
+        </label>
+        <label>
+            Text
+            <input id="text-color" type="color" value="#1d1d1d">
+        </label>
+    </section>
+
+    <main class="viewer-content">
+        <div id="viewer-status" class="viewer-status">Loading document...</div>
+        <iframe id="viewer-frame" title="Writing document"></iframe>
+    </main>
+
+    <script>
+        (function () {
+            const frame = document.getElementById("viewer-frame");
+            const status = document.getElementById("viewer-status");
+            const titleEl = document.getElementById("viewer-title");
+
+            const fontFamily = document.getElementById("font-family");
+            const fontSize = document.getElementById("font-size");
+            const lineHeight = document.getElementById("line-height");
+            const bgColor = document.getElementById("bg-color");
+            const textColor = document.getElementById("text-color");
+
+            const params = new URLSearchParams(window.location.search);
+            const doc = params.get("doc");
+
+            function titleFromFilename(path) {
+                const base = (path || "").split("/").pop() || "";
+                const noExt = base.replace(/\.[^.]+$/, "");
+                return noExt
+                    .replace(/[_-]+/g, " ")
+                    .replace(/\s+/g, " ")
+                    .trim()
+                    .replace(/\b\w/g, (match) => match.toUpperCase()) || "Writings Viewer";
+            }
+
+            function injectBase(html, baseHref) {
+                if (/<head[\s>]/i.test(html)) {
+                    return html.replace(/<head[^>]*>/i, (match) => `${match}\n<base href=\"${baseHref}\">`);
+                }
+                return `<!DOCTYPE html><html><head><base href=\"${baseHref}\"></head><body>${html}</body></html>`;
+            }
+
+            function applyReaderStyles() {
+                if (!frame.contentDocument) {
+                    return;
+                }
+                const doc = frame.contentDocument;
+                let styleTag = doc.getElementById("reader-style");
+                if (!styleTag) {
+                    styleTag = doc.createElement("style");
+                    styleTag.id = "reader-style";
+                    doc.head.appendChild(styleTag);
+                }
+
+                styleTag.textContent = `
+                    html, body {
+                        background: ${bgColor.value};
+                        color: ${textColor.value};
+                        font-family: ${fontFamily.value};
+                        font-size: ${fontSize.value}px;
+                        line-height: ${lineHeight.value};
+                        margin: 0;
+                        padding: 24px;
+                    }
+                    img, video, iframe {
+                        max-width: 100%;
+                        height: auto;
+                    }
+                `;
+            }
+
+            function loadDocument() {
+                if (!doc) {
+                    status.textContent = "No document specified.";
+                    return;
+                }
+
+                titleEl.textContent = titleFromFilename(doc);
+
+                fetch(doc, { cache: "no-store" })
+                    .then((response) => response.text())
+                    .then((html) => {
+                        const baseHref = new URL(doc, window.location.href).href;
+                        const sanitized = injectBase(html, baseHref);
+                        frame.srcdoc = sanitized;
+                        status.textContent = "";
+                    })
+                    .catch(() => {
+                        status.textContent = "Unable to load the document.";
+                    });
+            }
+
+            frame.addEventListener("load", applyReaderStyles);
+            [fontFamily, fontSize, lineHeight, bgColor, textColor].forEach((control) => {
+                control.addEventListener("input", applyReaderStyles);
+            });
+
+            loadDocument();
+        })();
+    </script>
+</body>
+</html>

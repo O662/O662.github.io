@@ -57,6 +57,24 @@
     background-color: #555;
 }
 
+body.nav-on-light .section-title,
+body.nav-on-light .menu a,
+body.nav-on-light .navbar .section-title,
+body.nav-on-light .navbar .menu a,
+.navbar.nav-on-light .section-title,
+.navbar.nav-on-light .menu a {
+    color: #000000 !important;
+}
+
+body.nav-on-light .menu a:hover,
+.navbar.nav-on-light .menu a:hover {
+    background-color: #dddddd;
+}
+
+body.nav-on-light .dropdown-content a {
+    color: #efefef;
+}
+
  /* Projects Mega Menu */
 
 .dropdown-content {

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture - Malcolm Ferguson</title>
+    <link rel="icon" type="image/x-icon" href="Images/MLogo.ico">
+    <link rel="stylesheet" href="stylesNavBar.css">
+    <link rel="stylesheet" href="stylesFooter.css">
+    <link rel="stylesheet" href="stylesCustomSite.css">
+    <link rel="stylesheet" href="stylesArchitecture.css">
+</head>
+
+<body class="nav-on-light">
+    <div id="navbar"></div>
+    <script>
+        fetch('navbar.html?cache-bust=' + new Date().getTime())
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Navbar fetch error:', error);
+            });
+    </script>
+
+    <header class="architecture-hero">
+        <div class="hero-content">
+            <p class="hero-eyebrow">Personal Project</p>
+            <h1>Architecture: House Design</h1>
+            <p class="hero-subtitle">A modern, light-filled home focused on calm materials, passive ventilation, and flexible living spaces.</p>
+            <div class="hero-actions">
+                <a class="hero-button" href="#gallery">View Concept Gallery</a>
+                <a class="hero-button ghost" href="#details">Project Details</a>
+            </div>
+        </div>
+        <div class="hero-card">
+            <div class="hero-card-inner">
+                <h2>Concept Summary</h2>
+                <p>Designed as a courtyard-centric home with a strong indoor-outdoor connection, shaded terraces, and a central stair lantern.</p>
+                <ul>
+                    <li>3 bedrooms + flexible studio</li>
+                    <li>Passive solar + cross ventilation</li>
+                    <li>Targeting net-zero ready</li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <section id="interactive-model" class="architecture-experience">
+        <div class="experience-sticky">
+            <canvas id="architecture-canvas" aria-label="3D model of the house"></canvas>
+            <div class="experience-overlay">
+                <p class="experience-eyebrow">Scroll Story</p>
+                <h2>Rotate the Cottage</h2>
+                <p class="experience-subtitle">Scroll down to spin the house 360 degrees, then keep going to fly inside.</p>
+                <div id="experience-status" class="experience-status">Loading model...</div>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <section id="details" class="architecture-section">
+            <h2>Project Snapshot</h2>
+            <div class="snapshot-grid">
+                <div class="snapshot-card">
+                    <h3>Location</h3>
+                    <p>Concept site, TBD</p>
+                </div>
+                <div class="snapshot-card">
+                    <h3>Stage</h3>
+                    <p>Design Development</p>
+                </div>
+                <div class="snapshot-card">
+                    <h3>Tools</h3>
+                    <p>Rhino, SketchUp, Adobe CC</p>
+                </div>
+                <div class="snapshot-card">
+                    <h3>Scope</h3>
+                    <p>Architecture + Interior Planning</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="architecture-section">
+            <div class="section-columns">
+                <div>
+                    <h2>Design Intent</h2>
+                    <p>The house is organized around a protected courtyard that pulls daylight deep into the plan. Public spaces remain open and social, while private zones stay quiet and layered. Material choices focus on textured plaster, warm timber, and blackened steel accents.</p>
+                </div>
+                <div class="intent-list">
+                    <h3>Spatial Priorities</h3>
+                    <ul>
+                        <li>Morning light in the kitchen and dining areas</li>
+                        <li>Outdoor rooms that extend living spaces</li>
+                        <li>Future-proofed accessibility and adaptability</li>
+                        <li>Acoustic separation for focused work</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="architecture-section">
+            <h2>Program + Flow</h2>
+            <div class="flow-grid">
+                <div class="flow-card">
+                    <h3>Ground Level</h3>
+                    <p>Open living, kitchen, and dining wrapped around the courtyard. Sliding panels allow full or partial enclosure.</p>
+                </div>
+                <div class="flow-card">
+                    <h3>Upper Level</h3>
+                    <p>Primary suite, two bedrooms, and a shared studio with a north-facing light scoop.</p>
+                </div>
+                <div class="flow-card">
+                    <h3>Outdoor</h3>
+                    <p>Rain garden, shaded patio, and edible landscape supporting passive cooling.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery" class="architecture-section">
+            <h2>Concept Gallery</h2>
+            <p class="section-subtitle">Add renders, sketches, or plan diagrams here as they evolve.</p>
+            <div class="gallery-grid">
+                <div class="gallery-tile">Courtyard Perspective</div>
+                <div class="gallery-tile">Ground Floor Plan</div>
+                <div class="gallery-tile">Material Palette</div>
+                <div class="gallery-tile">South Elevation</div>
+                <div class="gallery-tile">Entry Sequence</div>
+                <div class="gallery-tile">Night Lighting Study</div>
+            </div>
+        </section>
+
+        <section class="architecture-section">
+            <div class="callout">
+                <h2>Next Steps</h2>
+                <p>Finalize glazing studies, refine the structural grid, and develop the courtyard landscape strategy.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer id="footer"></footer>
+    <script>
+        fetch('footer.html?cache-bust=' + new Date().getTime())
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer').innerHTML = data;
+                var year = document.getElementById('current-year');
+                if (year) {
+                    year.textContent = new Date().getFullYear();
+                }
+            })
+            .catch(error => {
+                console.error('Footer fetch error:', error);
+            });
+    </script>
+    <script type="module" src="jsArchitecture.js"></script>
+</body>
+
+</html>

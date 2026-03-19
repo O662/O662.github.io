@@ -26,20 +26,32 @@
         */
 
         // Loading Screen Script
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             const loadingScreen = document.getElementById('loading-screen');
             const body = document.body;
-            
-            // Add a minimum loading time to show the animation
-            setTimeout(function() {
+
+            if (!loadingScreen) {
+                body.classList.remove('loading');
+                return;
+            }
+
+            function hideLoadingScreen() {
+                if (loadingScreen.classList.contains('fade-out')) {
+                    return;
+                }
                 loadingScreen.classList.add('fade-out');
                 body.classList.remove('loading');
-                
-                // Remove the loading screen from DOM after transition
-                setTimeout(function() {
+
+                setTimeout(function () {
                     loadingScreen.style.display = 'none';
                 }, 500);
-            }, 1000); // Show loader for at least 1 second
+            }
+
+            // Add a minimum loading time to show the animation
+            setTimeout(hideLoadingScreen, 1000);
+
+            // Failsafe in case the load event stalls
+            setTimeout(hideLoadingScreen, 4000);
         });
     </script>
 
@@ -66,16 +78,30 @@
                 console.error('There was a problem with the fetch operation:', error);
             });
         
+        function updateNavbarTheme(opacity) {
+            const isLight = opacity < 0.35;
+            document.body.classList.toggle('nav-on-light', isLight);
+
+            const navbar = document.getElementById('navbar');
+            if (navbar) {
+                navbar.classList.toggle('nav-on-light', isLight);
+            }
+        }
+
         window.addEventListener('scroll', function () {
             const navbar = document.getElementById('navbar');
             const scrollPosition = window.scrollY;
-            const maxScroll = 50; 
+            const maxScroll = 50;
             const opacity = Math.min(scrollPosition / maxScroll, 1);
             navbar.style.backgroundColor = `rgba(40, 40, 40, ${opacity})`;
-            
+
+            updateNavbarTheme(opacity);
+
             // Update section title in navbar
             updateCurrentSectionTitle();
         });
+
+        updateNavbarTheme(0);
 
         function updateCurrentSectionTitle() {
             const sections = document.querySelectorAll('section[id]');
