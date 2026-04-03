@@ -225,13 +225,13 @@
   }
 
   /* The seat grid */
-  .seat-row-wrapper { width: 100%; position: relative; margin-bottom: 24px; }
+  .seat-row-wrapper { width: 100%; position: relative; margin-bottom: 28px; }
   .seat-row {
     display: flex;
     align-items: stretch;
     gap: 2px;
     width: 100%;
-    height: 28px;
+    height: 52px;
   }
 
   .seat-block {
@@ -867,21 +867,16 @@ function renderSenateBar() {
   const row = document.getElementById('seat-row');
   row.innerHTML = '';
 
-  // Categorize the 35 races by projected winner + rating color
-  const demSeats = [];  // races projected Dem, sorted safe→lean
-  const repSeats = [];  // races projected Rep, sorted safe→lean
-  const tossSeats = []; // genuine toss-ups
-
+  const demSeats = [];
+  const repSeats = [];
+  const tossSeats = [];
   const sorted = [...races].sort((a, b) => b.avgDem - a.avgDem);
-
   sorted.forEach(r => {
     const rating = getRating(r.avgDem);
     if (r.avgDem >= 55) demSeats.push({ r, rating });
     else if (r.avgRep >= 55) repSeats.push({ r, rating });
     else tossSeats.push({ r, rating });
   });
-
-  // Sort rep seats least-likely first so darkest red is outermost right
   repSeats.sort((a, b) => a.r.avgRep - b.r.avgRep);
 
   const totalDem = DEM_HELD + demSeats.length;
@@ -889,7 +884,6 @@ function renderSenateBar() {
   const totalSeats = 100;
   const needMajority = 51;
 
-  // Update totals display
   document.getElementById('total-dem-seats').textContent = totalDem;
   document.getElementById('total-rep-seats').textContent = totalRep;
   document.getElementById('dem-seats-breakdown').textContent = `${DEM_HELD} held + ${demSeats.length} projected`;
@@ -909,77 +903,206 @@ function renderSenateBar() {
     statusEl.style.color = 'rgba(255,255,255,0.3)';
   }
 
-  // Helper to create a seat block
-  function makeSeat(color, title, width) {
-    const el = document.createElement('div');
-    el.className = 'seat-block';
-    el.style.background = color;
-    el.style.flex = width + ' 0 0';
-    el.style.minWidth = '0';
-    el.title = title;
-    return el;
+  // Tooltip helper — uses the floating #tooltip div
+  function attachTooltip(el, html) {
+    el.addEventListener('mousemove', evt => {
+      const tt = document.getElementById('tooltip');
+      tt.innerHTML = html;
+      tt.style.opacity = '1';
+      tt.style.left = Math.min(evt.clientX + 14, window.innerWidth - 260) + 'px';
+      tt.style.top = (evt.clientY - 10) + 'px';
+    });
+    el.addEventListener('mouseleave', () => {
+      document.getElementById('tooltip').style.opacity = '0';
+    });
   }
 
-  // Total width is 100 units = 100 seats
-  // Each seat gets width = 1 unit of flex
+  // The bar uses flex. Each "slot" = 1fr of 100.
+  // Held blocks = DEM_HELD or REP_HELD flex units but rendered as ONE element.
+  // Race blocks = 1 flex unit each, but taller with a label inside.
+  // We encode each block's flex-grow proportionally.
 
-  // 1. Dem held (not up) — dark teal-navy
-  for (let i = 0; i < DEM_HELD; i++) {
-    row.appendChild(makeSeat('#1a3560', `Dem seat (not up for election)`, 1));
-  }
+  const BAR_H = 52; // px — tall enough for labels
 
-  // 2. Dem projected races (safe→lean, left to right)
+  // 1. DEM HELD — one big block
+  const demHeldEl = document.createElement('div');
+  demHeldEl.style.cssText = `
+    flex: ${DEM_HELD} 0 0; min-width: 0; height: ${BAR_H}px;
+    background: #162a4a; border-radius: 4px 0 0 4px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    cursor: default; gap: 1px; overflow: hidden;
+    border-right: 2px solid rgba(255,255,255,0.08);
+  `;
+  demHeldEl.innerHTML = `
+    <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:rgba(107,163,232,0.7);line-height:1;">${DEM_HELD}</div>
+    <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(107,163,232,0.4);letter-spacing:0.06em;text-transform:uppercase;">not up</div>
+  `;
+  attachTooltip(demHeldEl, `
+    <div class="tt-title" style="color:#6ba3e8;">${DEM_HELD} Democratic seats</div>
+    <div class="tt-sub">Not up for election in 2026</div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);">These seats are in Classes I and III<br>and will next face voters in 2028 or 2030.</div>
+  `);
+  row.appendChild(demHeldEl);
+
+  // gap
+  row.appendChild(Object.assign(document.createElement('div'), { style: 'width:3px;flex-shrink:0;' }));
+
+  // 2. DEM PROJECTED RACES — individual labeled blocks
   demSeats.forEach(({ r, rating }) => {
-    const el = makeSeat(rating.color, `${r.state}: ${rating.label} (${r.avgDem}% Dem)`, 1);
+    const el = document.createElement('div');
+    const leadPct = r.avgDem;
+    el.style.cssText = `
+      flex: 1 0 0; min-width: 0; height: ${BAR_H}px;
+      background: ${rating.color};
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      cursor: pointer; gap: 0px; overflow: hidden;
+      transition: opacity 0.15s, transform 0.12s;
+      border-radius: 2px;
+    `;
+    el.innerHTML = `
+      <div style="font-family:'DM Mono',monospace;font-size:9px;font-weight:500;color:rgba(255,255,255,0.9);line-height:1.1;">${r.abbr}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:7px;color:rgba(255,255,255,0.6);line-height:1.1;">${leadPct}%</div>
+    `;
+    el.addEventListener('mouseenter', () => { el.style.opacity = '0.8'; el.style.transform = 'scaleY(1.06)'; });
+    el.addEventListener('mouseleave', () => { el.style.opacity = '1'; el.style.transform = 'scaleY(1)'; });
+    attachTooltip(el, `
+      <div class="tt-title">${r.state}</div>
+      <div class="tt-sub">${r.incumbent}${r.open ? ' · open seat' : ''}</div>
+      <div class="tt-grid">
+        <span class="tt-head"></span><span class="tt-head">Polymarket</span><span class="tt-head">Kalshi</span>
+        <span style="color:var(--text-dim);font-size:10px">Dem</span><span class="tt-dem">${r.demPoly}%</span><span class="tt-dem">${r.demKal}%</span>
+        <span style="color:var(--text-dim);font-size:10px">Rep</span><span class="tt-rep">${r.repPoly}%</span><span class="tt-rep">${r.repKal}%</span>
+        <span style="color:var(--text-dim);font-size:10px">Avg</span><span style="color:var(--text-muted)">${r.avgDem}% D</span><span style="color:var(--text-muted)">${r.avgRep}% R</span>
+      </div>
+      <span class="tt-badge" style="background:${rating.color}33;color:${rating.textColor}">${rating.label}</span>
+    `);
     row.appendChild(el);
   });
 
-  // 3. Toss-ups in center
-  tossSeats.forEach(({ r, rating }) => {
-    const el = makeSeat(rating.color, `${r.state}: Toss-up (${r.avgDem}% Dem / ${r.avgRep}% Rep)`, 1);
-    row.appendChild(el);
-  });
-
-  // 4. Rep projected races (lean→safe, left to right, so darkest is rightmost)
-  repSeats.forEach(({ r, rating }) => {
-    const el = makeSeat(rating.color, `${r.state}: ${rating.label} (${r.avgRep}% Rep)`, 1);
-    row.appendChild(el);
-  });
-
-  // 5. Rep held (not up) — dark burgundy
-  for (let i = 0; i < REP_HELD; i++) {
-    row.appendChild(makeSeat('#3a1010', `Rep seat (not up for election)`, 1));
+  // gap before toss-ups
+  if (tossSeats.length) {
+    row.appendChild(Object.assign(document.createElement('div'), { style: 'width:3px;flex-shrink:0;' }));
   }
 
-  // Majority marker at position 51 from left
-  // We inject a marker element by absolute positioning relative to the bar
-  // Use a wrapper approach: wrap seat-row in a relative container
-  addMajorityMarker(row, totalSeats, needMajority);
+  // 3. TOSS-UPS
+  tossSeats.forEach(({ r, rating }) => {
+    const el = document.createElement('div');
+    el.style.cssText = `
+      flex: 1 0 0; min-width: 0; height: ${BAR_H}px;
+      background: ${rating.color};
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      cursor: pointer; overflow: hidden;
+      transition: opacity 0.15s, transform 0.12s;
+      border-radius: 2px;
+    `;
+    el.innerHTML = `
+      <div style="font-family:'DM Mono',monospace;font-size:9px;font-weight:500;color:rgba(255,255,255,0.9);line-height:1.1;">${r.abbr}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:7px;color:rgba(255,255,255,0.6);line-height:1.1;">~50%</div>
+    `;
+    el.addEventListener('mouseenter', () => { el.style.opacity = '0.8'; el.style.transform = 'scaleY(1.06)'; });
+    el.addEventListener('mouseleave', () => { el.style.opacity = '1'; el.style.transform = 'scaleY(1)'; });
+    attachTooltip(el, `
+      <div class="tt-title">${r.state}</div>
+      <div class="tt-sub">${r.incumbent}${r.open ? ' · open seat' : ''}</div>
+      <div class="tt-grid">
+        <span class="tt-head"></span><span class="tt-head">Polymarket</span><span class="tt-head">Kalshi</span>
+        <span style="color:var(--text-dim);font-size:10px">Dem</span><span class="tt-dem">${r.demPoly}%</span><span class="tt-dem">${r.demKal}%</span>
+        <span style="color:var(--text-dim);font-size:10px">Rep</span><span class="tt-rep">${r.repPoly}%</span><span class="tt-rep">${r.repKal}%</span>
+      </div>
+      <span class="tt-badge" style="background:${rating.color}33;color:${rating.textColor}">Toss-up</span>
+    `);
+    row.appendChild(el);
+  });
+
+  // gap before rep races
+  row.appendChild(Object.assign(document.createElement('div'), { style: 'width:3px;flex-shrink:0;' }));
+
+  // 4. REP PROJECTED RACES
+  repSeats.forEach(({ r, rating }) => {
+    const el = document.createElement('div');
+    const leadPct = r.avgRep;
+    el.style.cssText = `
+      flex: 1 0 0; min-width: 0; height: ${BAR_H}px;
+      background: ${rating.color};
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      cursor: pointer; overflow: hidden;
+      transition: opacity 0.15s, transform 0.12s;
+      border-radius: 2px;
+    `;
+    el.innerHTML = `
+      <div style="font-family:'DM Mono',monospace;font-size:9px;font-weight:500;color:rgba(255,255,255,0.9);line-height:1.1;">${r.abbr}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:7px;color:rgba(255,255,255,0.6);line-height:1.1;">${leadPct}%</div>
+    `;
+    el.addEventListener('mouseenter', () => { el.style.opacity = '0.8'; el.style.transform = 'scaleY(1.06)'; });
+    el.addEventListener('mouseleave', () => { el.style.opacity = '1'; el.style.transform = 'scaleY(1)'; });
+    attachTooltip(el, `
+      <div class="tt-title">${r.state}</div>
+      <div class="tt-sub">${r.incumbent}${r.open ? ' · open seat' : ''}</div>
+      <div class="tt-grid">
+        <span class="tt-head"></span><span class="tt-head">Polymarket</span><span class="tt-head">Kalshi</span>
+        <span style="color:var(--text-dim);font-size:10px">Dem</span><span class="tt-dem">${r.demPoly}%</span><span class="tt-dem">${r.demKal}%</span>
+        <span style="color:var(--text-dim);font-size:10px">Rep</span><span class="tt-rep">${r.repPoly}%</span><span class="tt-rep">${r.repKal}%</span>
+        <span style="color:var(--text-dim);font-size:10px">Avg</span><span style="color:var(--text-muted)">${r.avgDem}% D</span><span style="color:var(--text-muted)">${r.avgRep}% R</span>
+      </div>
+      <span class="tt-badge" style="background:${rating.color}33;color:${rating.textColor}">${rating.label}</span>
+    `);
+    row.appendChild(el);
+  });
+
+  // gap
+  row.appendChild(Object.assign(document.createElement('div'), { style: 'width:3px;flex-shrink:0;' }));
+
+  // 5. REP HELD — one big block
+  const repHeldEl = document.createElement('div');
+  repHeldEl.style.cssText = `
+    flex: ${REP_HELD} 0 0; min-width: 0; height: ${BAR_H}px;
+    background: #3a1212; border-radius: 0 4px 4px 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    cursor: default; gap: 1px; overflow: hidden;
+    border-left: 2px solid rgba(255,255,255,0.08);
+  `;
+  repHeldEl.innerHTML = `
+    <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:rgba(232,120,120,0.7);line-height:1;">${REP_HELD}</div>
+    <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(232,120,120,0.4);letter-spacing:0.06em;text-transform:uppercase;">not up</div>
+  `;
+  attachTooltip(repHeldEl, `
+    <div class="tt-title" style="color:#e87878;">${REP_HELD} Republican seats</div>
+    <div class="tt-sub">Not up for election in 2026</div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);">These seats are in Classes I and III<br>and will next face voters in 2028 or 2030.</div>
+  `);
+  row.appendChild(repHeldEl);
+
+  // Majority marker
+  addMajorityMarker(row, totalSeats, needMajority, BAR_H);
 }
 
-function addMajorityMarker(row, total, threshold) {
-  // Wrap the row in a relative div if not already
+function addMajorityMarker(row, total, threshold, barH) {
   const parent = row.parentElement;
   let wrapper = parent.querySelector('.seat-row-wrapper');
   if (!wrapper) {
     wrapper = document.createElement('div');
     wrapper.className = 'seat-row-wrapper';
-    wrapper.style.cssText = 'position:relative;';
+    wrapper.style.cssText = 'position:relative; width:100%;';
     parent.insertBefore(wrapper, row);
     wrapper.appendChild(row);
   }
-
-  // Remove old marker
   const old = wrapper.querySelector('.majority-marker-abs');
   if (old) old.remove();
 
+  // The bar total includes 35 race slots + 2 big held blocks + small gaps
+  // Position marker at 51/100 of total flex weight
   const pct = ((threshold - 0.5) / total) * 100;
   const marker = document.createElement('div');
   marker.className = 'majority-marker-abs';
   marker.style.cssText = `position:absolute;top:0;left:${pct}%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:10;`;
   marker.innerHTML = `
-    <div style="width:2px;height:28px;background:rgba(255,255,255,0.6);border-radius:1px;"></div>
-    <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(255,255,255,0.5);letter-spacing:0.05em;margin-top:2px;white-space:nowrap;">51 majority</div>
+    <div style="width:2px;height:${barH}px;background:rgba(255,255,255,0.65);border-radius:1px;"></div>
+    <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(255,255,255,0.55);letter-spacing:0.05em;margin-top:3px;white-space:nowrap;text-align:center;">51<br>majority</div>
   `;
   wrapper.appendChild(marker);
 }
