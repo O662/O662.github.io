@@ -12,18 +12,25 @@
             <h1 id="viewer-title">Writings Viewer</h1>
             <p class="viewer-subtitle">Adjust fonts, size, and colors for comfortable reading.</p>
         </div>
-        <a class="viewer-back" href="pPortfolio.html#writings">Back to Writings</a>
+        <div class="viewer-actions">
+            <button class="viewer-toggle" type="button" id="viewer-toggle">Reader Settings</button>
+            <a class="viewer-back" href="pPortfolio.html#writings">Back to Writings</a>
+        </div>
     </header>
 
-    <section class="viewer-controls" aria-label="Reader controls">
+    <section class="viewer-controls is-hidden" aria-label="Reader controls" id="viewer-controls">
         <label>
             Font
             <select id="font-family">
                 <option value="Georgia, serif">Georgia</option>
-                <option value="\"Merriweather\", serif">Merriweather</option>
-                <option value="\"Times New Roman\", serif">Times New Roman</option>
-                <option value="\"Arial\", sans-serif">Arial</option>
-                <option value="\"Helvetica\", sans-serif">Helvetica</option>
+                <option value="'Merriweather', serif">Merriweather</option>
+                <option value="'Playfair Display', serif">Playfair Display</option>
+                <option value="'Times New Roman', serif">Times New Roman</option>
+                <option value="'Fira Sans', sans-serif">Fira Sans</option>
+                <option value="'Roboto', sans-serif">Roboto</option>
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="'Courier New', monospace">Courier New</option>
+                <option value="'Source Code Pro', monospace">Source Code Pro</option>
             </select>
         </label>
         <label>
@@ -60,6 +67,8 @@
             const lineHeight = document.getElementById("line-height");
             const bgColor = document.getElementById("bg-color");
             const textColor = document.getElementById("text-color");
+            const controls = document.getElementById("viewer-controls");
+            const toggle = document.getElementById("viewer-toggle");
 
             const params = new URLSearchParams(window.location.search);
             const doc = params.get("doc");
@@ -81,11 +90,65 @@
                 return `<!DOCTYPE html><html><head><base href=\"${baseHref}\"></head><body>${html}</body></html>`;
             }
 
+            function stripInlineStyles(doc) {
+                const elements = doc.querySelectorAll("[style]");
+                elements.forEach((el) => {
+                    el.removeAttribute("style");
+                });
+            }
+
+            function stripWordStyleBlocks(doc) {
+                const styleTags = doc.querySelectorAll("style");
+                styleTags.forEach((styleTag) => {
+                    if (styleTag.id === "reader-style") {
+                        return;
+                    }
+                    styleTag.remove();
+                });
+            }
+
+            function unwrapFontTags(doc) {
+                const fontTags = doc.querySelectorAll("font");
+                fontTags.forEach((fontTag) => {
+                    const span = doc.createElement("span");
+                    while (fontTag.firstChild) {
+                        span.appendChild(fontTag.firstChild);
+                    }
+                    fontTag.replaceWith(span);
+                });
+            }
+
+            function ensureFontStylesheet(doc) {
+                if (!doc.head || doc.getElementById("reader-fonts")) {
+                    return;
+                }
+                const link = doc.createElement("link");
+                link.id = "reader-fonts";
+                link.rel = "stylesheet";
+                link.href = "https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&family=Roboto:wght@400;700&family=Source+Code+Pro:wght@400;600&display=swap";
+                doc.head.appendChild(link);
+            }
+
+            function normalizeDocument(doc) {
+                const root = doc.documentElement;
+                if (root && root.getAttribute("data-reader-normalized") === "true") {
+                    return;
+                }
+                stripWordStyleBlocks(doc);
+                stripInlineStyles(doc);
+                unwrapFontTags(doc);
+                if (root) {
+                    root.setAttribute("data-reader-normalized", "true");
+                }
+            }
+
             function applyReaderStyles() {
                 if (!frame.contentDocument) {
                     return;
                 }
                 const doc = frame.contentDocument;
+                const root = doc.documentElement;
+                const body = doc.body || doc.documentElement;
                 let styleTag = doc.getElementById("reader-style");
                 if (!styleTag) {
                     styleTag = doc.createElement("style");
@@ -115,12 +178,71 @@
                         height: auto;
                     }
                 `;
+
+                ensureFontStylesheet(doc);
+                normalizeDocument(doc);
+
+                if (root) {
+                    root.style.setProperty("font-family", fontFamily.value, "important");
+                    root.style.setProperty("font-size", `${fontSize.value}px`, "important");
+                    root.style.setProperty("line-height", `${lineHeight.value}`, "important");
+                    root.style.setProperty("color", textColor.value, "important");
+                    root.style.setProperty("background-color", bgColor.value, "important");
+                }
+                if (body) {
+                    body.style.setProperty("font-family", fontFamily.value, "important");
+                    body.style.setProperty("font-size", `${fontSize.value}px`, "important");
+                    body.style.setProperty("line-height", `${lineHeight.value}`, "important");
+                    body.style.setProperty("color", textColor.value, "important");
+                    body.style.setProperty("background-color", bgColor.value, "important");
+                }
+
             }
 
             function detectCharset(buffer) {
                 const header = new TextDecoder("iso-8859-1").decode(buffer.slice(0, 2048));
                 const match = header.match(/charset\s*=\s*([\w-]+)/i);
                 return match ? match[1].toLowerCase() : "utf-8";
+            }
+
+            function countReplacementChars(text) {
+                let count = 0;
+                for (let i = 0; i < text.length; i += 1) {
+                    if (text[i] === "\ufffd") {
+                        count += 1;
+                    }
+                }
+                return count;
+            }
+
+            function decodeWithBestCharset(buffer, declaredCharset) {
+                const candidates = [];
+                const declared = declaredCharset || "utf-8";
+                const primary = declared === "utf-8" ? ["utf-8"] : [declared, "utf-8", "windows-1252"];
+                primary.forEach((name) => {
+                    try {
+                        const text = new TextDecoder(name).decode(buffer);
+                        candidates.push({ name, text, replacements: countReplacementChars(text) });
+                    } catch (error) {
+                        // Ignore unsupported decoders.
+                    }
+                });
+                if (candidates.length === 0) {
+                    return new TextDecoder("utf-8").decode(buffer);
+                }
+                candidates.sort((a, b) => a.replacements - b.replacements);
+                return candidates[0].text;
+            }
+
+            function normalizeMojibake(text) {
+                return text
+                    .replace(/ï¿½/g, "—")
+                    .replace(/â€”/g, "—")
+                    .replace(/â€“/g, "–")
+                    .replace(/â€œ/g, "“")
+                    .replace(/â€�/g, "”")
+                    .replace(/â€˜/g, "‘")
+                    .replace(/â€™/g, "’");
             }
 
             function loadDocument() {
@@ -135,13 +257,7 @@
                     .then((response) => response.arrayBuffer())
                     .then((buffer) => {
                         const charset = detectCharset(buffer);
-                        let decoder;
-                        try {
-                            decoder = new TextDecoder(charset);
-                        } catch (error) {
-                            decoder = new TextDecoder("utf-8");
-                        }
-                        const html = decoder.decode(buffer);
+                        const html = normalizeMojibake(decodeWithBestCharset(buffer, charset));
                         const docUrl = new URL(doc, window.location.href);
                         const baseHref = docUrl.href.substring(0, docUrl.href.lastIndexOf("/") + 1);
                         const sanitized = injectBase(html, baseHref);
@@ -158,6 +274,12 @@
                 control.addEventListener("input", applyReaderStyles);
                 control.addEventListener("change", applyReaderStyles);
             });
+
+            if (toggle && controls) {
+                toggle.addEventListener("click", () => {
+                    controls.classList.toggle("is-hidden");
+                });
+            }
 
             loadDocument();
         })();

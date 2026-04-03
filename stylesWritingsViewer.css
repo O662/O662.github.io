@@ -20,6 +20,29 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.viewer-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.viewer-toggle {
+    border: 1px solid rgba(239, 239, 239, 0.4);
+    background: transparent;
+    color: #efefef;
+    padding: 10px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.viewer-toggle:hover {
+    background: #efefef;
+    color: #121218;
+    border-color: #efefef;
+}
+
 .viewer-header h1 {
     margin: 0 0 6px;
     font-size: clamp(1.8rem, 2.8vw, 2.6rem);
@@ -54,6 +77,10 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.viewer-controls.is-hidden {
+    display: none;
+}
+
 .viewer-controls label {
     display: flex;
     flex-direction: column;
@@ -63,6 +90,7 @@ body {
     letter-spacing: 0.08em;
     color: rgba(239, 239, 239, 0.7);
 }
+
 
 .viewer-controls input,
 .viewer-controls select {

@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 Senate Races — Prediction Market Odds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dem-safe: #0f3f8c;
+    --dem-likely: #2563b8;
+    --dem-lean: #6ba3e8;
+    --toss: #b8960c;
+    --rep-lean: #e87878;
+    --rep-likely: #c0392b;
+    --rep-safe: #7a0e0e;
+    --bg: #0d0d10;
+    --surface: #16161c;
+    --surface2: #1e1e26;
+    --border: rgba(255,255,255,0.08);
+    --text: #f0f0f5;
+    --text-muted: rgba(240,240,245,0.5);
+    --text-dim: rgba(240,240,245,0.25);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid texture bg */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--text);
+  }
+
+  h1 span.year {
+    color: rgba(240,240,245,0.35);
+  }
+
+  .subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+  }
+
+  .refresh-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .refresh-btn:hover {
+    background: var(--surface);
+    color: var(--text);
+    border-color: rgba(255,255,255,0.18);
+  }
+
+  /* METRICS */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+
+  .metric {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    transition: border-color 0.2s;
+  }
+  .metric:hover { border-color: rgba(255,255,255,0.15); }
+
+  .metric-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  .metric-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .metric-val.dem { color: #6ba3e8; }
+  .metric-val.rep { color: #e87878; }
+  .metric-val.toss-c { color: var(--toss); }
+  .metric-val.total { color: var(--text); }
+
+  /* MAP */
+  .map-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  #map-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .state-path {
+    stroke: var(--bg);
+    stroke-width: 1.2px;
+    cursor: pointer;
+    transition: opacity 0.15s, stroke-width 0.1s;
+  }
+  .state-path:hover {
+    opacity: 0.82;
+    stroke-width: 2.5px;
+    stroke: rgba(255,255,255,0.5);
+  }
+
+  .state-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8.5px;
+    fill: rgba(255,255,255,0.7);
+    text-anchor: middle;
+    pointer-events: none;
+    font-weight: 500;
+  }
+  .state-pct-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 7px;
+    fill: rgba(255,255,255,0.55);
+    text-anchor: middle;
+    pointer-events: none;
+  }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+  }
+
+  .legend-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  /* TOOLTIP */
+  #tooltip {
+    position: fixed;
+    background: var(--surface2);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 12px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.12s;
+    z-index: 1000;
+    min-width: 200px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  }
+
+  .tt-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    color: var(--text);
+  }
+  .tt-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 10px;
+  }
+  .tt-grid {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    gap: 4px 12px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+  }
+  .tt-head { color: var(--text-dim); font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .tt-dem { color: #6ba3e8; }
+  .tt-rep { color: #e87878; }
+  .tt-badge {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .tt-poly-kal { margin-top: 6px; font-size: 10px; color: var(--text-dim); font-family: 'DM Mono', monospace; }
+
+  /* TABLE */
+  .table-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .table-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 6px;
+  }
+
+  .filter-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+  .filter-btn.active {
+    background: var(--surface2);
+    border-color: rgba(255,255,255,0.2);
+    color: var(--text);
+  }
+
+  .table-scroll { max-height: 420px; overflow-y: auto; }
+  .table-scroll::-webkit-scrollbar { width: 4px; }
+  .table-scroll::-webkit-scrollbar-track { background: transparent; }
+  .table-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  th {
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    text-align: left;
+    padding: 8px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    user-select: none;
+    z-index: 2;
+  }
+  th.sortable { cursor: pointer; }
+  th.sortable:hover { color: var(--text-muted); }
+
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+
+  .td-state { font-weight: 500; color: var(--text); }
+  .td-open { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--text-dim); margin-left: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .td-inc { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-muted); }
+
+  .td-pct-dem { font-family: 'DM Mono', monospace; font-weight: 500; color: #6ba3e8; }
+  .td-pct-rep { font-family: 'DM Mono', monospace; font-weight: 500; color: #e87878; }
+
+  .bar-wrap { display: flex; align-items: center; gap: 6px; min-width: 100px; }
+  .bar-track {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .bar-fill { height: 100%; border-radius: 3px; }
+
+  .rating-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  .winning-pct {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .source-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 1.25rem;
+    background: rgba(0,0,0,0.2);
+    border-top: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  @media (max-width: 700px) {
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+    .header-top { flex-direction: column; }
+  }
+  @media (max-width: 480px) {
+    .metrics { grid-template-columns: 1fr 1fr; }
+    h1 { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header>
+    <div class="header-top">
+      <div>
+        <h1><span class="year">2026</span> U.S. Senate Races</h1>
+        <div class="subtitle">Polymarket &amp; Kalshi — averaged prediction market odds · <span id="last-updated">Apr 3, 2026</span></div>
+      </div>
+      <button class="refresh-btn" id="refresh-btn">↻ Refresh</button>
+    </div>
+  </header>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">Dem projected</div>
+      <div class="metric-val dem" id="dem-count">—</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Rep projected</div>
+      <div class="metric-val rep" id="rep-count">—</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Toss-ups</div>
+      <div class="metric-val toss-c" id="toss-count">—</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Total races</div>
+      <div class="metric-val total" id="total-count">—</div>
+    </div>
+  </div>
+
+  <div class="map-section">
+    <div id="map-container"></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--dem-safe)"></div>Safe Dem (90%+)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--dem-likely)"></div>Likely Dem (75–89%)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--dem-lean)"></div>Lean Dem (55–74%)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--toss)"></div>Toss-up (45–54%)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--rep-lean)"></div>Lean Rep (55–74%)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--rep-likely)"></div>Likely Rep (75–89%)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--rep-safe)"></div>Safe Rep (90%+)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#2a2a35;border:1px solid #444"></div>No race</div>
+    </div>
+  </div>
+
+  <div class="table-section">
+    <div class="table-header">
+      <div class="table-title">Race details</div>
+      <div class="filter-tabs">
+        <button class="filter-btn active" id="btn-all" onclick="setFilter('all')">All</button>
+        <button class="filter-btn" id="btn-comp" onclick="setFilter('comp')">Competitive</button>
+        <button class="filter-btn" id="btn-dem" onclick="setFilter('dem')">Lean/Likely Dem</button>
+        <button class="filter-btn" id="btn-rep" onclick="setFilter('rep')">Lean/Likely Rep</button>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable" onclick="sortBy('state')">State <span id="sort-state">↕</span></th>
+            <th>Incumbent</th>
+            <th class="sortable" onclick="sortBy('dem')">Dem % <span id="sort-dem">↕</span></th>
+            <th class="sortable" onclick="sortBy('rep')">Rep % <span id="sort-rep">↕</span></th>
+            <th>Leading</th>
+            <th>Odds bar</th>
+            <th class="sortable" onclick="sortBy('lead')">Avg odds <span id="sort-lead">↕</span></th>
+            <th>Rating</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+    <div class="source-bar">
+      <span>Source: Polymarket &amp; Kalshi · April 3, 2026</span>
+      <span>Safe non-contested states use CPR ratings → approximate probabilities</span>
+    </div>
+  </div>
+</div>
+
+<div id="tooltip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+const races = [
+  { state:'Alaska',         abbr:'AK', demPoly:61, repPoly:39, demKal:58, repKal:42, incumbent:'Dan Sullivan (R)', open:false },
+  { state:'Alabama',        abbr:'AL', demPoly:5,  repPoly:95, demKal:5,  repKal:95, incumbent:'Tommy Tuberville (R)', open:false },
+  { state:'Arkansas',       abbr:'AR', demPoly:4,  repPoly:96, demKal:4,  repKal:96, incumbent:'John Boozman (R)', open:false },
+  { state:'Colorado',       abbr:'CO', demPoly:88, repPoly:12, demKal:87, repKal:13, incumbent:'Michael Bennet (D)', open:false },
+  { state:'Delaware',       abbr:'DE', demPoly:95, repPoly:5,  demKal:94, repKal:6,  incumbent:'Chris Coons (D)', open:false },
+  { state:'Florida',        abbr:'FL', demPoly:16, repPoly:84, demKal:16, repKal:84, incumbent:'Rick Scott (R) – special', open:true },
+  { state:'Georgia',        abbr:'GA', demPoly:84, repPoly:16, demKal:80, repKal:20, incumbent:'Jon Ossoff (D)', open:false },
+  { state:'Hawaii',         abbr:'HI', demPoly:97, repPoly:3,  demKal:96, repKal:4,  incumbent:'Brian Schatz (D)', open:false },
+  { state:'Idaho',          abbr:'ID', demPoly:4,  repPoly:96, demKal:4,  repKal:96, incumbent:'James Risch (R)', open:false },
+  { state:'Illinois',       abbr:'IL', demPoly:95, repPoly:5,  demKal:94, repKal:6,  incumbent:'Dick Durbin (D) – open', open:true },
+  { state:'Iowa',           abbr:'IA', demPoly:39, repPoly:61, demKal:36, repKal:64, incumbent:'Chuck Grassley (R)', open:false },
+  { state:'Kansas',         abbr:'KS', demPoly:5,  repPoly:95, demKal:5,  repKal:95, incumbent:'Jerry Moran (R)', open:false },
+  { state:'Kentucky',       abbr:'KY', demPoly:4,  repPoly:96, demKal:4,  repKal:96, incumbent:'Mitch McConnell (R) – open', open:true },
+  { state:'Louisiana',      abbr:'LA', demPoly:5,  repPoly:95, demKal:5,  repKal:95, incumbent:'Bill Cassidy (R)', open:false },
+  { state:'Maine',          abbr:'ME', demPoly:74, repPoly:26, demKal:71, repKal:29, incumbent:'Susan Collins (R)', open:false },
+  { state:'Massachusetts',  abbr:'MA', demPoly:97, repPoly:3,  demKal:97, repKal:3,  incumbent:'Ed Markey (D)', open:false },
+  { state:'Michigan',       abbr:'MI', demPoly:84, repPoly:16, demKal:80, repKal:20, incumbent:'Gary Peters (D) – open', open:true },
+  { state:'Minnesota',      abbr:'MN', demPoly:80, repPoly:20, demKal:79, repKal:21, incumbent:'Tina Smith (D) – open', open:true },
+  { state:'Mississippi',    abbr:'MS', demPoly:5,  repPoly:95, demKal:5,  repKal:95, incumbent:'Roger Wicker (R)', open:false },
+  { state:'Montana',        abbr:'MT', demPoly:10, repPoly:90, demKal:9,  repKal:91, incumbent:'Steve Daines (R)', open:false },
+  { state:'Nebraska',       abbr:'NE', demPoly:6,  repPoly:94, demKal:6,  repKal:94, incumbent:'Deb Fischer (R)', open:false },
+  { state:'New Hampshire',  abbr:'NH', demPoly:72, repPoly:28, demKal:70, repKal:30, incumbent:'Jeanne Shaheen (D) – open', open:true },
+  { state:'New Jersey',     abbr:'NJ', demPoly:82, repPoly:18, demKal:81, repKal:19, incumbent:'Cory Booker (D)', open:false },
+  { state:'New Mexico',     abbr:'NM', demPoly:88, repPoly:12, demKal:87, repKal:13, incumbent:'Ben Ray Luján (D)', open:false },
+  { state:'North Carolina', abbr:'NC', demPoly:88, repPoly:12, demKal:85, repKal:15, incumbent:'Thom Tillis (R) – open', open:true },
+  { state:'Ohio',           abbr:'OH', demPoly:58, repPoly:42, demKal:55, repKal:45, incumbent:'Jon Husted (R) – special', open:true },
+  { state:'Oklahoma',       abbr:'OK', demPoly:4,  repPoly:96, demKal:4,  repKal:96, incumbent:'James Lankford (R)', open:false },
+  { state:'Oregon',         abbr:'OR', demPoly:88, repPoly:12, demKal:87, repKal:13, incumbent:'Jeff Merkley (D)', open:false },
+  { state:'Rhode Island',   abbr:'RI', demPoly:96, repPoly:4,  demKal:95, repKal:5,  incumbent:'Sheldon Whitehouse (D)', open:false },
+  { state:'South Carolina', abbr:'SC', demPoly:10, repPoly:90, demKal:9,  repKal:91, incumbent:'Lindsey Graham (R)', open:false },
+  { state:'South Dakota',   abbr:'SD', demPoly:4,  repPoly:96, demKal:4,  repKal:96, incumbent:'John Thune (R)', open:false },
+  { state:'Texas',          abbr:'TX', demPoly:44, repPoly:56, demKal:42, repKal:58, incumbent:'Open (R primary)', open:true },
+  { state:'Virginia',       abbr:'VA', demPoly:84, repPoly:16, demKal:83, repKal:17, incumbent:'Mark Warner (D)', open:false },
+  { state:'West Virginia',  abbr:'WV', demPoly:5,  repPoly:95, demKal:5,  repKal:95, incumbent:'Jim Justice (R)', open:false },
+  { state:'Wyoming',        abbr:'WY', demPoly:3,  repPoly:97, demKal:3,  repKal:97, incumbent:'John Barrasso (R)', open:false },
+];
+
+races.forEach(r => {
+  r.avgDem = Math.round((r.demPoly + r.demKal) / 2);
+  r.avgRep = Math.round((r.repPoly + r.repKal) / 2);
+});
+
+function getRating(avgDem) {
+  if (avgDem >= 90) return { label:'Safe Dem',    color:'#0f3f8c', party:'D', textColor:'rgba(107,163,232,0.9)' };
+  if (avgDem >= 75) return { label:'Likely Dem',  color:'#2563b8', party:'D', textColor:'rgba(107,163,232,0.9)' };
+  if (avgDem >= 55) return { label:'Lean Dem',    color:'#6ba3e8', party:'D', textColor:'rgba(107,163,232,0.9)' };
+  if (avgDem >= 45) return { label:'Toss-up',     color:'#b8960c', party:'T', textColor:'rgba(184,150,12,0.9)' };
+  if (avgDem >= 25) return { label:'Lean Rep',    color:'#e87878', party:'R', textColor:'rgba(232,120,120,0.9)' };
+  if (avgDem >= 10) return { label:'Likely Rep',  color:'#c0392b', party:'R', textColor:'rgba(232,120,120,0.9)' };
+  return               { label:'Safe Rep',    color:'#7a0e0e', party:'R', textColor:'rgba(232,120,120,0.9)' };
+}
+
+const stateByName = {};
+races.forEach(r => { stateByName[r.state] = r; });
+
+// ---- MAP ----
+d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us => {
+  const features = topojson.feature(us, us.objects.states).features;
+
+  const svg = d3.select('#map-container').append('svg')
+    .attr('id','map-svg')
+    .attr('viewBox','0 0 960 560')
+    .attr('width','100%');
+
+  const proj = d3.geoAlbersUsa().scale(1280).translate([480, 300]);
+  const pathGen = d3.geoPath(proj);
+
+  const smallStates = new Set(['Connecticut','Delaware','Rhode Island','New Jersey','Maryland','Massachusetts','Vermont','New Hampshire','Hawaii']);
+
+  svg.selectAll('path.state-path')
+    .data(features)
+    .join('path')
+    .attr('class','state-path')
+    .attr('d', pathGen)
+    .attr('fill', d => {
+      const r = stateByName[d.properties.name];
+      return r ? getRating(r.avgDem).color : '#2a2a35';
+    })
+    .on('mousemove', (evt, d) => {
+      const r = stateByName[d.properties.name];
+      if (!r) return;
+      const rating = getRating(r.avgDem);
+      const leadParty = r.avgDem >= 50 ? 'D' : 'R';
+      const leadPct = leadParty === 'D' ? r.avgDem : r.avgRep;
+      const badge = `<span class="tt-badge" style="background:${rating.color}22;color:${rating.textColor}">${rating.label}</span>`;
+      document.getElementById('tooltip').innerHTML = `
+        <div class="tt-title">${r.state}</div>
+        <div class="tt-sub">${r.incumbent}${r.open ? ' · open seat' : ''}</div>
+        <div class="tt-grid">
+          <span class="tt-head"></span><span class="tt-head">Polymarket</span><span class="tt-head">Kalshi</span>
+          <span style="color:var(--text-dim);font-size:10px">Dem</span>
+          <span class="tt-dem">${r.demPoly}%</span>
+          <span class="tt-dem">${r.demKal}%</span>
+          <span style="color:var(--text-dim);font-size:10px">Rep</span>
+          <span class="tt-rep">${r.repPoly}%</span>
+          <span class="tt-rep">${r.repKal}%</span>
+          <span style="color:var(--text-dim);font-size:10px">Avg</span>
+          <span style="color:var(--text-muted)">${r.avgDem}% D</span>
+          <span style="color:var(--text-muted)">${r.avgRep}% R</span>
+        </div>
+        ${badge}
+        <div class="tt-poly-kal">Leader: ${leadParty === 'D' ? '<span class="tt-dem">' : '<span class="tt-rep">'}${leadPct}% ${leadParty}</span></div>
+      `;
+      const tt = document.getElementById('tooltip');
+      tt.style.opacity = '1';
+      tt.style.left = Math.min(evt.clientX + 14, window.innerWidth - 240) + 'px';
+      tt.style.top = (evt.clientY - 10) + 'px';
+    })
+    .on('mouseleave', () => {
+      document.getElementById('tooltip').style.opacity = '0';
+    });
+
+  // State abbreviation labels (skip tiny states)
+  features.forEach(f => {
+    const name = f.properties.name;
+    if (smallStates.has(name)) return;
+    const c = pathGen.centroid(f);
+    if (!c || isNaN(c[0])) return;
+    const r = stateByName[name];
+    const abbr = r ? r.abbr : '';
+    if (!abbr) return;
+    const leadParty = r && r.avgDem >= 50 ? 'D' : 'R';
+    const pct = r ? (leadParty === 'D' ? r.avgDem : r.avgRep) : null;
+
+    svg.append('text')
+      .attr('class','state-label')
+      .attr('x', c[0])
+      .attr('y', c[1] + (pct ? 1 : 3))
+      .text(abbr);
+
+    if (pct) {
+      svg.append('text')
+        .attr('class','state-pct-label')
+        .attr('x', c[0])
+        .attr('y', c[1] + 10)
+        .text(pct + '%' + (leadParty === 'D' ? 'D' : 'R'));
+    }
+  });
+
+  renderMetrics();
+  renderTable();
+});
+
+// ---- METRICS ----
+function renderMetrics() {
+  const demW = races.filter(r => r.avgDem > 55).length;
+  const repW = races.filter(r => r.avgRep > 55).length;
+  const toss = races.filter(r => r.avgDem >= 45 && r.avgDem <= 55).length;
+  document.getElementById('dem-count').textContent = demW;
+  document.getElementById('rep-count').textContent = repW;
+  document.getElementById('toss-count').textContent = toss;
+  document.getElementById('total-count').textContent = races.length;
+}
+
+// ---- TABLE ----
+let sortCol = 'lead', sortDir = -1, filterMode = 'all';
+
+window.setFilter = function(mode) {
+  filterMode = mode;
+  ['all','comp','dem','rep'].forEach(m => {
+    document.getElementById('btn-' + m).classList.toggle('active', m === mode);
+  });
+  renderTable();
+};
+
+window.sortBy = function(col) {
+  if (sortCol === col) sortDir *= -1;
+  else { sortCol = col; sortDir = 1; }
+  ['state','dem','rep','lead'].forEach(c => {
+    const el = document.getElementById('sort-' + c);
+    if (el) el.textContent = c === sortCol ? (sortDir === 1 ? '↑' : '↓') : '↕';
+  });
+  renderTable();
+};
+
+function renderTable() {
+  let data = [...races];
+  if (filterMode === 'comp') data = data.filter(r => r.avgDem >= 30 && r.avgDem <= 70);
+  if (filterMode === 'dem')  data = data.filter(r => r.avgDem >= 55);
+  if (filterMode === 'rep')  data = data.filter(r => r.avgRep >= 55);
+
+  data.sort((a, b) => {
+    let va, vb;
+    if (sortCol === 'state') return sortDir * a.state.localeCompare(b.state);
+    if (sortCol === 'dem')   { va = a.avgDem; vb = b.avgDem; }
+    else if (sortCol === 'rep') { va = a.avgRep; vb = b.avgRep; }
+    else { // lead
+      va = Math.max(a.avgDem, a.avgRep);
+      vb = Math.max(b.avgDem, b.avgRep);
+    }
+    return sortDir * (va - vb);
+  });
+
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = data.map(r => {
+    const rating = getRating(r.avgDem);
+    const leadParty = r.avgDem >= 50 ? 'D' : 'R';
+    const leadPct = leadParty === 'D' ? r.avgDem : r.avgRep;
+    const trailPct = leadParty === 'D' ? r.avgRep : r.avgDem;
+    const demColor = r.avgDem >= 50 ? '#6ba3e8' : 'rgba(107,163,232,0.4)';
+    const repColor = r.avgRep >= 50 ? '#e87878' : 'rgba(232,120,120,0.4)';
+
+    return `<tr>
+      <td>
+        <span class="td-state">${r.state}</span>
+        ${r.open ? '<span class="td-open">open</span>' : ''}
+      </td>
+      <td><span class="td-inc">${r.incumbent}</span></td>
+      <td><span class="td-pct-dem" style="color:${demColor}">${r.avgDem}%</span></td>
+      <td><span class="td-pct-rep" style="color:${repColor}">${r.avgRep}%</span></td>
+      <td>
+        <span class="winning-pct" style="color:${rating.textColor}">
+          ${leadParty === 'D' ? '<span style="color:#6ba3e8">' : '<span style="color:#e87878">'}${leadPct}% ${leadParty}</span>
+        </span>
+      </td>
+      <td>
+        <div class="bar-wrap">
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${r.avgDem}%;background:${rating.color}"></div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">
+          ${leadPct}% vs ${trailPct}%
+        </span>
+      </td>
+      <td>
+        <span class="rating-pill" style="background:${rating.color}22;color:${rating.textColor};">${rating.label}</span>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+document.getElementById('refresh-btn').addEventListener('click', function() {
+  const btn = this;
+  btn.textContent = '↻ Refreshing...';
+  btn.style.opacity = '0.6';
+  setTimeout(() => {
+    document.getElementById('last-updated').textContent = new Date().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    btn.textContent = '↻ Refresh';
+    btn.style.opacity = '1';
+  }, 1000);
+});
+</script>
+</body>
+</html>
