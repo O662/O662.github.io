@@ -20,10 +20,10 @@
             Font
             <select id="font-family">
                 <option value="Georgia, serif">Georgia</option>
-                <option value=""""Merriweather"", serif">Merriweather</option>
-                <option value=""""Times New Roman"", serif">Times New Roman</option>
-                <option value=""""Arial"", sans-serif">Arial</option>
-                <option value=""""Helvetica"", sans-serif">Helvetica</option>
+                <option value="\"Merriweather\", serif">Merriweather</option>
+                <option value="\"Times New Roman\", serif">Times New Roman</option>
+                <option value="\"Arial\", sans-serif">Arial</option>
+                <option value="\"Helvetica\", sans-serif">Helvetica</option>
             </select>
         </label>
         <label>
@@ -103,11 +103,24 @@
                         margin: 0;
                         padding: 24px;
                     }
+                    *, *::before, *::after {
+                        font-family: ${fontFamily.value} !important;
+                        font-size: ${fontSize.value}px !important;
+                        line-height: ${lineHeight.value} !important;
+                        color: ${textColor.value} !important;
+                        background-color: transparent !important;
+                    }
                     img, video, iframe {
                         max-width: 100%;
                         height: auto;
                     }
                 `;
+            }
+
+            function detectCharset(buffer) {
+                const header = new TextDecoder("iso-8859-1").decode(buffer.slice(0, 2048));
+                const match = header.match(/charset\s*=\s*([\w-]+)/i);
+                return match ? match[1].toLowerCase() : "utf-8";
             }
 
             function loadDocument() {
@@ -119,9 +132,18 @@
                 titleEl.textContent = titleFromFilename(doc);
 
                 fetch(doc, { cache: "no-store" })
-                    .then((response) => response.text())
-                    .then((html) => {
-                        const baseHref = new URL(doc, window.location.href).href;
+                    .then((response) => response.arrayBuffer())
+                    .then((buffer) => {
+                        const charset = detectCharset(buffer);
+                        let decoder;
+                        try {
+                            decoder = new TextDecoder(charset);
+                        } catch (error) {
+                            decoder = new TextDecoder("utf-8");
+                        }
+                        const html = decoder.decode(buffer);
+                        const docUrl = new URL(doc, window.location.href);
+                        const baseHref = docUrl.href.substring(0, docUrl.href.lastIndexOf("/") + 1);
                         const sanitized = injectBase(html, baseHref);
                         frame.srcdoc = sanitized;
                         status.textContent = "";
@@ -134,6 +156,7 @@
             frame.addEventListener("load", applyReaderStyles);
             [fontFamily, fontSize, lineHeight, bgColor, textColor].forEach((control) => {
                 control.addEventListener("input", applyReaderStyles);
+                control.addEventListener("change", applyReaderStyles);
             });
 
             loadDocument();

@@ -1,0 +1,101 @@
+:root {
+    color-scheme: light;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+    background: #141418;
+    color: #efefef;
+}
+
+.viewer-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 8vw 12px;
+    background: linear-gradient(135deg, #1a1a24 0%, #262634 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.viewer-header h1 {
+    margin: 0 0 6px;
+    font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+}
+
+.viewer-subtitle {
+    margin: 0;
+    color: rgba(239, 239, 239, 0.7);
+}
+
+.viewer-back {
+    text-decoration: none;
+    color: #efefef;
+    border: 1px solid rgba(239, 239, 239, 0.4);
+    padding: 10px 18px;
+    border-radius: 999px;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.viewer-back:hover {
+    background: #efefef;
+    color: #121218;
+    border-color: #efefef;
+}
+
+.viewer-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    padding: 16px 8vw 24px;
+    background: #1a1a24;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.viewer-controls label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(239, 239, 239, 0.7);
+}
+
+.viewer-controls input,
+.viewer-controls select {
+    background: #101018;
+    color: #efefef;
+    border: 1px solid rgba(239, 239, 239, 0.2);
+    border-radius: 8px;
+    padding: 8px 10px;
+}
+
+.viewer-content {
+    padding: 24px 8vw 60px;
+}
+
+.viewer-status {
+    margin-bottom: 16px;
+    color: rgba(239, 239, 239, 0.8);
+}
+
+#viewer-frame {
+    width: 100%;
+    min-height: 70vh;
+    border: none;
+    background: #f6f2ea;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 700px) {
+    .viewer-header,
+    .viewer-controls,
+    .viewer-content {
+        padding-left: 6vw;
+        padding-right: 6vw;
+    }
+}
