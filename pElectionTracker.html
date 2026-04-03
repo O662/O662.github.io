@@ -628,7 +628,8 @@
       </div>
       <div style="text-align:center">
         <div class="senate-majority-label">majority threshold</div>
-        <div class="senate-majority-line">51 seats</div>
+        <div class="senate-majority-line" style="color:#6ba3e8;font-size:11px;">D: 51&nbsp;&nbsp;</div>
+        <div class="senate-majority-line" style="color:#e87878;font-size:11px;">R: 50 <span style="font-size:9px;opacity:0.6">(VP tie-break)</span></div>
         <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px" id="majority-status">—</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
@@ -891,12 +892,14 @@ function renderSenateBar() {
   document.getElementById('dem-held-label').textContent = `${DEM_HELD} Dem (not up)`;
   document.getElementById('rep-held-label').textContent = `${REP_HELD} Rep (not up)`;
 
+  // VP is Republican (JD Vance) — Reps only need 50, Dems need 51
+  const DEM_MAJ = 51, REP_MAJ = 50;
   const statusEl = document.getElementById('majority-status');
-  if (totalDem >= needMajority) {
-    statusEl.textContent = `Dems projected +${totalDem - needMajority + 1} majority`;
+  if (totalDem >= DEM_MAJ) {
+    statusEl.textContent = `Dems projected majority (${totalDem} seats)`;
     statusEl.style.color = '#6ba3e8';
-  } else if (totalRep >= needMajority) {
-    statusEl.textContent = `Reps projected +${totalRep - needMajority + 1} majority`;
+  } else if (totalRep >= REP_MAJ) {
+    statusEl.textContent = `Reps projected majority (${totalRep} seats + VP tie-break)`;
     statusEl.style.color = '#e87878';
   } else {
     statusEl.textContent = `No projected majority yet`;
@@ -924,10 +927,10 @@ function renderSenateBar() {
 
   const BAR_H = 52; // px — tall enough for labels
 
-  // 1. DEM HELD — one big block
+  // 1. DEM HELD — one compact block (fixed width, not proportional to seat count)
   const demHeldEl = document.createElement('div');
   demHeldEl.style.cssText = `
-    flex: ${DEM_HELD} 0 0; min-width: 0; height: ${BAR_H}px;
+    flex: 0 0 52px; width: 52px; height: ${BAR_H}px;
     background: #162a4a; border-radius: 4px 0 0 4px;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
@@ -1056,10 +1059,10 @@ function renderSenateBar() {
   // gap
   row.appendChild(Object.assign(document.createElement('div'), { style: 'width:3px;flex-shrink:0;' }));
 
-  // 5. REP HELD — one big block
+  // 5. REP HELD — one compact block (fixed width, not proportional to seat count)
   const repHeldEl = document.createElement('div');
   repHeldEl.style.cssText = `
-    flex: ${REP_HELD} 0 0; min-width: 0; height: ${BAR_H}px;
+    flex: 0 0 52px; width: 52px; height: ${BAR_H}px;
     background: #3a1212; border-radius: 0 4px 4px 0;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
@@ -1077,11 +1080,13 @@ function renderSenateBar() {
   `);
   row.appendChild(repHeldEl);
 
-  // Majority marker
-  addMajorityMarker(row, totalSeats, needMajority, BAR_H);
+  // Majority markers — placed after layout via rAF so pixel positions are real
+  // VP is Republican (JD Vance) → GOP needs only 50 seats (tie-break), Dems need 51
+  positionMajorityMarkers(row, BAR_H, 51, 50);
 }
 
-function addMajorityMarker(row, total, threshold, barH) {
+function positionMajorityMarkers(row, barH, demThreshold, repThreshold) {
+  // Ensure wrapper exists
   const parent = row.parentElement;
   let wrapper = parent.querySelector('.seat-row-wrapper');
   if (!wrapper) {
@@ -1091,20 +1096,67 @@ function addMajorityMarker(row, total, threshold, barH) {
     parent.insertBefore(wrapper, row);
     wrapper.appendChild(row);
   }
-  const old = wrapper.querySelector('.majority-marker-abs');
-  if (old) old.remove();
+  wrapper.querySelectorAll('.majority-marker-abs').forEach(el => el.remove());
 
-  // The bar total includes 35 race slots + 2 big held blocks + small gaps
-  // Position marker at 51/100 of total flex weight
-  const pct = ((threshold - 0.5) / total) * 100;
-  const marker = document.createElement('div');
-  marker.className = 'majority-marker-abs';
-  marker.style.cssText = `position:absolute;top:0;left:${pct}%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:10;`;
-  marker.innerHTML = `
-    <div style="width:2px;height:${barH}px;background:rgba(255,255,255,0.65);border-radius:1px;"></div>
-    <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(255,255,255,0.55);letter-spacing:0.05em;margin-top:3px;white-space:nowrap;text-align:center;">51<br>majority</div>
-  `;
-  wrapper.appendChild(marker);
+  requestAnimationFrame(() => {
+    const children = Array.from(row.children);
+    const rowRect = row.getBoundingClientRect();
+    if (rowRect.width === 0) return;
+
+    // Walk each child and map cumulative seat index → right-edge pixel.
+    // DEM_HELD block = DEM_HELD seats distributed evenly across its width.
+    // Each race block = 1 seat.
+    // REP_HELD block = REP_HELD seats distributed evenly.
+    // Gap divs (width <= 5px) are skipped.
+    let seatCursor = 0;
+    const seatEdges = {}; // seatEdges[n] = right-edge px of seat n
+
+    children.forEach((child, i) => {
+      const rect = child.getBoundingClientRect();
+      const leftPx  = rect.left - rowRect.left;
+      const rightPx = rect.right - rowRect.left;
+      const w = rect.width;
+
+      if (w <= 5) return; // skip gap divs
+
+      if (i === 0) {
+        // DEM HELD block — distribute DEM_HELD seats across its width
+        for (let s = 1; s <= DEM_HELD; s++) {
+          seatEdges[seatCursor + s] = leftPx + (w * s / DEM_HELD);
+        }
+        seatCursor += DEM_HELD;
+      } else if (i === children.length - 1) {
+        // REP HELD block
+        for (let s = 1; s <= REP_HELD; s++) {
+          seatEdges[seatCursor + s] = leftPx + (w * s / REP_HELD);
+        }
+        seatCursor += REP_HELD;
+      } else {
+        // Individual race block = 1 seat
+        seatCursor += 1;
+        seatEdges[seatCursor] = rightPx;
+      }
+    });
+
+    function placeMarker(thresholdSeats, labelLines, color) {
+      const px = seatEdges[thresholdSeats];
+      if (px == null) return;
+      const marker = document.createElement('div');
+      marker.className = 'majority-marker-abs';
+      marker.style.cssText = `position:absolute;top:0;left:${px}px;transform:translateX(-50%);` +
+        `display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:10;`;
+      marker.innerHTML =
+        `<div style="width:2px;height:${barH}px;background:${color};border-radius:1px;"></div>` +
+        `<div style="font-family:'DM Mono',monospace;font-size:8px;color:${color};` +
+        `letter-spacing:0.04em;margin-top:3px;white-space:nowrap;text-align:center;line-height:1.4;">${labelLines}</div>`;
+      wrapper.appendChild(marker);
+    }
+
+    // Dem needs 51 (no VP tie-break)
+    placeMarker(demThreshold, 'D maj<br>(51)', 'rgba(107,163,232,0.85)');
+    // Rep needs 50 (JD Vance VP tie-break)
+    placeMarker(repThreshold, 'R maj<br>(50)', 'rgba(232,120,120,0.85)');
+  });
 }
 
 // ---- METRICS ----
