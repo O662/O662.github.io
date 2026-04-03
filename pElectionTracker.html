@@ -153,6 +153,168 @@
   .metric-val.toss-c { color: var(--toss); }
   .metric-val.total { color: var(--text); }
 
+  /* SENATE COMPOSITION BAR */
+  .senate-bar-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .senate-bar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.75rem;
+  }
+
+  .senate-bar-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: var(--text);
+  }
+
+  .senate-bar-subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  .senate-totals {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.6rem;
+  }
+
+  .senate-total-dem {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #6ba3e8;
+    line-height: 1;
+  }
+
+  .senate-total-rep {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #e87878;
+    line-height: 1;
+  }
+
+  .senate-majority-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    text-align: center;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .senate-majority-line {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text-muted);
+  }
+
+  /* The seat grid */
+  .seat-row-wrapper { width: 100%; position: relative; margin-bottom: 24px; }
+  .seat-row {
+    display: flex;
+    align-items: stretch;
+    gap: 2px;
+    width: 100%;
+    height: 28px;
+  }
+
+  .seat-block {
+    height: 100%;
+    border-radius: 2px;
+    cursor: default;
+    transition: opacity 0.15s, transform 0.1s;
+    flex-shrink: 0;
+  }
+  .seat-block:hover {
+    opacity: 0.75;
+    transform: scaleY(1.12);
+  }
+
+  .seat-divider {
+    width: 2px;
+    height: 36px;
+    background: rgba(255,255,255,0.18);
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin: 0 4px;
+  }
+
+  .seat-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+  }
+
+  .majority-marker {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    flex-shrink: 0;
+    margin: 0 2px;
+  }
+
+  .majority-tick {
+    width: 1px;
+    height: 36px;
+    background: rgba(255,255,255,0.5);
+  }
+
+  .majority-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: rgba(255,255,255,0.45);
+    white-space: nowrap;
+    letter-spacing: 0.06em;
+    margin-top: 3px;
+    text-align: center;
+  }
+
+  .seat-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .seat-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    color: var(--text-dim);
+  }
+
+  .seat-legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+  }
+
   /* MAP */
   .map-section {
     background: var(--surface);
@@ -451,6 +613,52 @@
     </div>
   </div>
 
+  <!-- SENATE COMPOSITION BAR -->
+  <div class="senate-bar-section">
+    <div class="senate-bar-header">
+      <div class="senate-bar-title">Projected Senate composition after 2026</div>
+      <div class="senate-bar-subtitle">65 seats not up for election · 35 seats on ballot</div>
+    </div>
+
+    <div class="senate-totals">
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase">Democrats</div>
+        <div class="senate-total-dem" id="total-dem-seats">—</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim)" id="dem-seats-breakdown">— held + — projected</div>
+      </div>
+      <div style="text-align:center">
+        <div class="senate-majority-label">majority threshold</div>
+        <div class="senate-majority-line">51 seats</div>
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px" id="majority-status">—</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase">Republicans</div>
+        <div class="senate-total-rep" id="total-rep-seats">—</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);text-align:right" id="rep-seats-breakdown">— held + — projected</div>
+      </div>
+    </div>
+
+    <div class="seat-row" id="seat-row"></div>
+
+    <div class="seat-labels">
+      <span id="dem-held-label">— Dem (not up)</span>
+      <span style="color:rgba(255,255,255,0.3)">← 35 races on ballot →</span>
+      <span id="rep-held-label">— Rep (not up)</span>
+    </div>
+
+    <div class="seat-legend">
+      <div class="seat-legend-item"><div class="seat-legend-swatch" style="background:#1a3d1a;border:1px solid #2a5a2a"></div>Dem (not up)</div>
+      <div class="seat-legend-item"><div class="seat-legend-swatch" style="background:#0f3f8c"></div>Safe Dem</div>
+      <div class="seat-legend-item"><div class="seat-legend-swatch" style="background:#2563b8"></div>Likely Dem</div>
+      <div class="seat-legend-item"><div class="seat-legend-swatch" style="background:#6ba3e8"></div>Lean Dem</div>
+      <div class="seat-legend-item"><div class="seat-legend-swatch" style="background:#b8960c"></div>Toss-up</div>
+      <div class="seat-legend-item"><div class="seat-legend-swatch" style="background:#e87878"></div>Lean Rep</div>
+      <div class="seat-legend-item"><div class="seat-legend-swatch" style="background:#c0392b"></div>Likely Rep</div>
+      <div class="seat-legend-item"><div class="seat-legend-swatch" style="background:#7a0e0e"></div>Safe Rep</div>
+      <div class="seat-legend-item"><div class="seat-legend-swatch" style="background:#3a1010;border:1px solid #5a2020"></div>Rep (not up)</div>
+    </div>
+  </div>
+
   <div class="map-section">
     <div id="map-container"></div>
     <div class="legend">
@@ -648,6 +856,134 @@ d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us => {
   renderTable();
 });
 
+// ---- SENATE COMPOSITION ----
+// Seats NOT up for election in 2026 (Class I & III currently held)
+// Current Senate: 47 Dem/Ind caucus, 53 Rep  — 65 seats not on ballot
+// Of those 65: 34 Dem/Ind caucus, 31 Rep
+const DEM_HELD = 34;  // Dem/Ind seats not up in 2026
+const REP_HELD = 31;  // Rep seats not up in 2026
+
+function renderSenateBar() {
+  const row = document.getElementById('seat-row');
+  row.innerHTML = '';
+
+  // Categorize the 35 races by projected winner + rating color
+  const demSeats = [];  // races projected Dem, sorted safe→lean
+  const repSeats = [];  // races projected Rep, sorted safe→lean
+  const tossSeats = []; // genuine toss-ups
+
+  const sorted = [...races].sort((a, b) => b.avgDem - a.avgDem);
+
+  sorted.forEach(r => {
+    const rating = getRating(r.avgDem);
+    if (r.avgDem >= 55) demSeats.push({ r, rating });
+    else if (r.avgRep >= 55) repSeats.push({ r, rating });
+    else tossSeats.push({ r, rating });
+  });
+
+  // Sort rep seats least-likely first so darkest red is outermost right
+  repSeats.sort((a, b) => a.r.avgRep - b.r.avgRep);
+
+  const totalDem = DEM_HELD + demSeats.length;
+  const totalRep = REP_HELD + repSeats.length;
+  const totalSeats = 100;
+  const needMajority = 51;
+
+  // Update totals display
+  document.getElementById('total-dem-seats').textContent = totalDem;
+  document.getElementById('total-rep-seats').textContent = totalRep;
+  document.getElementById('dem-seats-breakdown').textContent = `${DEM_HELD} held + ${demSeats.length} projected`;
+  document.getElementById('rep-seats-breakdown').textContent = `${REP_HELD} held + ${repSeats.length} projected`;
+  document.getElementById('dem-held-label').textContent = `${DEM_HELD} Dem (not up)`;
+  document.getElementById('rep-held-label').textContent = `${REP_HELD} Rep (not up)`;
+
+  const statusEl = document.getElementById('majority-status');
+  if (totalDem >= needMajority) {
+    statusEl.textContent = `Dems projected +${totalDem - needMajority + 1} majority`;
+    statusEl.style.color = '#6ba3e8';
+  } else if (totalRep >= needMajority) {
+    statusEl.textContent = `Reps projected +${totalRep - needMajority + 1} majority`;
+    statusEl.style.color = '#e87878';
+  } else {
+    statusEl.textContent = `No projected majority yet`;
+    statusEl.style.color = 'rgba(255,255,255,0.3)';
+  }
+
+  // Helper to create a seat block
+  function makeSeat(color, title, width) {
+    const el = document.createElement('div');
+    el.className = 'seat-block';
+    el.style.background = color;
+    el.style.flex = width + ' 0 0';
+    el.style.minWidth = '0';
+    el.title = title;
+    return el;
+  }
+
+  // Total width is 100 units = 100 seats
+  // Each seat gets width = 1 unit of flex
+
+  // 1. Dem held (not up) — dark teal-navy
+  for (let i = 0; i < DEM_HELD; i++) {
+    row.appendChild(makeSeat('#1a3560', `Dem seat (not up for election)`, 1));
+  }
+
+  // 2. Dem projected races (safe→lean, left to right)
+  demSeats.forEach(({ r, rating }) => {
+    const el = makeSeat(rating.color, `${r.state}: ${rating.label} (${r.avgDem}% Dem)`, 1);
+    row.appendChild(el);
+  });
+
+  // 3. Toss-ups in center
+  tossSeats.forEach(({ r, rating }) => {
+    const el = makeSeat(rating.color, `${r.state}: Toss-up (${r.avgDem}% Dem / ${r.avgRep}% Rep)`, 1);
+    row.appendChild(el);
+  });
+
+  // 4. Rep projected races (lean→safe, left to right, so darkest is rightmost)
+  repSeats.forEach(({ r, rating }) => {
+    const el = makeSeat(rating.color, `${r.state}: ${rating.label} (${r.avgRep}% Rep)`, 1);
+    row.appendChild(el);
+  });
+
+  // 5. Rep held (not up) — dark burgundy
+  for (let i = 0; i < REP_HELD; i++) {
+    row.appendChild(makeSeat('#3a1010', `Rep seat (not up for election)`, 1));
+  }
+
+  // Majority marker at position 51 from left
+  // We inject a marker element by absolute positioning relative to the bar
+  // Use a wrapper approach: wrap seat-row in a relative container
+  addMajorityMarker(row, totalSeats, needMajority);
+}
+
+function addMajorityMarker(row, total, threshold) {
+  // Wrap the row in a relative div if not already
+  const parent = row.parentElement;
+  let wrapper = parent.querySelector('.seat-row-wrapper');
+  if (!wrapper) {
+    wrapper = document.createElement('div');
+    wrapper.className = 'seat-row-wrapper';
+    wrapper.style.cssText = 'position:relative;';
+    parent.insertBefore(wrapper, row);
+    wrapper.appendChild(row);
+  }
+
+  // Remove old marker
+  const old = wrapper.querySelector('.majority-marker-abs');
+  if (old) old.remove();
+
+  const pct = ((threshold - 0.5) / total) * 100;
+  const marker = document.createElement('div');
+  marker.className = 'majority-marker-abs';
+  marker.style.cssText = `position:absolute;top:0;left:${pct}%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:10;`;
+  marker.innerHTML = `
+    <div style="width:2px;height:28px;background:rgba(255,255,255,0.6);border-radius:1px;"></div>
+    <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(255,255,255,0.5);letter-spacing:0.05em;margin-top:2px;white-space:nowrap;">51 majority</div>
+  `;
+  wrapper.appendChild(marker);
+}
+
 // ---- METRICS ----
 function renderMetrics() {
   const demW = races.filter(r => r.avgDem > 55).length;
@@ -657,6 +993,7 @@ function renderMetrics() {
   document.getElementById('rep-count').textContent = repW;
   document.getElementById('toss-count').textContent = toss;
   document.getElementById('total-count').textContent = races.length;
+  renderSenateBar();
 }
 
 // ---- TABLE ----
