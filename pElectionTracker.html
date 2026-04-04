@@ -225,7 +225,7 @@
   }
 
   /* The seat grid */
-  .seat-row-wrapper { width: 100%; position: relative; margin-bottom: 28px; }
+  .seat-row-wrapper { width: 100%; position: relative; margin-bottom: 48px; margin-top: 28px; }
   .seat-row {
     display: flex;
     align-items: stretch;
@@ -345,18 +345,73 @@
 
   .state-label {
     font-family: 'DM Mono', monospace;
-    font-size: 8.5px;
-    fill: rgba(255,255,255,0.7);
+    font-size: 11px;
+    fill: rgba(255,255,255,0.85);
     text-anchor: middle;
     pointer-events: none;
     font-weight: 500;
   }
   .state-pct-label {
     font-family: 'DM Mono', monospace;
-    font-size: 7px;
-    fill: rgba(255,255,255,0.55);
+    font-size: 9px;
+    fill: rgba(255,255,255,0.65);
     text-anchor: middle;
     pointer-events: none;
+  }
+
+  /* SMALL STATE KEY */
+  .ssk-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-bottom: 2px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ssk-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    cursor: default;
+    padding: 3px 5px;
+    border-radius: 5px;
+    transition: background 0.15s;
+  }
+  .ssk-row:hover { background: var(--surface2); }
+  .ssk-swatch {
+    width: 28px;
+    height: 20px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ssk-abbr {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.8);
+  }
+  .ssk-info { display: flex; flex-direction: column; gap: 1px; }
+  .ssk-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .ssk-pct {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--text-muted);
+  }
+  .ssk-norace {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
   }
 
   /* LEGEND */
@@ -661,7 +716,10 @@
   </div>
 
   <div class="map-section">
-    <div id="map-container"></div>
+    <div style="display:flex;gap:12px;align-items:flex-start;">
+      <div id="map-container" style="flex:1;min-width:0;"></div>
+      <div id="small-state-key" style="flex:0 0 120px;display:flex;flex-direction:column;gap:6px;padding-top:4px;"></div>
+    </div>
     <div class="legend">
       <div class="legend-item"><div class="legend-swatch" style="background:var(--dem-safe)"></div>Safe Dem (90%+)</div>
       <div class="legend-item"><div class="legend-swatch" style="background:var(--dem-likely)"></div>Likely Dem (75–89%)</div>
@@ -670,6 +728,7 @@
       <div class="legend-item"><div class="legend-swatch" style="background:var(--rep-lean)"></div>Lean Rep (55–74%)</div>
       <div class="legend-item"><div class="legend-swatch" style="background:var(--rep-likely)"></div>Likely Rep (75–89%)</div>
       <div class="legend-item"><div class="legend-swatch" style="background:var(--rep-safe)"></div>Safe Rep (90%+)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#4a7a4a"></div>Lean Ind</div>
       <div class="legend-item"><div class="legend-swatch" style="background:#2a2a35;border:1px solid #444"></div>No race</div>
     </div>
   </div>
@@ -692,6 +751,7 @@
             <th>Incumbent</th>
             <th class="sortable" onclick="sortBy('dem')">Dem % <span id="sort-dem">↕</span></th>
             <th class="sortable" onclick="sortBy('rep')">Rep % <span id="sort-rep">↕</span></th>
+            <th>Ind %</th>
             <th>Leading</th>
             <th>Odds bar</th>
             <th class="sortable" onclick="sortBy('lead')">Avg odds <span id="sort-lead">↕</span></th>
@@ -702,7 +762,7 @@
       </table>
     </div>
     <div class="source-bar">
-      <span>Source: Polymarket &amp; Kalshi · April 3, 2026</span>
+      <span>Source: Kalshi live API · fallback snapshot Apr 3 2026 if unavailable</span>
       <span>Safe non-contested states use CPR ratings → approximate probabilities</span>
     </div>
   </div>
@@ -713,50 +773,165 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <script>
-const races = [
-  { state:'Alaska',         abbr:'AK', demPoly:61, repPoly:39, demKal:58, repKal:42, incumbent:'Dan Sullivan (R)', open:false },
-  { state:'Alabama',        abbr:'AL', demPoly:5,  repPoly:95, demKal:5,  repKal:95, incumbent:'Tommy Tuberville (R)', open:false },
-  { state:'Arkansas',       abbr:'AR', demPoly:4,  repPoly:96, demKal:4,  repKal:96, incumbent:'John Boozman (R)', open:false },
-  { state:'Colorado',       abbr:'CO', demPoly:88, repPoly:12, demKal:87, repKal:13, incumbent:'Michael Bennet (D)', open:false },
-  { state:'Delaware',       abbr:'DE', demPoly:95, repPoly:5,  demKal:94, repKal:6,  incumbent:'Chris Coons (D)', open:false },
-  { state:'Florida',        abbr:'FL', demPoly:16, repPoly:84, demKal:16, repKal:84, incumbent:'Rick Scott (R) – special', open:true },
-  { state:'Georgia',        abbr:'GA', demPoly:84, repPoly:16, demKal:80, repKal:20, incumbent:'Jon Ossoff (D)', open:false },
-  { state:'Hawaii',         abbr:'HI', demPoly:97, repPoly:3,  demKal:96, repKal:4,  incumbent:'Brian Schatz (D)', open:false },
-  { state:'Idaho',          abbr:'ID', demPoly:4,  repPoly:96, demKal:4,  repKal:96, incumbent:'James Risch (R)', open:false },
-  { state:'Illinois',       abbr:'IL', demPoly:95, repPoly:5,  demKal:94, repKal:6,  incumbent:'Dick Durbin (D) – open', open:true },
-  { state:'Iowa',           abbr:'IA', demPoly:39, repPoly:61, demKal:36, repKal:64, incumbent:'Chuck Grassley (R)', open:false },
-  { state:'Kansas',         abbr:'KS', demPoly:5,  repPoly:95, demKal:5,  repKal:95, incumbent:'Jerry Moran (R)', open:false },
-  { state:'Kentucky',       abbr:'KY', demPoly:4,  repPoly:96, demKal:4,  repKal:96, incumbent:'Mitch McConnell (R) – open', open:true },
-  { state:'Louisiana',      abbr:'LA', demPoly:5,  repPoly:95, demKal:5,  repKal:95, incumbent:'Bill Cassidy (R)', open:false },
-  { state:'Maine',          abbr:'ME', demPoly:74, repPoly:26, demKal:71, repKal:29, incumbent:'Susan Collins (R)', open:false },
-  { state:'Massachusetts',  abbr:'MA', demPoly:97, repPoly:3,  demKal:97, repKal:3,  incumbent:'Ed Markey (D)', open:false },
-  { state:'Michigan',       abbr:'MI', demPoly:84, repPoly:16, demKal:80, repKal:20, incumbent:'Gary Peters (D) – open', open:true },
-  { state:'Minnesota',      abbr:'MN', demPoly:80, repPoly:20, demKal:79, repKal:21, incumbent:'Tina Smith (D) – open', open:true },
-  { state:'Mississippi',    abbr:'MS', demPoly:5,  repPoly:95, demKal:5,  repKal:95, incumbent:'Roger Wicker (R)', open:false },
-  { state:'Montana',        abbr:'MT', demPoly:10, repPoly:90, demKal:9,  repKal:91, incumbent:'Steve Daines (R)', open:false },
-  { state:'Nebraska',       abbr:'NE', demPoly:6,  repPoly:94, demKal:6,  repKal:94, incumbent:'Deb Fischer (R)', open:false },
-  { state:'New Hampshire',  abbr:'NH', demPoly:72, repPoly:28, demKal:70, repKal:30, incumbent:'Jeanne Shaheen (D) – open', open:true },
-  { state:'New Jersey',     abbr:'NJ', demPoly:82, repPoly:18, demKal:81, repKal:19, incumbent:'Cory Booker (D)', open:false },
-  { state:'New Mexico',     abbr:'NM', demPoly:88, repPoly:12, demKal:87, repKal:13, incumbent:'Ben Ray Luján (D)', open:false },
-  { state:'North Carolina', abbr:'NC', demPoly:88, repPoly:12, demKal:85, repKal:15, incumbent:'Thom Tillis (R) – open', open:true },
-  { state:'Ohio',           abbr:'OH', demPoly:58, repPoly:42, demKal:55, repKal:45, incumbent:'Jon Husted (R) – special', open:true },
-  { state:'Oklahoma',       abbr:'OK', demPoly:4,  repPoly:96, demKal:4,  repKal:96, incumbent:'James Lankford (R)', open:false },
-  { state:'Oregon',         abbr:'OR', demPoly:88, repPoly:12, demKal:87, repKal:13, incumbent:'Jeff Merkley (D)', open:false },
-  { state:'Rhode Island',   abbr:'RI', demPoly:96, repPoly:4,  demKal:95, repKal:5,  incumbent:'Sheldon Whitehouse (D)', open:false },
-  { state:'South Carolina', abbr:'SC', demPoly:10, repPoly:90, demKal:9,  repKal:91, incumbent:'Lindsey Graham (R)', open:false },
-  { state:'South Dakota',   abbr:'SD', demPoly:4,  repPoly:96, demKal:4,  repKal:96, incumbent:'John Thune (R)', open:false },
-  { state:'Texas',          abbr:'TX', demPoly:44, repPoly:56, demKal:42, repKal:58, incumbent:'Open (R primary)', open:true },
-  { state:'Virginia',       abbr:'VA', demPoly:84, repPoly:16, demKal:83, repKal:17, incumbent:'Mark Warner (D)', open:false },
-  { state:'West Virginia',  abbr:'WV', demPoly:5,  repPoly:95, demKal:5,  repKal:95, incumbent:'Jim Justice (R)', open:false },
-  { state:'Wyoming',        abbr:'WY', demPoly:3,  repPoly:97, demKal:3,  repKal:97, incumbent:'John Barrasso (R)', open:false },
+// ── Race metadata (static) ──────────────────────────────────────────────────
+// kalshiTicker: the event ticker on Kalshi for this senate race
+// Party labels on Kalshi markets: "Democratic Party" / "Republican Party" / candidate name
+const racesMeta = [
+  { state:'Alaska',         abbr:'AK', kalshiTicker:'SENATEAK',  incumbent:'Dan Sullivan (R)',           open:false },
+  { state:'Alabama',        abbr:'AL', kalshiTicker:'SENATEAL',  incumbent:'Tommy Tuberville (R)',        open:false },
+  { state:'Arkansas',       abbr:'AR', kalshiTicker:'SENATEAR',  incumbent:'John Boozman (R)',            open:false },
+  { state:'Colorado',       abbr:'CO', kalshiTicker:'SENATECO',  incumbent:'Michael Bennet (D)',          open:false },
+  { state:'Delaware',       abbr:'DE', kalshiTicker:'SENATECH',  incumbent:'Chris Coons (D)',             open:false },
+  { state:'Florida',        abbr:'FL', kalshiTicker:'SENATEFL',  incumbent:'Rick Scott (R) – special',   open:true  },
+  { state:'Georgia',        abbr:'GA', kalshiTicker:'SENATEGA',  incumbent:'Jon Ossoff (D)',              open:false },
+  { state:'Hawaii',         abbr:'HI', kalshiTicker:'SENATEHI',  incumbent:'Brian Schatz (D)',            open:false },
+  { state:'Idaho',          abbr:'ID', kalshiTicker:'SENATEID',  incumbent:'James Risch (R)',             open:false },
+  { state:'Illinois',       abbr:'IL', kalshiTicker:'SENATEIL',  incumbent:'Dick Durbin (D) – open',     open:true  },
+  { state:'Iowa',           abbr:'IA', kalshiTicker:'SENATEIA',  incumbent:'Chuck Grassley (R)',          open:false },
+  { state:'Kansas',         abbr:'KS', kalshiTicker:'SENATEKS',  incumbent:'Jerry Moran (R)',             open:false },
+  { state:'Kentucky',       abbr:'KY', kalshiTicker:'SENATKY',   incumbent:'Mitch McConnell (R) – open', open:true  },
+  { state:'Louisiana',      abbr:'LA', kalshiTicker:'SENATELA',  incumbent:'Bill Cassidy (R)',            open:false },
+  { state:'Maine',          abbr:'ME', kalshiTicker:'SENATEM',   incumbent:'Susan Collins (R)',           open:false },
+  { state:'Massachusetts',  abbr:'MA', kalshiTicker:'SENATEMA',  incumbent:'Ed Markey (D)',               open:false },
+  { state:'Michigan',       abbr:'MI', kalshiTicker:'SENATEMI',  incumbent:'Gary Peters (D) – open',     open:true  },
+  { state:'Minnesota',      abbr:'MN', kalshiTicker:'SENATEMN',  incumbent:'Tina Smith (D) – open',      open:true  },
+  { state:'Mississippi',    abbr:'MS', kalshiTicker:'SENATEMS',  incumbent:'Roger Wicker (R)',            open:false },
+  { state:'Montana',        abbr:'MT', kalshiTicker:'SENATEMT',  incumbent:'Steve Daines (R)',            open:false, hasInd:true },
+  { state:'Nebraska',       abbr:'NE', kalshiTicker:'SENATENE',  incumbent:'Deb Fischer (R)',             open:false },
+  { state:'New Hampshire',  abbr:'NH', kalshiTicker:'SENATENH',  incumbent:'Jeanne Shaheen (D) – open',  open:true  },
+  { state:'New Jersey',     abbr:'NJ', kalshiTicker:'SENATENJ',  incumbent:'Cory Booker (D)',             open:false },
+  { state:'New Mexico',     abbr:'NM', kalshiTicker:'SENATENM',  incumbent:'Ben Ray Luján (D)',           open:false },
+  { state:'North Carolina', abbr:'NC', kalshiTicker:'SENATENC',  incumbent:'Thom Tillis (R) – open',     open:true  },
+  { state:'Ohio',           abbr:'OH', kalshiTicker:'SENATEOH',  incumbent:'Jon Husted (R) – special',   open:true  },
+  { state:'Oklahoma',       abbr:'OK', kalshiTicker:'SENATEOK',  incumbent:'James Lankford (R)',          open:false },
+  { state:'Oregon',         abbr:'OR', kalshiTicker:'SENATEOR',  incumbent:'Jeff Merkley (D)',            open:false },
+  { state:'Rhode Island',   abbr:'RI', kalshiTicker:'SENATERI',  incumbent:'Sheldon Whitehouse (D)',      open:false },
+  { state:'South Carolina', abbr:'SC', kalshiTicker:'SENATESC',  incumbent:'Lindsey Graham (R)',          open:false },
+  { state:'South Dakota',   abbr:'SD', kalshiTicker:'SENATESD',  incumbent:'John Thune (R)',              open:false },
+  { state:'Texas',          abbr:'TX', kalshiTicker:'SENATETX',  incumbent:'Open (R primary)',            open:true  },
+  { state:'Virginia',       abbr:'VA', kalshiTicker:'SENATEVA',  incumbent:'Mark Warner (D)',             open:false },
+  { state:'West Virginia',  abbr:'WV', kalshiTicker:'SENATEWV',  incumbent:'Jim Justice (R)',             open:false },
+  { state:'Wyoming',        abbr:'WY', kalshiTicker:'SENATEWY',  incumbent:'John Barrasso (R)',           open:false },
 ];
 
-races.forEach(r => {
-  r.avgDem = Math.round((r.demPoly + r.demKal) / 2);
-  r.avgRep = Math.round((r.repPoly + r.repKal) / 2);
-});
+// Live data will be merged in here
+let races = racesMeta.map(r => Object.assign({}, r, {
+  demKal:null, repKal:null, indKal:null, indName:null,
+  avgDem:null, avgRep:null, avgInd:null,
+  kalshiLoaded:false
+}));
 
-function getRating(avgDem) {
+// ── Kalshi live fetch ────────────────────────────────────────────────────────
+const KALSHI_BASE = 'https://api.elections.kalshi.com/trade-api/v2';
+
+async function fetchKalshiEvent(ticker) {
+  try {
+    const res = await fetch(KALSHI_BASE + '/events/' + ticker + '-26?with_nested_markets=true', {
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch(e) { return null; }
+}
+
+function parseKalshiMarkets(eventData, race) {
+  if (!eventData || !eventData.event || !eventData.event.markets) return;
+  const markets = eventData.event.markets;
+  markets.forEach(m => {
+    // yes_bid is in cents (0-99), convert to percent
+    const pct = Math.round((m.yes_bid / 100) * 100) || Math.round(m.last_price / 100 * 100);
+    const title = (m.title || '').toLowerCase();
+    if (title.includes('democrat')) {
+      race.demKal = pct;
+    } else if (title.includes('republican')) {
+      race.repKal = pct;
+    } else if (!title.includes('democrat') && !title.includes('republican')) {
+      // Independent / third party candidate
+      race.indKal = pct;
+      race.indName = m.title;
+    }
+  });
+  // Normalize so they sum to ~100
+  const total = (race.demKal||0) + (race.repKal||0) + (race.indKal||0);
+  if (total > 0) {
+    race.demKal = Math.round((race.demKal||0) / total * 100);
+    race.repKal = Math.round((race.repKal||0) / total * 100);
+    if (race.indKal) race.indKal = Math.round(race.indKal / total * 100);
+  }
+  race.avgDem = race.demKal;
+  race.avgRep = race.repKal;
+  race.avgInd = race.indKal || null;
+  race.kalshiLoaded = true;
+}
+
+async function loadAllKalshiData() {
+  showLoadingStatus('Fetching live Kalshi data…');
+  const results = await Promise.allSettled(
+    races.map(r => fetchKalshiEvent(r.kalshiTicker))
+  );
+  results.forEach((result, i) => {
+    if (result.status === 'fulfilled' && result.value) {
+      parseKalshiMarkets(result.value, races[i]);
+    }
+    // Fallback: if Kalshi fetch failed, use hardcoded snapshot
+    if (!races[i].kalshiLoaded) {
+      applyFallback(races[i]);
+    }
+  });
+  const loaded = races.filter(r => r.kalshiLoaded).length;
+  showLoadingStatus(loaded + '/' + races.length + ' races loaded from Kalshi · Live', true);
+  document.getElementById('last-updated').textContent =
+    new Date().toLocaleString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit' });
+}
+
+// Hardcoded fallback snapshot (Apr 3 2026) in case API is unavailable
+const fallbackData = {
+  'Alaska':{'dem':60,'rep':40},'Alabama':{'dem':5,'rep':95},'Arkansas':{'dem':4,'rep':96},
+  'Colorado':{'dem':88,'rep':12},'Delaware':{'dem':95,'rep':5},'Florida':{'dem':16,'rep':84},
+  'Georgia':{'dem':82,'rep':18},'Hawaii':{'dem':97,'rep':3},'Idaho':{'dem':4,'rep':96},
+  'Illinois':{'dem':95,'rep':5},'Iowa':{'dem':38,'rep':62},'Kansas':{'dem':5,'rep':95},
+  'Kentucky':{'dem':4,'rep':96},'Louisiana':{'dem':5,'rep':95},'Maine':{'dem':73,'rep':27},
+  'Massachusetts':{'dem':97,'rep':3},'Michigan':{'dem':82,'rep':18},'Minnesota':{'dem':80,'rep':20},
+  'Mississippi':{'dem':5,'rep':95},'Montana':{'dem':9,'rep':91,'ind':16,'indName':'Seth Bodnar (I)'},
+  'Nebraska':{'dem':6,'rep':94},'New Hampshire':{'dem':71,'rep':29},'New Jersey':{'dem':82,'rep':18},
+  'New Mexico':{'dem':88,'rep':12},'North Carolina':{'dem':87,'rep':13},'Ohio':{'dem':57,'rep':43},
+  'Oklahoma':{'dem':4,'rep':96},'Oregon':{'dem':88,'rep':12},'Rhode Island':{'dem':96,'rep':4},
+  'South Carolina':{'dem':10,'rep':90},'South Dakota':{'dem':4,'rep':96},'Texas':{'dem':43,'rep':57},
+  'Virginia':{'dem':84,'rep':16},'West Virginia':{'dem':5,'rep':95},'Wyoming':{'dem':3,'rep':97}
+};
+
+function applyFallback(race) {
+  const fb = fallbackData[race.state];
+  if (!fb) return;
+  race.demKal = fb.dem; race.repKal = fb.rep;
+  race.avgDem = fb.dem; race.avgRep = fb.rep;
+  if (fb.ind) { race.indKal = fb.ind; race.avgInd = fb.ind; race.indName = fb.indName || null; }
+  race.kalshiLoaded = true;
+}
+
+function showLoadingStatus(msg, success) {
+  let el = document.getElementById('live-status');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'live-status';
+    el.style.cssText = 'font-family:"DM Mono",monospace;font-size:10px;letter-spacing:0.06em;' +
+      'padding:5px 10px;border-radius:5px;margin-top:6px;display:inline-block;';
+    document.querySelector('.subtitle').after(el);
+  }
+  el.textContent = (success ? '● ' : '◌ ') + msg;
+  el.style.color = success ? '#4caf79' : 'rgba(240,240,245,0.4)';
+  el.style.background = success ? 'rgba(76,175,121,0.1)' : 'rgba(255,255,255,0.04)';
+}
+
+function getRating(avgDem, race) {
+  // If an independent is leading, return Ind rating
+  if (race && race.avgInd != null) {
+    const leading = Math.max(avgDem, race.avgRep, race.avgInd);
+    if (race.avgInd === leading && race.avgInd >= 35) {
+      if (race.avgInd >= 55) return { label:'Lean Ind',  color:'#4a7a4a', party:'I', textColor:'rgba(130,200,130,0.9)' };
+      return { label:'Toss-up (I)', color:'#b8960c', party:'I', textColor:'rgba(184,150,12,0.9)' };
+    }
+  }
   if (avgDem >= 90) return { label:'Safe Dem',    color:'#0f3f8c', party:'D', textColor:'rgba(107,163,232,0.9)' };
   if (avgDem >= 75) return { label:'Likely Dem',  color:'#2563b8', party:'D', textColor:'rgba(107,163,232,0.9)' };
   if (avgDem >= 55) return { label:'Lean Dem',    color:'#6ba3e8', party:'D', textColor:'rgba(107,163,232,0.9)' };
@@ -770,12 +945,16 @@ const stateByName = {};
 races.forEach(r => { stateByName[r.state] = r; });
 
 // ---- MAP ----
-d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us => {
+// Load map topology AND live Kalshi data in parallel, then render
+Promise.all([
+  d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json'),
+  loadAllKalshiData()
+]).then(([us]) => {
   const features = topojson.feature(us, us.objects.states).features;
 
   const svg = d3.select('#map-container').append('svg')
     .attr('id','map-svg')
-    .attr('viewBox','0 0 960 560')
+    .attr('viewBox','0 0 960 620')
     .attr('width','100%');
 
   const proj = d3.geoAlbersUsa().scale(1280).translate([480, 300]);
@@ -790,14 +969,15 @@ d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us => {
     .attr('d', pathGen)
     .attr('fill', d => {
       const r = stateByName[d.properties.name];
-      return r ? getRating(r.avgDem).color : '#2a2a35';
+      return r ? getRating(r.avgDem, r).color : '#2a2a35';
     })
     .on('mousemove', (evt, d) => {
       const r = stateByName[d.properties.name];
       if (!r) return;
-      const rating = getRating(r.avgDem);
-      const leadParty = r.avgDem >= 50 ? 'D' : 'R';
-      const leadPct = leadParty === 'D' ? r.avgDem : r.avgRep;
+      const rating = getRating(r.avgDem, r);
+      const allPcts = [['D',r.avgDem],['R',r.avgRep]];
+      if (r.avgInd != null) allPcts.push(['I',r.avgInd]);
+      const [leadParty, leadPct] = allPcts.reduce((a,b) => b[1]>a[1]?b:a);
       const badge = `<span class="tt-badge" style="background:${rating.color}22;color:${rating.textColor}">${rating.label}</span>`;
       document.getElementById('tooltip').innerHTML = `
         <div class="tt-title">${r.state}</div>
@@ -810,9 +990,11 @@ d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us => {
           <span style="color:var(--text-dim);font-size:10px">Rep</span>
           <span class="tt-rep">${r.repPoly}%</span>
           <span class="tt-rep">${r.repKal}%</span>
+          ${r.avgInd != null ? `<span style="color:var(--text-dim);font-size:10px">Ind</span><span style="color:#82c882">${r.indPoly}%</span><span style="color:#82c882">${r.indKal}%</span>` : '<span></span><span></span><span></span>'}
           <span style="color:var(--text-dim);font-size:10px">Avg</span>
           <span style="color:var(--text-muted)">${r.avgDem}% D</span>
           <span style="color:var(--text-muted)">${r.avgRep}% R</span>
+          ${r.avgInd != null ? `<span></span><span style="color:#82c882">${r.avgInd}% I</span><span></span>` : ''}
         </div>
         ${badge}
         <div class="tt-poly-kal">Leader: ${leadParty === 'D' ? '<span class="tt-dem">' : '<span class="tt-rep">'}${leadPct}% ${leadParty}</span></div>
@@ -827,35 +1009,179 @@ d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us => {
     });
 
   // State abbreviation labels (skip tiny states)
+  // Manual centroid overrides: MI → lower peninsula center, AK → mainland center
+  const centroidOverride = {
+    'Michigan':  [670, 195],  // left 10
+    'Alaska':    [110, 505],  // right 15
+
+  };
+
+  // Full abbr lookup for all 50 states (including grey no-race states)
+  const allAbbr = {
+    'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA',
+    'Colorado':'CO','Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA',
+    'Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA',
+    'Kansas':'KS','Kentucky':'KY','Louisiana':'LA','Maine':'ME','Maryland':'MD',
+    'Massachusetts':'MA','Michigan':'MI','Minnesota':'MN','Mississippi':'MS','Missouri':'MO',
+    'Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH','New Jersey':'NJ',
+    'New Mexico':'NM','New York':'NY','North Carolina':'NC','North Dakota':'ND','Ohio':'OH',
+    'Oklahoma':'OK','Oregon':'OR','Pennsylvania':'PA','Rhode Island':'RI','South Carolina':'SC',
+    'South Dakota':'SD','Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT',
+    'Virginia':'VA','Washington':'WA','West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY'
+  };
+
   features.forEach(f => {
     const name = f.properties.name;
     if (smallStates.has(name)) return;
-    const c = pathGen.centroid(f);
-    if (!c || isNaN(c[0])) return;
-    const r = stateByName[name];
-    const abbr = r ? r.abbr : '';
+    const raw = pathGen.centroid(f);
+    if (!raw || isNaN(raw[0])) return;
+    const abbr = allAbbr[name];
     if (!abbr) return;
-    const leadParty = r && r.avgDem >= 50 ? 'D' : 'R';
-    const pct = r ? (leadParty === 'D' ? r.avgDem : r.avgRep) : null;
+
+    const r = stateByName[name];
+    const hasRace = !!r;
+    let leadParty = null, pct = null;
+    if (hasRace) {
+      const opts = [['D',r.avgDem],['R',r.avgRep]];
+      if (r.avgInd != null) opts.push(['I',r.avgInd]);
+      [leadParty, pct] = opts.reduce((a,b) => b[1]>a[1]?b:a);
+    }
+
+    // Use override if available, otherwise D3 centroid
+    const c = centroidOverride[name] || raw;
 
     svg.append('text')
       .attr('class','state-label')
       .attr('x', c[0])
-      .attr('y', c[1] + (pct ? 1 : 3))
+      .attr('y', c[1] + 2)
       .text(abbr);
 
-    if (pct) {
-      svg.append('text')
-        .attr('class','state-pct-label')
-        .attr('x', c[0])
-        .attr('y', c[1] + 10)
-        .text(pct + '%' + (leadParty === 'D' ? 'D' : 'R'));
-    }
+    // Race states: show "XX%D" or "XX%R"; grey states: show "--"
+    svg.append('text')
+      .attr('class','state-pct-label')
+      .attr('x', c[0])
+      .attr('y', c[1] + 14)
+      .attr('fill', hasRace ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.25)')
+      .text(hasRace ? (pct + '% ' + leadParty) : '--');
   });
 
   renderMetrics();
   renderTable();
+  renderSmallStateKey();
 });
+
+function renderSmallStateKey() {
+  const smallStateNames = [
+    'Connecticut','Delaware','Hawaii','Maryland',
+    'Massachusetts','New Hampshire','New Jersey','Rhode Island','Vermont'
+  ];
+  const panel = document.getElementById('small-state-key');
+  if (!panel) return;
+  panel.innerHTML = '';
+
+  const title = document.createElement('div');
+  title.className = 'ssk-title';
+  title.textContent = 'Small states';
+  panel.appendChild(title);
+
+  smallStateNames.forEach(name => {
+    const r = stateByName[name];
+    const rating = r ? getRating(r.avgDem, r) : null;
+    let leadParty = null, leadPct = null;
+    if (r) {
+      const opts = [['D',r.avgDem],['R',r.avgRep]];
+      if (r.avgInd != null) opts.push(['I',r.avgInd]);
+      [leadParty, leadPct] = opts.reduce((a,b) => b[1]>a[1]?b:a);
+    }
+    const abbr      = r ? r.abbr : name.slice(0,2).toUpperCase();
+    const color     = rating ? rating.color : '#2a2a35';
+    const textColor = rating ? rating.textColor : 'var(--text-dim)';
+
+    const row = document.createElement('div');
+    row.className = 'ssk-row';
+
+    // Swatch
+    const swatch = document.createElement('div');
+    swatch.className = 'ssk-swatch';
+    swatch.style.background = color;
+    const abbrSpan = document.createElement('span');
+    abbrSpan.className = 'ssk-abbr';
+    abbrSpan.textContent = abbr;
+    swatch.appendChild(abbrSpan);
+
+    // Info block
+    const info = document.createElement('div');
+    info.className = 'ssk-info';
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'ssk-name';
+    nameSpan.textContent = name;
+    info.appendChild(nameSpan);
+
+    if (r && rating) {
+      const pctSpan = document.createElement('span');
+      pctSpan.className = 'ssk-pct';
+      pctSpan.style.color = textColor;
+      pctSpan.textContent = leadPct + '% ' + leadParty + ' · ' + rating.label;
+      info.appendChild(pctSpan);
+    } else {
+      const noRace = document.createElement('span');
+      noRace.className = 'ssk-norace';
+      noRace.textContent = 'No 2026 race';
+      info.appendChild(noRace);
+    }
+
+    row.appendChild(swatch);
+    row.appendChild(info);
+
+    // Tooltip
+    if (r && rating) {
+      row.addEventListener('mousemove', function(evt) {
+        const tt = document.getElementById('tooltip');
+        tt.innerHTML = '';
+
+        const ttTitle = document.createElement('div');
+        ttTitle.className = 'tt-title';
+        ttTitle.textContent = name;
+        tt.appendChild(ttTitle);
+
+        const ttSub = document.createElement('div');
+        ttSub.className = 'tt-sub';
+        ttSub.textContent = r.incumbent + (r.open ? ' · open seat' : '');
+        tt.appendChild(ttSub);
+
+        const grid = document.createElement('div');
+        grid.className = 'tt-grid';
+        grid.innerHTML =
+          '<span class="tt-head"></span><span class="tt-head">Polymarket</span><span class="tt-head">Kalshi</span>' +
+          '<span style="color:var(--text-dim);font-size:10px">Dem</span>' +
+          '<span class="tt-dem">' + r.demPoly + '%</span><span class="tt-dem">' + r.demKal + '%</span>' +
+          '<span style="color:var(--text-dim);font-size:10px">Rep</span>' +
+          '<span class="tt-rep">' + r.repPoly + '%</span><span class="tt-rep">' + r.repKal + '%</span>' +
+          '<span style="color:var(--text-dim);font-size:10px">Avg</span>' +
+          '<span style="color:var(--text-muted)">' + r.avgDem + '% D</span>' +
+          '<span style="color:var(--text-muted)">' + r.avgRep + '% R</span>';
+        tt.appendChild(grid);
+
+        const badge = document.createElement('span');
+        badge.className = 'tt-badge';
+        badge.style.background = rating.color + '33';
+        badge.style.color = rating.textColor;
+        badge.textContent = rating.label;
+        tt.appendChild(badge);
+
+        tt.style.opacity = '1';
+        tt.style.left = Math.min(evt.clientX + 14, window.innerWidth - 260) + 'px';
+        tt.style.top  = (evt.clientY - 10) + 'px';
+      });
+      row.addEventListener('mouseleave', function() {
+        document.getElementById('tooltip').style.opacity = '0';
+      });
+    }
+
+    panel.appendChild(row);
+  });
+}
 
 // ---- SENATE COMPOSITION ----
 // Seats NOT up for election in 2026 (Class I & III currently held)
@@ -873,7 +1199,7 @@ function renderSenateBar() {
   const tossSeats = [];
   const sorted = [...races].sort((a, b) => b.avgDem - a.avgDem);
   sorted.forEach(r => {
-    const rating = getRating(r.avgDem);
+    const rating = getRating(r.avgDem, r);
     if (r.avgDem >= 55) demSeats.push({ r, rating });
     else if (r.avgRep >= 55) repSeats.push({ r, rating });
     else tossSeats.push({ r, rating });
@@ -1086,7 +1412,6 @@ function renderSenateBar() {
 }
 
 function positionMajorityMarkers(row, barH, demThreshold, repThreshold) {
-  // Ensure wrapper exists
   const parent = row.parentElement;
   let wrapper = parent.querySelector('.seat-row-wrapper');
   if (!wrapper) {
@@ -1103,59 +1428,130 @@ function positionMajorityMarkers(row, barH, demThreshold, repThreshold) {
     const rowRect = row.getBoundingClientRect();
     if (rowRect.width === 0) return;
 
-    // Walk each child and map cumulative seat index → right-edge pixel.
-    // DEM_HELD block = DEM_HELD seats distributed evenly across its width.
-    // Each race block = 1 seat.
-    // REP_HELD block = REP_HELD seats distributed evenly.
-    // Gap divs (width <= 5px) are skipped.
+    // Build seat-index → right-edge pixel map
     let seatCursor = 0;
-    const seatEdges = {}; // seatEdges[n] = right-edge px of seat n
+    const seatEdges = {};
+    const leftEdges  = {};
 
     children.forEach((child, i) => {
       const rect = child.getBoundingClientRect();
       const leftPx  = rect.left - rowRect.left;
       const rightPx = rect.right - rowRect.left;
       const w = rect.width;
-
-      if (w <= 5) return; // skip gap divs
+      if (w <= 5) return;
 
       if (i === 0) {
-        // DEM HELD block — distribute DEM_HELD seats across its width
         for (let s = 1; s <= DEM_HELD; s++) {
           seatEdges[seatCursor + s] = leftPx + (w * s / DEM_HELD);
+          leftEdges[seatCursor + s] = leftPx + (w * (s-1) / DEM_HELD);
         }
         seatCursor += DEM_HELD;
       } else if (i === children.length - 1) {
-        // REP HELD block
         for (let s = 1; s <= REP_HELD; s++) {
           seatEdges[seatCursor + s] = leftPx + (w * s / REP_HELD);
+          leftEdges[seatCursor + s] = leftPx + (w * (s-1) / REP_HELD);
         }
         seatCursor += REP_HELD;
       } else {
-        // Individual race block = 1 seat
         seatCursor += 1;
         seatEdges[seatCursor] = rightPx;
+        leftEdges[seatCursor] = leftPx;
       }
     });
 
-    function placeMarker(thresholdSeats, labelLines, color) {
-      const px = seatEdges[thresholdSeats];
-      if (px == null) return;
-      const marker = document.createElement('div');
-      marker.className = 'majority-marker-abs';
-      marker.style.cssText = `position:absolute;top:0;left:${px}px;transform:translateX(-50%);` +
-        `display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:10;`;
-      marker.innerHTML =
-        `<div style="width:2px;height:${barH}px;background:${color};border-radius:1px;"></div>` +
-        `<div style="font-family:'DM Mono',monospace;font-size:8px;color:${color};` +
-        `letter-spacing:0.04em;margin-top:3px;white-space:nowrap;text-align:center;line-height:1.4;">${labelLines}</div>`;
-      wrapper.appendChild(marker);
+    const totalWidth = rowRect.width;
+
+    // SVG geometry constants
+    const svgOffsetY = 28;        // space above bar for dem arrow track
+    const trackOffset = 16;       // how far above/below bar the track sits
+    const strokeW = 6;            // thick rounded stroke
+    const svgH = barH + svgOffsetY + 28; // total svg height
+
+    const old = wrapper.querySelector('.majority-svg-overlay');
+    if (old) old.remove();
+
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('class', 'majority-svg-overlay majority-marker-abs');
+    svg.style.cssText = `position:absolute;left:0;top:-${svgOffsetY}px;` +
+      `width:${totalWidth}px;height:${svgH}px;pointer-events:none;overflow:visible;z-index:20;`;
+
+    // Helper: thick rounded path (no arrowheads — rounded linecap does it)
+    function makeTrack(x1, y1, x2, y2, color) {
+      const path = document.createElementNS(svgNS, 'line');
+      path.setAttribute('x1', x1); path.setAttribute('y1', y1);
+      path.setAttribute('x2', x2); path.setAttribute('y2', y2);
+      path.setAttribute('stroke', color);
+      path.setAttribute('stroke-width', strokeW);
+      path.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(path);
     }
 
-    // Dem needs 51 (no VP tie-break)
-    placeMarker(demThreshold, 'D maj<br>(51)', 'rgba(107,163,232,0.85)');
-    // Rep needs 50 (JD Vance VP tie-break)
-    placeMarker(repThreshold, 'R maj<br>(50)', 'rgba(232,120,120,0.85)');
+    // Helper: arrowhead pointing DOWN (into the bar from above) or UP (into bar from below)
+    // Arrow is a filled triangle pointing toward the bar
+    function makeBarArrow(x, yTip, pointingDown, color) {
+      const W = 10, H = 9; // width and height of arrowhead triangle
+      let pts;
+      if (pointingDown) {
+        // tip at bottom, base at top
+        pts = `${x},${yTip} ${x - W/2},${yTip - H} ${x + W/2},${yTip - H}`;
+      } else {
+        // tip at top, base at bottom
+        pts = `${x},${yTip} ${x - W/2},${yTip + H} ${x + W/2},${yTip + H}`;
+      }
+      const tri = document.createElementNS(svgNS, 'polygon');
+      tri.setAttribute('points', pts);
+      tri.setAttribute('fill', color);
+      svg.appendChild(tri);
+    }
+
+    function makeLabel(x, y, text, color, anchor) {
+      const t = document.createElementNS(svgNS, 'text');
+      t.setAttribute('x', x); t.setAttribute('y', y);
+      t.setAttribute('fill', color);
+      t.setAttribute('font-family', "'DM Mono', monospace");
+      t.setAttribute('font-size', '9');
+      t.setAttribute('text-anchor', anchor || 'middle');
+      t.setAttribute('dominant-baseline', 'middle');
+      t.textContent = text;
+      svg.appendChild(t);
+    }
+
+    const demColor  = 'rgba(45,90,160,0.95)';
+    const demColorS = '#1a4a99';
+    const repColor  = 'rgba(180,45,45,0.95)';
+    const repColorS = '#a01818';
+
+    // ── DEM track: left edge of bar → seat 51, runs ABOVE the bar ────────────
+    const demX   = seatEdges[demThreshold];  // right edge of seat 51
+    const barTopY = svgOffsetY;              // bar top in svg coords
+    const trackTopY = barTopY - trackOffset; // track y above bar
+
+    if (demX != null) {
+      // Thick rounded horizontal track from x=0 to demX
+      makeTrack(0, trackTopY, demX, trackTopY, demColor);
+      // Downward arrow at demX pointing into the top of the bar
+      makeBarArrow(demX, barTopY - 1, true, demColorS);
+      // Label centred on the track
+      makeLabel(demX / 2, trackTopY - 10, 'D majority — 51 seats', demColor, 'middle');
+    }
+
+    // ── REP track: right edge of bar → seat 50, runs BELOW the bar ───────────
+    const repX    = seatEdges[repThreshold]; // right edge of seat 50
+    const barBotY = svgOffsetY + barH;       // bar bottom in svg coords
+    const trackBotY = barBotY + trackOffset; // track y below bar
+
+    if (repX != null) {
+      // Thick rounded horizontal track from totalWidth back to repX
+      makeTrack(totalWidth, trackBotY, repX, trackBotY, repColor);
+      // Upward arrow at repX pointing into the bottom of the bar
+      makeBarArrow(repX, barBotY + 1, false, repColorS);
+      // Label centred on the track (right half)
+      makeLabel(repX + (totalWidth - repX) / 2, trackBotY + 12,
+        'R majority — 50 seats (VP tie-break)', repColor, 'middle');
+    }
+
+    wrapper.appendChild(svg);
   });
 }
 
@@ -1212,10 +1608,12 @@ function renderTable() {
 
   const tbody = document.getElementById('table-body');
   tbody.innerHTML = data.map(r => {
-    const rating = getRating(r.avgDem);
-    const leadParty = r.avgDem >= 50 ? 'D' : 'R';
-    const leadPct = leadParty === 'D' ? r.avgDem : r.avgRep;
-    const trailPct = leadParty === 'D' ? r.avgRep : r.avgDem;
+    const rating = getRating(r.avgDem, r);
+    const allOpts = [['D',r.avgDem],['R',r.avgRep]];
+    if (r.avgInd != null) allOpts.push(['I',r.avgInd]);
+    const [leadParty, leadPct] = allOpts.reduce((a,b) => b[1]>a[1]?b:a);
+    const trailOpts = allOpts.filter(x => x[0] !== leadParty);
+    const trailPct = Math.max(...trailOpts.map(x=>x[1]));
     const demColor = r.avgDem >= 50 ? '#6ba3e8' : 'rgba(107,163,232,0.4)';
     const repColor = r.avgRep >= 50 ? '#e87878' : 'rgba(232,120,120,0.4)';
 
@@ -1227,9 +1625,10 @@ function renderTable() {
       <td><span class="td-inc">${r.incumbent}</span></td>
       <td><span class="td-pct-dem" style="color:${demColor}">${r.avgDem}%</span></td>
       <td><span class="td-pct-rep" style="color:${repColor}">${r.avgRep}%</span></td>
+      <td>${r.avgInd != null ? '<span style="font-family:\'DM Mono\',monospace;font-weight:500;color:#82c882">' + r.avgInd + '%</span>' : '<span style="color:var(--text-dim)">—</span>'}</td>
       <td>
         <span class="winning-pct" style="color:${rating.textColor}">
-          ${leadParty === 'D' ? '<span style="color:#6ba3e8">' : '<span style="color:#e87878">'}${leadPct}% ${leadParty}</span>
+          ${leadParty === 'D' ? '<span style="color:#6ba3e8">' : leadParty === 'I' ? '<span style="color:#82c882">' : '<span style="color:#e87878">'}${leadPct}% ${leadParty}</span>
         </span>
       </td>
       <td>
@@ -1251,15 +1650,21 @@ function renderTable() {
   }).join('');
 }
 
-document.getElementById('refresh-btn').addEventListener('click', function() {
+document.getElementById('refresh-btn').addEventListener('click', async function() {
   const btn = this;
   btn.textContent = '↻ Refreshing...';
   btn.style.opacity = '0.6';
-  setTimeout(() => {
-    document.getElementById('last-updated').textContent = new Date().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
-    btn.textContent = '↻ Refresh';
-    btn.style.opacity = '1';
-  }, 1000);
+  await loadAllKalshiData();
+  renderMetrics();
+  renderTable();
+  renderSmallStateKey();
+  // Re-color map paths
+  d3.selectAll('path.state-path').attr('fill', d => {
+    const r = stateByName[d.properties.name];
+    return r ? getRating(r.avgDem, r).color : '#2a2a35';
+  });
+  btn.textContent = '↻ Refresh';
+  btn.style.opacity = '1';
 });
 </script>
 </body>
