@@ -558,6 +558,7 @@
     color: var(--text-dim);
     border-bottom: 1px solid var(--border);
     white-space: nowrap;
+    -webkit-user-select: none;
     user-select: none;
     z-index: 2;
   }
@@ -691,7 +692,7 @@
       </div>
     </div>
 
-    <div class="seat-row" id="seat-row"></div>
+    <div class="seat-row" id="seat-row" style="display:flex;width:100%;"></div>
 
     <div class="seat-labels">
       <span id="dem-held-label">← Dem seats (projected)</span>
@@ -700,7 +701,7 @@
     </div>
 
     <div class="seat-legend">
-      <div class="seat-legend-item"><div class="seat-legend-swatch" style="background:#1a3d1a;border:1px solid #2a5a2a"></div>Dem (not up)</div>
+      <div class="seat-legend-item"><div class="seat-legend-swatch" style="background:#0d2a4a;border:1px solid #1a3d6a"></div>Dem (not up)</div>
       <div class="seat-legend-item"><div class="seat-legend-swatch" style="background:#0f3f8c"></div>Safe Dem</div>
       <div class="seat-legend-item"><div class="seat-legend-swatch" style="background:#2563b8"></div>Likely Dem</div>
       <div class="seat-legend-item"><div class="seat-legend-swatch" style="background:#6ba3e8"></div>Lean Dem</div>
@@ -726,7 +727,7 @@
       <div class="legend-item"><div class="legend-swatch" style="background:var(--rep-lean)"></div>Lean Rep (55–74%)</div>
       <div class="legend-item"><div class="legend-swatch" style="background:var(--rep-likely)"></div>Likely Rep (75–89%)</div>
       <div class="legend-item"><div class="legend-swatch" style="background:var(--rep-safe)"></div>Safe Rep (90%+)</div>
-      <div class="legend-item"><div class="legend-swatch" style="background:#1a3d1a;border:1px solid #2a5a2a"></div>Safe Dem (not tracked)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#0d2a4a;border:1px solid #1a3d6a"></div>Safe Dem (not tracked)</div>
       <div class="legend-item"><div class="legend-swatch" style="background:#3a1010;border:1px solid #5a2020"></div>Safe Rep (not tracked)</div>
     </div>
   </div>
@@ -792,7 +793,7 @@ const racesMeta = [
   { state:'ME-02', abbr:'ME02', kalshiTicker:'HOUSEME02', incumbent:'Jared Golden (D)',            open:false },
   { state:'MI-07', abbr:'MI07', kalshiTicker:'HOUSEMI07', incumbent:'Tom Barrett (R)',             open:false },
   { state:'MI-08', abbr:'MI08', kalshiTicker:'HOUSEMI08', incumbent:'Open (D)',                    open:true  },
-  { state:'MN-02', abbr:'MN02', kalshiTicker:'HOUSEMN02', incumbent:'Angie Craig (D)',             open:false },
+  { state:'MN-02', abbr:'MN02', kalshiTicker:'HOUSEMN02', incumbent:'Open (D)',                   open:true  },
   { state:'NE-02', abbr:'NE02', kalshiTicker:'HOUSENE02', incumbent:'Don Bacon (R)',               open:false },
   { state:'NJ-07', abbr:'NJ07', kalshiTicker:'HOUSENJ07', incumbent:'Thomas Kean Jr. (R)',         open:false },
   { state:'NM-02', abbr:'NM02', kalshiTicker:'HOUSENM02', incumbent:'Gabe Vasquez (D)',            open:false },
@@ -889,7 +890,7 @@ const fallbackData = {
   'AZ-01':{'dem':55,'rep':45},'AZ-06':{'dem':40,'rep':60},
   'CA-13':{'dem':52,'rep':48},'CA-27':{'dem':35,'rep':65},
   'CA-45':{'dem':48,'rep':52},'CA-47':{'dem':56,'rep':44},
-  'CA-48':{'dem':62,'rep':38},
+  'CA-48':{'dem':38,'rep':62},
   'CO-08':{'dem':42,'rep':58},
   'IA-01':{'dem':48,'rep':52},'IA-03':{'dem':45,'rep':55},
   'ME-02':{'dem':45,'rep':55},
@@ -944,7 +945,7 @@ function getRating(avgDem, race) {
   if (avgDem >= 75) return { label:'Likely Dem',  color:'#2563b8', party:'D', textColor:'rgba(107,163,232,0.9)' };
   if (avgDem >= 55) return { label:'Lean Dem',    color:'#6ba3e8', party:'D', textColor:'rgba(107,163,232,0.9)' };
   if (avgDem >= 45) return { label:'Toss-up',     color:'#b8960c', party:'T', textColor:'rgba(184,150,12,0.9)' };
-  if (avgDem >= 25) return { label:'Lean Rep',    color:'#e87878', party:'R', textColor:'rgba(232,120,120,0.9)' };
+  if (avgDem >= 35) return { label:'Lean Rep',    color:'#e87878', party:'R', textColor:'rgba(232,120,120,0.9)' };
   if (avgDem >= 10) return { label:'Likely Rep',  color:'#c0392b', party:'R', textColor:'rgba(232,120,120,0.9)' };
   return               { label:'Safe Rep',    color:'#7a0e0e', party:'R', textColor:'rgba(232,120,120,0.9)' };
 }
@@ -955,6 +956,137 @@ const stateByName = {}; // unused in House version
 // districtByKey: "CA13" → race object  (racesMeta abbr field)
 const districtByKey = {};
 races.forEach(r => { districtByKey[r.abbr] = r; });
+
+// safeParty: district key → 'D' or 'R'
+// Used to color safe (non-competitive) seats on the map.
+// Competitive seats get their party from districtByKey/getRating instead.
+const safeParty = {
+  // Alabama
+  'AL01':'R','AL02':'R','AL03':'R','AL04':'R','AL05':'R','AL06':'R','AL07':'D',
+  // Alaska
+  'AK00':'R',
+  // Arizona
+  'AZ01':'R','AZ02':'D','AZ03':'D','AZ04':'R','AZ05':'R','AZ06':'R','AZ07':'D','AZ08':'R','AZ09':'R',
+  // Arkansas
+  'AR01':'R','AR02':'R','AR03':'R','AR04':'R',
+  // California
+  'CA01':'R','CA02':'D','CA03':'D','CA04':'R','CA05':'D','CA06':'D','CA07':'D','CA08':'D',
+  'CA09':'D','CA10':'D','CA11':'D','CA12':'D','CA13':'D','CA14':'D','CA15':'D','CA16':'D',
+  'CA17':'D','CA18':'D','CA19':'D','CA20':'D','CA21':'R','CA22':'R','CA23':'R','CA24':'D',
+  'CA25':'D','CA26':'D','CA27':'R','CA28':'D','CA29':'D','CA30':'D','CA31':'D','CA32':'D',
+  'CA33':'D','CA34':'D','CA35':'D','CA36':'D','CA37':'D','CA38':'D','CA39':'D','CA40':'R',
+  'CA41':'D','CA42':'R','CA43':'D','CA44':'D','CA45':'D','CA46':'D','CA47':'D','CA48':'R',
+  'CA49':'D','CA50':'R','CA51':'D','CA52':'D',
+  // Colorado
+  'CO01':'D','CO02':'D','CO03':'R','CO04':'R','CO05':'R','CO06':'D','CO07':'D','CO08':'R',
+  // Connecticut
+  'CT01':'D','CT02':'D','CT03':'D','CT04':'D','CT05':'D',
+  // Delaware
+  'DE00':'D',
+  // Florida
+  'FL01':'R','FL02':'R','FL03':'R','FL04':'R','FL05':'R','FL06':'R','FL07':'D','FL08':'R',
+  'FL09':'D','FL10':'D','FL11':'R','FL12':'R','FL13':'D','FL14':'R','FL15':'R','FL16':'R',
+  'FL17':'R','FL18':'R','FL19':'R','FL20':'D','FL21':'R','FL22':'D','FL23':'D','FL24':'D',
+  'FL25':'R','FL26':'R','FL27':'D','FL28':'R',
+  // Georgia
+  'GA01':'R','GA02':'D','GA03':'R','GA04':'D','GA05':'D','GA06':'R','GA07':'D','GA08':'R',
+  'GA09':'R','GA10':'R','GA11':'R','GA12':'R','GA13':'D','GA14':'R',
+  // Hawaii
+  'HI01':'D','HI02':'D',
+  // Idaho
+  'ID01':'R','ID02':'R',
+  // Illinois
+  'IL01':'D','IL02':'D','IL03':'D','IL04':'D','IL05':'D','IL06':'D','IL07':'D','IL08':'D',
+  'IL09':'D','IL10':'D','IL11':'D','IL12':'R','IL13':'R','IL14':'D','IL15':'R','IL16':'R','IL17':'D',
+  // Indiana
+  'IN01':'D','IN02':'R','IN03':'R','IN04':'R','IN05':'R','IN06':'R','IN07':'D','IN08':'R','IN09':'R',
+  // Iowa
+  'IA01':'R','IA02':'R','IA03':'R','IA04':'R',
+  // Kansas
+  'KS01':'R','KS02':'R','KS03':'D','KS04':'R',
+  // Kentucky
+  'KY01':'R','KY02':'R','KY03':'D','KY04':'R','KY05':'R','KY06':'R',
+  // Louisiana
+  'LA01':'R','LA02':'D','LA03':'R','LA04':'R','LA05':'R','LA06':'R',
+  // Maine
+  'ME01':'D','ME02':'D',
+  // Maryland
+  'MD01':'R','MD02':'D','MD03':'D','MD04':'D','MD05':'D','MD06':'D','MD07':'D','MD08':'D',
+  // Massachusetts
+  'MA01':'D','MA02':'D','MA03':'D','MA04':'D','MA05':'D','MA06':'D','MA07':'D','MA08':'D','MA09':'D',
+  // Michigan
+  'MI01':'R','MI02':'R','MI03':'R','MI04':'R','MI05':'D','MI06':'D','MI07':'R','MI08':'D',
+  'MI09':'D','MI10':'R','MI11':'D','MI12':'D','MI13':'D',
+  // Minnesota
+  'MN01':'R','MN02':'D','MN03':'D','MN04':'D','MN05':'D','MN06':'R','MN07':'R','MN08':'R',
+  // Mississippi
+  'MS01':'R','MS02':'D','MS03':'R','MS04':'R',
+  // Missouri
+  'MO01':'D','MO02':'R','MO03':'R','MO04':'R','MO05':'D','MO06':'R','MO07':'R','MO08':'R',
+  // Montana
+  'MT01':'R','MT02':'R',
+  // Nebraska
+  'NE01':'R','NE02':'R','NE03':'R',
+  // Nevada
+  'NV01':'D','NV02':'R','NV03':'D','NV04':'D',
+  // New Hampshire
+  'NH01':'D','NH02':'D',
+  // New Jersey
+  'NJ01':'D','NJ02':'R','NJ03':'D','NJ04':'D','NJ05':'D','NJ06':'D','NJ07':'R','NJ08':'D',
+  'NJ09':'D','NJ10':'D','NJ11':'D','NJ12':'D',
+  // New Mexico
+  'NM01':'D','NM02':'D','NM03':'D',
+  // New York
+  'NY01':'R','NY02':'R','NY03':'D','NY04':'D','NY05':'D','NY06':'D','NY07':'D','NY08':'D',
+  'NY09':'D','NY10':'D','NY11':'R','NY12':'D','NY13':'D','NY14':'D','NY15':'D','NY16':'D',
+  'NY17':'R','NY18':'D','NY19':'R','NY20':'D','NY21':'R','NY22':'D','NY23':'R','NY24':'R',
+  'NY25':'D','NY26':'D',
+  // North Carolina
+  'NC01':'D','NC02':'R','NC03':'R','NC04':'D','NC05':'R','NC06':'D','NC07':'R','NC08':'R',
+  'NC09':'R','NC10':'R','NC11':'R','NC12':'D','NC13':'R','NC14':'R',
+  // North Dakota
+  'ND00':'R',
+  // Ohio
+  'OH01':'R','OH02':'R','OH03':'D','OH04':'R','OH05':'R','OH06':'R','OH07':'R','OH08':'R',
+  'OH09':'D','OH10':'R','OH11':'D','OH12':'R','OH13':'D','OH14':'R','OH15':'R',
+  // Oklahoma
+  'OK01':'R','OK02':'R','OK03':'R','OK04':'R','OK05':'R',
+  // Oregon
+  'OR01':'D','OR02':'R','OR03':'D','OR04':'D','OR05':'D','OR06':'D',
+  // Pennsylvania
+  'PA01':'R','PA02':'D','PA03':'D','PA04':'D','PA05':'D','PA06':'D','PA07':'D','PA08':'D',
+  'PA09':'R','PA10':'R','PA11':'R','PA12':'D','PA13':'D','PA14':'R','PA15':'R','PA16':'R','PA17':'D',
+  // Rhode Island
+  'RI01':'D','RI02':'D',
+  // South Carolina
+  'SC01':'R','SC02':'R','SC03':'R','SC04':'R','SC05':'R','SC06':'D','SC07':'R',
+  // South Dakota
+  'SD00':'R',
+  // Tennessee
+  'TN01':'R','TN02':'R','TN03':'R','TN04':'R','TN05':'R','TN06':'R','TN07':'R','TN08':'R','TN09':'D',
+  // Texas
+  'TX01':'R','TX02':'R','TX03':'R','TX04':'R','TX05':'R','TX06':'R','TX07':'D','TX08':'R',
+  'TX09':'D','TX10':'R','TX11':'R','TX12':'R','TX13':'R','TX14':'R','TX15':'R','TX16':'D',
+  'TX17':'R','TX18':'D','TX19':'R','TX20':'D','TX21':'R','TX22':'R','TX23':'R','TX24':'R',
+  'TX25':'R','TX26':'R','TX27':'R','TX28':'D','TX29':'D','TX30':'D','TX31':'R','TX32':'D',
+  'TX33':'D','TX34':'D','TX35':'D','TX36':'R','TX37':'D','TX38':'R',
+  // Utah
+  'UT01':'R','UT02':'R','UT03':'R','UT04':'R',
+  // Vermont
+  'VT00':'D',
+  // Virginia
+  'VA01':'R','VA02':'R','VA03':'D','VA04':'D','VA05':'R','VA06':'R','VA07':'D','VA08':'D',
+  'VA09':'R','VA10':'D','VA11':'D',
+  // Washington
+  'WA01':'D','WA02':'D','WA03':'D','WA04':'R','WA05':'R','WA06':'D','WA07':'D','WA08':'D',
+  'WA09':'D','WA10':'D',
+  // West Virginia
+  'WV01':'R','WV02':'R',
+  // Wisconsin
+  'WI01':'R','WI02':'D','WI03':'R','WI04':'D','WI05':'D','WI06':'R','WI07':'R','WI08':'R',
+  // Wyoming
+  'WY00':'R',
+};
 
 // fipsToState: "06" → "CA"
 const fipsToState = {
@@ -1016,7 +1148,7 @@ function renderDistrictMap(geojson) {
     if (race && race.avgDem != null) return getRating(race.avgDem, race).color;
     // Safe seat — use party from safeParty lookup
     const party = key ? safeParty[key] : null;
-    if (party === 'D') return '#132d13';
+    if (party === 'D') return '#0d2a4a';
     if (party === 'R') return '#2d1010';
     return '#1a1a22'; // at-large / unknown
   }
@@ -1290,7 +1422,6 @@ function renderHouseBar() {
   botRow.appendChild(botLeft);
 
   if (tossSeats.length) {
-    // Label strip
     const tossLabel = document.createElement('div');
     tossLabel.style.cssText = `
       flex-shrink: 0; display: flex; align-items: center;
@@ -1300,9 +1431,7 @@ function renderHouseBar() {
     `;
     tossLabel.textContent = 'toss-ups';
     botRow.appendChild(tossLabel);
-
     tossSeats.forEach(({ r, rating }) => botRow.appendChild(makeSeatBlock(r, rating, 'toss')));
-
     const tossLabelR = document.createElement('div');
     tossLabelR.style.cssText = tossLabel.style.cssText;
     tossLabelR.textContent = '';
@@ -1340,6 +1469,11 @@ function renderHouseBar() {
   grid.appendChild(repSafeEl);
 
   container.appendChild(grid);
+
+  // Position majority markers (218-seat threshold indicators)
+  const demThreshold = DEM_SAFE + demSeats.length;
+  const repThreshold = DEM_SAFE + demSeats.length + tossSeats.length + repSeats.length - (REP_SAFE + repSeats.length - 218);
+  positionMajorityMarkers(grid, TOTAL_H, demThreshold, repThreshold);
 
   // Add a simple majority divider label between tiers
   const divRow = center.children[1]; // botRow
