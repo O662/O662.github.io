@@ -78,30 +78,19 @@
                 console.error('There was a problem with the fetch operation:', error);
             });
         
-        function updateNavbarTheme(opacity) {
-            const isLight = opacity < 0.35;
-            document.body.classList.toggle('nav-on-light', isLight);
-
-            const navbar = document.getElementById('navbar');
-            if (navbar) {
-                navbar.classList.toggle('nav-on-light', isLight);
-            }
-        }
-
         window.addEventListener('scroll', function () {
             const navbar = document.getElementById('navbar');
             const scrollPosition = window.scrollY;
             const maxScroll = 50;
             const opacity = Math.min(scrollPosition / maxScroll, 1);
             navbar.style.backgroundColor = `rgba(40, 40, 40, ${opacity})`;
-
-            updateNavbarTheme(opacity);
+            navbar.style.boxShadow = opacity > 0.05
+                ? `0 4px 30px rgba(0, 0, 0, ${opacity * 0.5})`
+                : 'none';
 
             // Update section title in navbar
             updateCurrentSectionTitle();
         });
-
-        updateNavbarTheme(0);
 
         function updateCurrentSectionTitle() {
             const sections = document.querySelectorAll('section[id]');

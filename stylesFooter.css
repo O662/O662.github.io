@@ -16,6 +16,18 @@ footer {
     position: relative;
 }
 
+@media (max-width: 768px) {
+    footer {
+        padding: 30px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    footer {
+        padding: 20px 12px;
+    }
+}
+
 footer p {
     margin: 0;
     padding: 10px 0;

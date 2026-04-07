@@ -780,37 +780,61 @@
 // Non-competitive seats are accounted for via DEM_SAFE / REP_SAFE constants.
 // Kalshi tickers follow pattern: HOUSE<ST><NN>-26
 const racesMeta = [
-  { state:'AZ-01', abbr:'AZ01', kalshiTicker:'HOUSEAZ01', incumbent:'Open (R)',                   open:true  },
-  { state:'AZ-06', abbr:'AZ06', kalshiTicker:'HOUSEAZ06', incumbent:'Juan Ciscomani (R)',          open:false },
-  { state:'CA-13', abbr:'CA13', kalshiTicker:'HOUSECA13', incumbent:'Adam Gray (D)',               open:false },
-  { state:'CA-27', abbr:'CA27', kalshiTicker:'HOUSECA27', incumbent:'Mike Garcia (R)',             open:false },
-  { state:'CA-45', abbr:'CA45', kalshiTicker:'HOUSECA45', incumbent:'Derek Tran (D)',              open:false },
-  { state:'CA-47', abbr:'CA47', kalshiTicker:'HOUSECA47', incumbent:'Dave Min (D)',                open:false },
-  { state:'CA-48', abbr:'CA48', kalshiTicker:'HOUSECA48', incumbent:'Darrell Issa (R)',            open:false },
-  { state:'CO-08', abbr:'CO08', kalshiTicker:'HOUSECO08', incumbent:'Gabe Evans (R)',              open:false },
-  { state:'IA-01', abbr:'IA01', kalshiTicker:'HOUSEIA01', incumbent:'Mariannette Miller-Meeks (R)',open:false },
-  { state:'IA-03', abbr:'IA03', kalshiTicker:'HOUSEIA03', incumbent:'Zach Nunn (R)',               open:false },
-  { state:'ME-02', abbr:'ME02', kalshiTicker:'HOUSEME02', incumbent:'Jared Golden (D)',            open:false },
-  { state:'MI-07', abbr:'MI07', kalshiTicker:'HOUSEMI07', incumbent:'Tom Barrett (R)',             open:false },
-  { state:'MI-08', abbr:'MI08', kalshiTicker:'HOUSEMI08', incumbent:'Open (D)',                    open:true  },
-  { state:'MN-02', abbr:'MN02', kalshiTicker:'HOUSEMN02', incumbent:'Open (D)',                   open:true  },
-  { state:'NE-02', abbr:'NE02', kalshiTicker:'HOUSENE02', incumbent:'Don Bacon (R)',               open:false },
-  { state:'NJ-07', abbr:'NJ07', kalshiTicker:'HOUSENJ07', incumbent:'Thomas Kean Jr. (R)',         open:false },
-  { state:'NM-02', abbr:'NM02', kalshiTicker:'HOUSENM02', incumbent:'Gabe Vasquez (D)',            open:false },
-  { state:'NC-01', abbr:'NC01', kalshiTicker:'HOUSENC01', incumbent:'Don Davis (D)',               open:false },
-  { state:'NY-04', abbr:'NY04', kalshiTicker:'HOUSENY04', incumbent:'Laura Gillen (D)',            open:false },
-  { state:'NY-17', abbr:'NY17', kalshiTicker:'HOUSENY17', incumbent:'Mike Lawler (R)',             open:false },
-  { state:'NY-19', abbr:'NY19', kalshiTicker:'HOUSENY19', incumbent:'Marc Molinaro (R)',           open:false },
-  { state:'NY-22', abbr:'NY22', kalshiTicker:'HOUSENY22', incumbent:'Open (D)',                    open:true  },
-  { state:'OH-09', abbr:'OH09', kalshiTicker:'HOUSEOH09', incumbent:'Marcy Kaptur (D)',            open:false },
-  { state:'OH-13', abbr:'OH13', kalshiTicker:'HOUSEOH13', incumbent:'Emilia Sykes (D)',            open:false },
-  { state:'PA-07', abbr:'PA07', kalshiTicker:'HOUSEPA07', incumbent:'Susan Wild (D)',              open:false },
-  { state:'PA-08', abbr:'PA08', kalshiTicker:'HOUSEPA08', incumbent:'Matt Cartwright (D)',         open:false },
-  { state:'PA-10', abbr:'PA10', kalshiTicker:'HOUSEPA10', incumbent:'Scott Perry (R)',             open:false },
-  { state:'TX-34', abbr:'TX34', kalshiTicker:'HOUSETX34', incumbent:'Vicente Gonzalez (D)',        open:false },
-  { state:'VA-02', abbr:'VA02', kalshiTicker:'HOUSEVA02', incumbent:'Jen Kiggans (R)',             open:false },
-  { state:'WA-03', abbr:'WA03', kalshiTicker:'HOUSEWA03', incumbent:'Marie Gluesenkamp Perez (D)',open:false },
-  { state:'WI-03', abbr:'WI03', kalshiTicker:'HOUSEWI03', incumbent:'Derrick Van Orden (R)',       open:false },
+  // Kalshi tickers use no leading zeros (e.g. HOUSEAZ1-26, not HOUSEAZ01-26)
+  { state:'AZ-01', abbr:'AZ01', kalshiTicker:'HOUSEAZ1',  incumbent:'Open (R)',                    open:true  },
+  { state:'AZ-06', abbr:'AZ06', kalshiTicker:'HOUSEAZ6',  incumbent:'Juan Ciscomani (R)',           open:false },
+  { state:'CA-3',  abbr:'CA03', kalshiTicker:'HOUSECA3',  incumbent:'Open (D)',                     open:true  },
+  { state:'CA-13', abbr:'CA13', kalshiTicker:'HOUSECA13', incumbent:'Adam Gray (D)',                open:false },
+  { state:'CA-22', abbr:'CA22', kalshiTicker:'HOUSECA22', incumbent:'David Valadao (R)',            open:false },
+  { state:'CA-27', abbr:'CA27', kalshiTicker:'HOUSECA27', incumbent:'Mike Garcia (R)',              open:false },
+  { state:'CA-45', abbr:'CA45', kalshiTicker:'HOUSECA45', incumbent:'Derek Tran (D)',               open:false },
+  { state:'CA-47', abbr:'CA47', kalshiTicker:'HOUSECA47', incumbent:'Dave Min (D)',                 open:false },
+  { state:'CA-48', abbr:'CA48', kalshiTicker:'HOUSECA48', incumbent:'Darrell Issa (R)',             open:false },
+  { state:'CA-49', abbr:'CA49', kalshiTicker:'HOUSECA49', incumbent:'Mike Levin (D)',               open:false },
+  { state:'CO-3',  abbr:'CO03', kalshiTicker:'HOUSECO3',  incumbent:'Jeff Hurd (R)',                open:false },
+  { state:'CO-08', abbr:'CO08', kalshiTicker:'HOUSECO8',  incumbent:'Gabe Evans (R)',               open:false },
+  { state:'FL-13', abbr:'FL13', kalshiTicker:'HOUSEFL13', incumbent:'Anna Paulina Luna (R)',        open:false },
+  { state:'IA-01', abbr:'IA01', kalshiTicker:'HOUSEIA1',  incumbent:'Mariannette Miller-Meeks (R)', open:false },
+  { state:'IA-03', abbr:'IA03', kalshiTicker:'HOUSEIA3',  incumbent:'Zach Nunn (R)',                open:false },
+  { state:'IL-17', abbr:'IL17', kalshiTicker:'HOUSEIL17', incumbent:'Eric Sorensen (D)',            open:false },
+  { state:'ME-02', abbr:'ME02', kalshiTicker:'HOUSEME2',  incumbent:'Jared Golden (D)',             open:false },
+  { state:'MI-3',  abbr:'MI03', kalshiTicker:'HOUSEMI3',  incumbent:'Hillary Scholten (D)',         open:false },
+  { state:'MI-07', abbr:'MI07', kalshiTicker:'HOUSEMI7',  incumbent:'Tom Barrett (R)',              open:false },
+  { state:'MI-08', abbr:'MI08', kalshiTicker:'HOUSEMI8',  incumbent:'Open (D)',                     open:true  },
+  { state:'MI-10', abbr:'MI10', kalshiTicker:'HOUSEMI10', incumbent:'John James (R)',               open:false },
+  { state:'MN-02', abbr:'MN02', kalshiTicker:'HOUSEMN2',  incumbent:'Open (D)',                     open:true  },
+  { state:'MT-1',  abbr:'MT01', kalshiTicker:'HOUSEMT1',  incumbent:'Ryan Zinke (R)',               open:false },
+  { state:'NE-02', abbr:'NE02', kalshiTicker:'HOUSENE2',  incumbent:'Don Bacon (R)',                open:false },
+  { state:'NH-1',  abbr:'NH01', kalshiTicker:'HOUSENH1',  incumbent:'Chris Pappas (D)',             open:false },
+  { state:'NJ-5',  abbr:'NJ05', kalshiTicker:'HOUSENJ5',  incumbent:'Josh Gottheimer (D)',          open:false },
+  { state:'NJ-07', abbr:'NJ07', kalshiTicker:'HOUSENJ7',  incumbent:'Thomas Kean Jr. (R)',          open:false },
+  { state:'NM-02', abbr:'NM02', kalshiTicker:'HOUSENM2',  incumbent:'Gabe Vasquez (D)',             open:false },
+  { state:'NC-01', abbr:'NC01', kalshiTicker:'HOUSENC1',  incumbent:'Don Davis (D)',                open:false },
+  { state:'NV-3',  abbr:'NV03', kalshiTicker:'HOUSENV3',  incumbent:'Susie Lee (D)',                open:false },
+  { state:'NV-4',  abbr:'NV04', kalshiTicker:'HOUSENV4',  incumbent:'Steven Horsford (D)',          open:false },
+  { state:'NY-3',  abbr:'NY03', kalshiTicker:'HOUSENY3',  incumbent:'Tom Suozzi (D)',               open:false },
+  { state:'NY-04', abbr:'NY04', kalshiTicker:'HOUSENY4',  incumbent:'Laura Gillen (D)',             open:false },
+  { state:'NY-17', abbr:'NY17', kalshiTicker:'HOUSENY17', incumbent:'Mike Lawler (R)',              open:false },
+  { state:'NY-18', abbr:'NY18', kalshiTicker:'HOUSENY18', incumbent:'Pat Ryan (D)',                 open:false },
+  { state:'NY-19', abbr:'NY19', kalshiTicker:'HOUSENY19', incumbent:'Marc Molinaro (R)',            open:false },
+  { state:'NY-22', abbr:'NY22', kalshiTicker:'HOUSENY22', incumbent:'Open (D)',                     open:true  },
+  { state:'OH-1',  abbr:'OH01', kalshiTicker:'HOUSEOH1',  incumbent:'Greg Landsman (D)',            open:false },
+  { state:'OH-09', abbr:'OH09', kalshiTicker:'HOUSEOH9',  incumbent:'Marcy Kaptur (D)',             open:false },
+  { state:'OH-13', abbr:'OH13', kalshiTicker:'HOUSEOH13', incumbent:'Emilia Sykes (D)',             open:false },
+  { state:'OR-5',  abbr:'OR05', kalshiTicker:'HOUSEOR5',  incumbent:'Janelle Bynum (D)',            open:false },
+  { state:'PA-1',  abbr:'PA01', kalshiTicker:'HOUSEPA1',  incumbent:'Brian Fitzpatrick (R)',        open:false },
+  { state:'PA-07', abbr:'PA07', kalshiTicker:'HOUSEPA7',  incumbent:'Susan Wild (D)',               open:false },
+  { state:'PA-08', abbr:'PA08', kalshiTicker:'HOUSEPA8',  incumbent:'Matt Cartwright (D)',          open:false },
+  { state:'PA-10', abbr:'PA10', kalshiTicker:'HOUSEPA10', incumbent:'Scott Perry (R)',              open:false },
+  { state:'PA-17', abbr:'PA17', kalshiTicker:'HOUSEPA17', incumbent:'Chris Deluzio (D)',            open:false },
+  { state:'TX-15', abbr:'TX15', kalshiTicker:'HOUSETX15', incumbent:'Monica De La Cruz (R)',        open:false },
+  { state:'TX-28', abbr:'TX28', kalshiTicker:'HOUSETX28', incumbent:'Henry Cuellar (D)',            open:false },
+  { state:'TX-34', abbr:'TX34', kalshiTicker:'HOUSETX34', incumbent:'Vicente Gonzalez (D)',         open:false },
+  { state:'VA-02', abbr:'VA02', kalshiTicker:'HOUSEVA2',  incumbent:'Jen Kiggans (R)',              open:false },
+  { state:'VA-7',  abbr:'VA07', kalshiTicker:'HOUSEVA7',  incumbent:'Eugene Vindman (D)',           open:false },
+  { state:'WA-03', abbr:'WA03', kalshiTicker:'HOUSEWA3',  incumbent:'Marie Gluesenkamp Perez (D)', open:false },
+  { state:'WI-1',  abbr:'WI01', kalshiTicker:'HOUSEWI1',  incumbent:'Bryan Steil (R)',              open:false },
+  { state:'WI-03', abbr:'WI03', kalshiTicker:'HOUSEWI3',  incumbent:'Derrick Van Orden (R)',        open:false },
 ];
 
 // Live data will be merged in here
@@ -883,30 +907,42 @@ async function loadAllKalshiData() {
     new Date().toLocaleString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit' });
 }
 
-// Hardcoded fallback snapshot (Apr 3 2026) in case API is unavailable
-// Fallback snapshot (Apr 2026) — CPR-based approximate probabilities
-// for competitive House districts when Kalshi API is unavailable
+// Fallback snapshot (Apr 2026) — Kalshi-based approximate probabilities
+// for competitive House districts when live API is unavailable
 const fallbackData = {
-  'AZ-01':{'dem':55,'rep':45},'AZ-06':{'dem':40,'rep':60},
-  'CA-13':{'dem':52,'rep':48},'CA-27':{'dem':35,'rep':65},
+  'AZ-01':{'dem':68,'rep':32},'AZ-06':{'dem':76,'rep':24},
+  'CA-3': {'dem':91,'rep': 9},
+  'CA-13':{'dem':65,'rep':35},'CA-22':{'dem':67,'rep':33},
+  'CA-27':{'dem':35,'rep':65},
   'CA-45':{'dem':48,'rep':52},'CA-47':{'dem':56,'rep':44},
-  'CA-48':{'dem':38,'rep':62},
+  'CA-48':{'dem':38,'rep':62},'CA-49':{'dem':95,'rep': 5},
+  'CO-3': {'dem':29,'rep':71},
   'CO-08':{'dem':42,'rep':58},
+  'FL-13':{'dem':24,'rep':76},
   'IA-01':{'dem':48,'rep':52},'IA-03':{'dem':45,'rep':55},
-  'ME-02':{'dem':45,'rep':55},
-  'MI-07':{'dem':50,'rep':50},'MI-08':{'dem':65,'rep':35},
+  'IL-17':{'dem':91,'rep': 9},
+  'ME-02':{'dem':47,'rep':53},
+  'MI-3': {'dem':89,'rep':11},
+  'MI-07':{'dem':50,'rep':50},'MI-08':{'dem':65,'rep':35},'MI-10':{'dem':70,'rep':30},
   'MN-02':{'dem':52,'rep':48},
+  'MT-1': {'dem':42,'rep':58},
   'NE-02':{'dem':44,'rep':56},
-  'NJ-07':{'dem':50,'rep':50},
+  'NH-1': {'dem':83,'rep':17},
+  'NJ-5': {'dem':89,'rep':11},'NJ-07':{'dem':50,'rep':50},
   'NM-02':{'dem':48,'rep':52},
   'NC-01':{'dem':50,'rep':50},
-  'NY-04':{'dem':58,'rep':42},'NY-17':{'dem':50,'rep':50},'NY-19':{'dem':45,'rep':55},'NY-22':{'dem':68,'rep':32},
+  'NV-3': {'dem':82,'rep':18},'NV-4': {'dem':91,'rep': 9},
+  'NY-3': {'dem':79,'rep':21},
+  'NY-04':{'dem':58,'rep':42},'NY-17':{'dem':50,'rep':50},'NY-18':{'dem':92,'rep': 8},'NY-19':{'dem':45,'rep':55},'NY-22':{'dem':68,'rep':32},
+  'OH-1': {'dem':78,'rep':22},
   'OH-09':{'dem':50,'rep':50},'OH-13':{'dem':52,'rep':48},
-  'PA-07':{'dem':55,'rep':45},'PA-08':{'dem':52,'rep':48},'PA-10':{'dem':46,'rep':54},
-  'TX-34':{'dem':52,'rep':48},
-  'VA-02':{'dem':42,'rep':58},
+  'OR-5': {'dem':86,'rep':14},
+  'PA-1': {'dem':38,'rep':62},
+  'PA-07':{'dem':55,'rep':45},'PA-08':{'dem':52,'rep':48},'PA-10':{'dem':46,'rep':54},'PA-17':{'dem':86,'rep':14},
+  'TX-15':{'dem':56,'rep':44},'TX-28':{'dem':73,'rep':27},'TX-34':{'dem':52,'rep':48},
+  'VA-02':{'dem':42,'rep':58},'VA-7': {'dem':90,'rep':10},
   'WA-03':{'dem':50,'rep':50},
-  'WI-03':{'dem':44,'rep':56}
+  'WI-1': {'dem':32,'rep':68},'WI-03':{'dem':44,'rep':56}
 };
 
 function applyFallback(race) {
@@ -1252,10 +1288,10 @@ function renderSmallStateKey() { /* no-op for House version */ }
 // All 435 seats are on the ballot in 2026.
 // DEM_SAFE / REP_SAFE = non-competitive seats projected to hold.
 // These are seats not in racesMeta (i.e., CPR Safe/Solid).
-// Current competitive seats in racesMeta: 31 seats
-// Non-competitive safe Dem seats: ~185, safe Rep seats: ~189
-const DEM_SAFE = 185;  // Safe Dem seats not in racesMeta
-const REP_SAFE = 189;  // Safe Rep seats not in racesMeta
+// Current competitive seats in racesMeta: 54 seats
+// Non-competitive safe Dem seats: ~171, safe Rep seats: ~180
+const DEM_SAFE = 171;  // Safe Dem seats not in racesMeta
+const REP_SAFE = 180;  // Safe Rep seats not in racesMeta
 
 function renderHouseBar() {
   // Use a two-tier layout:

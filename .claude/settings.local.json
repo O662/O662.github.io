@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:api.elections.kalshi.com)",
+      "WebFetch(domain:api.kalshi.com)"
+    ]
+  }
+}
