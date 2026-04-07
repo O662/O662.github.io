@@ -187,6 +187,17 @@
     border-radius: 20px;
 }
 
+/* Invisible bridge that fills the gap between the navbar and the mega menu,
+   so the mouse never enters a dead zone while travelling between the two. */
+.projects-dropdown .dropdown-content::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    right: 0;
+    height: 20px;
+}
+
 .projects-dropdown:hover .dropdown-content,
 .projects-dropdown.active .dropdown-content {
     display: block;
