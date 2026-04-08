@@ -420,6 +420,637 @@
       will-change: transform, opacity;
     }
 
+    /* ── METHODOLOGY SECTION ── */
+    .methodology {
+      background: #111111;
+      padding: 100px 48px;
+    }
+
+    .methodology-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .methodology-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2.5rem, 4vw, 3.8rem);
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 64px;
+    }
+
+    .methodology-title em {
+      font-style: italic;
+      color: var(--white);
+    }
+
+    .methodology-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+
+    .methodology-card {
+      background: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 40px 32px;
+    }
+
+    .methodology-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+
+    .methodology-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: 1.35rem;
+      color: var(--white);
+      margin-bottom: 16px;
+      letter-spacing: 0.02em;
+    }
+
+    .methodology-card-text {
+      font-size: 0.78rem;
+      font-weight: 400;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    @media (max-width: 900px) {
+      .methodology-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 540px) {
+      .methodology-grid {
+        grid-template-columns: 1fr;
+      }
+      .methodology {
+        padding: 72px 24px;
+      }
+    }
+
+    /* ── ARCHIVE SECTION ── */
+    .archive {
+      background: #0d0d0d;
+      padding: 100px 48px;
+    }
+
+    .archive-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 40px;
+    }
+
+    .archive-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    .archive-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+      line-height: 1.0;
+      color: var(--white);
+    }
+
+    .archive-subtitle {
+      font-size: 0.78rem;
+      font-weight: 400;
+      line-height: 1.75;
+      color: rgba(255, 255, 255, 0.45);
+      max-width: 280px;
+      text-align: right;
+    }
+
+    .archive-grid {
+      display: grid;
+      grid-template-columns: 1.85fr 1fr;
+      grid-template-rows: 300px 260px;
+      gap: 6px;
+    }
+
+    .archive-img {
+      overflow: hidden;
+    }
+
+    .archive-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(80%) brightness(0.65);
+      transition: filter 0.4s ease, transform 0.5s ease;
+      display: block;
+    }
+
+    .archive-img:hover img {
+      filter: grayscale(40%) brightness(0.8);
+      transform: scale(1.03);
+    }
+
+    .archive-row-1 {
+      grid-column: 1 / 3;
+      display: grid;
+      grid-template-columns: 1.85fr 1fr;
+      gap: 6px;
+      height: 300px;
+    }
+
+    .archive-row-2 {
+      grid-column: 1 / 3;
+      display: grid;
+      grid-template-columns: 1fr 1.85fr;
+      gap: 6px;
+      height: 260px;
+    }
+
+    .archive-footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 52px;
+      gap: 0;
+    }
+
+    .archive-expand-btn {
+      background: none;
+      border: none;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.2s;
+      margin-bottom: 14px;
+    }
+
+    .archive-expand-btn:hover {
+      color: var(--gold);
+    }
+
+    .archive-expand-line {
+      width: 1px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .archive-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+      .archive-subtitle { text-align: left; max-width: 100%; }
+      .archive-row-1,
+      .archive-row-2 { grid-template-columns: 1fr; height: auto; }
+      .archive-img { height: 220px; }
+      .archive { padding: 72px 24px; }
+    }
+
+    /* ── BUILT FOR EXCELLENCE SECTION ── */
+    .excellence {
+      background: #111111;
+      padding: 100px 48px;
+    }
+
+    .excellence-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .excellence-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .excellence-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(3rem, 5vw, 5rem);
+      line-height: 1.05;
+      color: var(--white);
+    }
+
+    .excellence-title em {
+      font-style: italic;
+    }
+
+    .excellence-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .excellence-card-img {
+      width: 100%;
+      height: 360px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+
+    .excellence-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(80%) brightness(0.55);
+      transition: filter 0.4s ease, transform 0.5s ease;
+      display: block;
+    }
+
+    .excellence-card:hover .excellence-card-img img {
+      filter: grayscale(40%) brightness(0.72);
+      transform: scale(1.04);
+    }
+
+    .excellence-card-body {
+      padding: 0 4px;
+    }
+
+    .excellence-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 2rem;
+      color: var(--white);
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+
+    .excellence-card-title--italic em {
+      font-style: italic;
+    }
+
+    .excellence-card-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 18px;
+    }
+
+    .excellence-card-meta span {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .excellence-card-text {
+      font-size: 0.8rem;
+      font-weight: 400;
+      line-height: 1.85;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    @media (max-width: 900px) {
+      .excellence-grid { grid-template-columns: 1fr; gap: 48px; }
+      .excellence { padding: 72px 24px; }
+      .excellence-card-img { height: 260px; }
+    }
+
+    /* ── CONTACT SECTION ── */
+    .contact {
+      background: #111111;
+      padding: 100px 48px;
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 80px;
+      align-items: start;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .contact-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    .contact-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2.8rem, 4vw, 4.2rem);
+      color: var(--white);
+      line-height: 1.05;
+    }
+
+    .contact-title em { font-style: italic; }
+
+    .contact-divider {
+      width: 80px;
+      height: 1px;
+      background: var(--gold);
+      margin: 24px 0 40px;
+    }
+
+    .contact-info {
+      margin-bottom: 32px;
+    }
+
+    .contact-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 6px;
+    }
+
+    .contact-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 2rem;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .contact-role {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+    }
+
+    .contact-label--spaced { margin-top: 20px; }
+
+    .contact-phone-block {
+      margin-bottom: 40px;
+    }
+
+    .contact-phone {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+
+    .contact-phone:hover { color: var(--gold-light); }
+
+    .contact-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.45);
+      max-width: 360px;
+    }
+
+    /* Form side */
+    .contact-right {
+      background: #181818;
+      padding: 48px;
+    }
+
+    .contact-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .contact-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .contact-field-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .contact-input,
+    .contact-select,
+    .contact-textarea {
+      background: #111111;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.82rem;
+      padding: 14px 16px;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .contact-input::placeholder,
+    .contact-textarea::placeholder {
+      color: rgba(255,255,255,0.2);
+    }
+
+    .contact-input:focus,
+    .contact-select:focus,
+    .contact-textarea:focus {
+      border-color: var(--gold);
+    }
+
+    .contact-select-wrap {
+      position: relative;
+    }
+
+    .contact-select {
+      cursor: pointer;
+      padding-right: 40px;
+    }
+
+    .contact-select option { background: #111111; }
+
+    .contact-select-arrow {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: rgba(255,255,255,0.4);
+      pointer-events: none;
+    }
+
+    .contact-textarea {
+      resize: vertical;
+      min-height: 140px;
+    }
+
+    .contact-submit {
+      width: 100%;
+      background: var(--gold);
+      border: none;
+      color: var(--dark);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+
+    .contact-submit:hover { background: var(--gold-light); }
+
+    @media (max-width: 900px) {
+      .contact {
+        grid-template-columns: 1fr;
+        gap: 48px;
+        padding: 72px 24px;
+      }
+      .contact-form-row { grid-template-columns: 1fr; }
+      .contact-right { padding: 32px 24px; }
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: #0d0d0d;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+
+    /* Partners bar */
+    .footer-partners {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      padding: 40px 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .footer-partners-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      white-space: nowrap;
+    }
+
+    .footer-partners-logos {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .footer-partner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0.75;
+      transition: opacity 0.2s;
+    }
+
+    .footer-partner:hover { opacity: 1; }
+
+    .footer-partner-svg {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+
+    .footer-partner-svg--shield {
+      width: 34px;
+      height: 40px;
+    }
+
+    .footer-partner-name {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .footer-partner-divider {
+      width: 1px;
+      height: 36px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Footer bar */
+    .footer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 48px;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1.1rem;
+      color: var(--gold);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 6px;
+      transition: color 0.2s;
+    }
+
+    .footer-logo:hover { color: var(--gold-light); }
+
+    .footer-copy {
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 36px;
+    }
+
+    .footer-links a {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--gold); }
+
+    @media (max-width: 768px) {
+      .footer-partners { flex-direction: column; align-items: flex-start; padding: 32px 24px; }
+      .footer-bar { flex-direction: column; align-items: flex-start; gap: 24px; padding: 28px 24px; }
+      .footer-links { flex-wrap: wrap; gap: 20px; }
+    }
+
     /* ── Mouse glow orb ── */
     #mouse-glow {
       position: fixed;
@@ -530,6 +1161,212 @@
     </div>
   </section>
   </div><!-- /hero-wrapper -->
+
+  <!-- METHODOLOGY SECTION -->
+  <section class="methodology">
+    <div class="methodology-header">
+      <div class="methodology-eyebrow">Methodology</div>
+      <h2 class="methodology-title">
+        Our Architectural<br>
+        <em>Genesis</em>
+      </h2>
+    </div>
+    <div class="methodology-grid">
+      <div class="methodology-card">
+        <div class="methodology-number">01</div>
+        <h3 class="methodology-card-title">Consultation</h3>
+        <p class="methodology-card-text">We begin with a silent observation of the site and a deep dialogue regarding the spatial intent and the human experience within the monolith.</p>
+      </div>
+      <div class="methodology-card">
+        <div class="methodology-number">02</div>
+        <h3 class="methodology-card-title">Design</h3>
+        <p class="methodology-card-text">Translating abstract visions into technical precision. We craft the structural core using brutalist principles softened by modern luxury.</p>
+      </div>
+      <div class="methodology-card">
+        <div class="methodology-number">03</div>
+        <h3 class="methodology-card-title">Refinement</h3>
+        <p class="methodology-card-text">Every shadow is calculated. Every texture is curated. We iterate on the details until the architecture feels like a natural extension of its environment.</p>
+      </div>
+      <div class="methodology-card">
+        <div class="methodology-number">04</div>
+        <h3 class="methodology-card-title">Construction</h3>
+        <p class="methodology-card-text">The transition from digital precision to physical weight. Our master artisans execute the vision with architectural exactness.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCHIVE SECTION -->
+  <section class="archive">
+    <div class="archive-header">
+      <div class="archive-left">
+        <div class="archive-eyebrow">Archive</div>
+        <h2 class="archive-title">Curated<br>Excellence</h2>
+      </div>
+      <p class="archive-subtitle">A showcase of our most ambitious monolithic structures and interior landscapes.</p>
+    </div>
+
+    <div class="archive-grid">
+      <div class="archive-row-1">
+        <div class="archive-img">
+          <img src="turnerPictures/franco-debartolo-AfpOZUJHfMA-unsplash.jpg" alt="Sculptural architecture" />
+        </div>
+        <div class="archive-img">
+          <img src="turnerPictures/franco-debartolo-UsWSkZ8NuXw-unsplash.jpg" alt="Facade texture" />
+        </div>
+      </div>
+      <div class="archive-row-2">
+        <div class="archive-img">
+          <img src="turnerPictures/allphoto-bangkok-nI4aC1kaTRc-unsplash.jpg" alt="Interior corridor" />
+        </div>
+        <div class="archive-img">
+          <img src="turnerPictures/franco-debartolo-QvfHdC9lJRI-unsplash.jpg" alt="Geometric panels" />
+        </div>
+      </div>
+    </div>
+
+    <div class="archive-footer">
+      <button type="button" class="archive-expand-btn">Expand the Archive</button>
+      <div class="archive-expand-line"></div>
+    </div>
+  </section>
+
+  <!-- BUILT FOR EXCELLENCE SECTION -->
+  <section class="excellence">
+    <div class="excellence-header">
+      <div class="excellence-eyebrow">Our Methodology</div>
+      <h2 class="excellence-title"><em>Built for Excellence</em></h2>
+    </div>
+
+    <div class="excellence-grid">
+      <div class="excellence-card">
+        <div class="excellence-card-img">
+          <img src="turnerPictures/franco-debartolo-2yqF4SI8M84-unsplash.jpg" alt="Design process" />
+        </div>
+        <div class="excellence-card-body">
+          <h3 class="excellence-card-title">What We Do</h3>
+          <div class="excellence-card-meta">
+            <span>David Turner</span>
+            <span>Designer</span>
+            <span>The Design Phase</span>
+          </div>
+          <p class="excellence-card-text">We design in-house using CAD, and we work externally, when needed, with architects to produce beautiful, comfortable homes for today and for the future. As a Design Build Team, we take your new home concepts and apply them to the property dimensions, grade, location, setting, and view.</p>
+        </div>
+      </div>
+
+      <div class="excellence-card">
+        <div class="excellence-card-img">
+          <img src="turnerPictures/nathan-van-egmond-0IwypLLbHiA-unsplash.jpg" alt="Working together" />
+        </div>
+        <div class="excellence-card-body">
+          <h3 class="excellence-card-title excellence-card-title--italic"><em>Working Together</em></h3>
+          <div class="excellence-card-meta">
+            <span>The Building Process</span>
+            <span>Pre-Construction</span>
+          </div>
+          <p class="excellence-card-text">We work with you to establish a budget estimate which will incorporate the decisions you will make regarding quality, caliber, availability, and cost of the structure, materials, design features, and conveniences. A timeline is established, the permit process begins, and is followed by construction.</p>
+        </div>
+      </div>
+
+      <div class="excellence-card">
+        <div class="excellence-card-img">
+          <img src="turnerPictures/franco-debartolo--coNBx0-TgQ-unsplash.jpg" alt="Quality construction" />
+        </div>
+        <div class="excellence-card-body">
+          <h3 class="excellence-card-title">Why Choose Us?</h3>
+          <div class="excellence-card-meta">
+            <span>David Turner</span>
+            <span>40+ Years Experience</span>
+            <span>Construction</span>
+          </div>
+          <p class="excellence-card-text">As an insured, bonded, licensed, home warranty builder, I am registered with BC Housing and offer 45 years experience as a building professional. Your home will be constructed to meet or exceed the BC Building Code, the Step Code, and it will include local seismic requirements.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section class="contact">
+    <div class="contact-left">
+      <div class="contact-eyebrow">Contact</div>
+      <h2 class="contact-title"><em>Get in Touch</em></h2>
+      <div class="contact-divider"></div>
+
+      <div class="contact-info">
+        <div class="contact-label">Principal</div>
+        <div class="contact-name">David Turner</div>
+        <div class="contact-role">Professional Builder &amp; Designer</div>
+      </div>
+
+      <div class="contact-phone-block">
+        <div class="contact-label">Direct Line</div>
+        <a href="tel:2509517003" class="contact-phone">250-951-7003</a>
+        <div class="contact-label contact-label--spaced">Direct Email</div>
+        <a href="mailto:david@turnerdesignltd.com" class="contact-phone">david@turnerdesignltd.com</a>
+      </div>
+
+      <p class="contact-tagline"><em>Ready to discuss your next monolithic project? We are currently accepting consultations.</em></p>
+    </div>
+
+    <div class="contact-right">
+      <form class="contact-form" onsubmit="return false;">
+        <div class="contact-form-row">
+          <div class="contact-field">
+            <label class="contact-field-label" for="cf-name">Your Name</label>
+            <input class="contact-input" id="cf-name" type="text" placeholder="Full Name" />
+          </div>
+          <div class="contact-field">
+            <label class="contact-field-label" for="cf-email">Email Address</label>
+            <input class="contact-input" id="cf-email" type="email" placeholder="email@example.com" />
+          </div>
+        </div>
+
+        <div class="contact-field">
+          <label class="contact-field-label" for="cf-project">Project Type</label>
+          <div class="contact-select-wrap">
+            <select class="contact-select" id="cf-project">
+              <option value="" disabled selected>Select Project Type</option>
+              <option>New Residential Build</option>
+              <option>Custom Home Design</option>
+              <option>Renovation</option>
+              <option>Commercial</option>
+              <option>Consultation Only</option>
+            </select>
+            <svg class="contact-select-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+        <div class="contact-field">
+          <label class="contact-field-label" for="cf-message">Your Message</label>
+          <textarea class="contact-textarea" id="cf-message" rows="6" placeholder="Tell us about your project goals and location..."></textarea>
+        </div>
+
+        <button type="submit" class="contact-submit">Send Inquiry</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <!-- Footer bar -->
+    <div class="footer-bar">
+      <div class="footer-brand">
+        <a href="#" class="footer-logo">Turner Design Ltd</a>
+        <p class="footer-copy">&copy; 2024 Turner Design Ltd. Built for the Modern Monolith.</p>
+      </div>
+      <div class="footer-partners">
+        <span class="footer-partners-label">Proudly partnering with</span>
+        <div class="footer-partners-logos">
+          <div class="footer-partner">
+            <img src="turnerPictures/bchousing.png" alt="BC Housing" class="footer-partner-img" />
+          </div>
+          <div class="footer-partner-divider"></div>
+          <div class="footer-partner">
+            <img src="turnerPictures/pacifichomewarranty.png" alt="Pacific Home Warranty" class="footer-partner-img" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <script>
     const canvas = document.getElementById('lines-canvas');
