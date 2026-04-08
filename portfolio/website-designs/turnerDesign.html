@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Turner Design Ltd</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #d4b96a;
+      --white: #ffffff;
+      --dark: #111111;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--dark);
+      color: var(--white);
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 48px;
+      z-index: 10;
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1.25rem;
+      color: var(--gold);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+
+    .nav-links a.active {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .nav-cta {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--dark);
+      background: var(--gold-light);
+      border: none;
+      padding: 14px 28px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .nav-cta:hover {
+      background: var(--gold);
+    }
+
+    /* ── HERO WRAPPER — extra scroll height for sticky animation ── */
+    .hero-wrapper {
+      position: relative;
+      height: 200vh;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1800&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center right;
+      filter: grayscale(60%) brightness(0.45);
+    }
+
+    .hero-bg-hover {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center right;
+      filter: grayscale(60%) brightness(0.45);
+      opacity: 0;
+      transition: opacity 0.45s ease;
+    }
+
+    #hero-bg-0 { background-image: url('turnerPictures/allphoto-bangkok-nI4aC1kaTRc-unsplash.jpg'); }
+    #hero-bg-1 { background-image: url('turnerPictures/dillon-kydd-XGvwt544g8k-unsplash.jpg'); }
+    #hero-bg-2 { background-image: url('turnerPictures/lotus-design-n-print--Vfa35ueUCo-unsplash.jpg'); }
+
+    /* ── TRIANGLE INFO OVERLAY ── */
+    .hero-info {
+      position: absolute;
+      bottom: 60px;
+      right: 56px;
+      z-index: 3;
+      text-align: right;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none;
+      max-width: 320px;
+    }
+
+    .hero-info.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-info-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 2rem;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .hero-info-title span {
+      color: var(--gold);
+    }
+
+    .hero-info-divider {
+      width: 48px;
+      height: 1px;
+      background: var(--gold);
+      margin: 0 0 12px auto;
+    }
+
+    .hero-info-text {
+      font-size: 0.75rem;
+      font-weight: 400;
+      line-height: 1.75;
+      color: rgba(255, 255, 255, 0.65);
+      letter-spacing: 0.02em;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to right,
+        rgba(10, 10, 10, 0.85) 0%,
+        rgba(10, 10, 10, 0.5) 70%,
+        rgba(10, 10, 10, 0.1) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 48px;
+      max-width: 680px;
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .hero-eyebrow-line {
+      width: 40px;
+      height: 2px;
+      background: var(--gold);
+    }
+
+    .hero-eyebrow span {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    .hero-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 2rem;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(4rem, 8vw, 7rem);
+      line-height: 0.95;
+      color: var(--white);
+      margin-bottom: 0;
+    }
+
+    .hero-title .italic-gold {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-description {
+      font-size: 0.85rem;
+      font-weight: 400;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.75);
+      margin-top: 28px;
+      max-width: 420px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .btn-primary {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dark);
+      background: var(--gold-light);
+      padding: 18px 32px;
+      text-decoration: none;
+      transition: background 0.2s;
+      display: inline-block;
+    }
+
+    .btn-primary:hover {
+      background: var(--gold);
+    }
+
+    .hero-contact {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .hero-contact-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .hero-contact-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── ABOUT SECTION ── */
+    .about {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      margin-top: -100vh;
+      background: #161616;
+      opacity: 0;
+      will-change: opacity, z-index;
+      padding: 120px 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-images {
+      position: relative;
+      height: 600px;
+    }
+
+    .about-img-main {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 82%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.8) saturate(0.65);
+      display: block;
+    }
+
+    .about-img-secondary {
+      position: absolute;
+      bottom: -32px;
+      right: 0;
+      width: 46%;
+      height: 55%;
+      object-fit: cover;
+      filter: brightness(0.8) saturate(0.65);
+      outline: 4px solid #161616;
+    }
+
+    .about-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2.8rem, 4vw, 4.2rem);
+      line-height: 1.1;
+      color: var(--white);
+    }
+
+    .about-title .italic-gold {
+      font-style: italic;
+      color: var(--gold);
+      display: block;
+    }
+
+    .about-divider {
+      width: 80px;
+      height: 1px;
+      background: var(--gold);
+      margin: 28px 0 36px;
+    }
+
+    .about-description {
+      font-size: 0.82rem;
+      font-weight: 400;
+      line-height: 1.85;
+      color: rgba(255, 255, 255, 0.6);
+      max-width: 480px;
+      margin-bottom: 52px;
+    }
+
+    .about-services {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .about-service-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.6rem;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+
+    .about-service-label {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    /* ── GOLD LINES CANVAS ── */
+    #lines-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* ── SCROLL EXIT FADE ── */
+    .hero-scroll-fade {
+      position: absolute;
+      inset: 0;
+      background: #161616;
+      opacity: 0;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    /* ── HERO CONTENT scroll transform ── */
+    .hero-content {
+      will-change: transform, opacity;
+    }
+
+    /* ── Mouse glow orb ── */
+    #mouse-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, transparent 65%);
+      filter: blur(60px);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 9998;
+      mix-blend-mode: screen;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="#" class="nav-logo">Turner Design Ltd</a>
+    <ul class="nav-links">
+      <li><a href="#">About</a></li>
+      <li><a href="#" class="active">Projects</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <a href="#" class="nav-cta">View Gallery</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-wrapper" id="hero-wrapper">
+  <section class="hero" id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-bg-hover" id="hero-bg-0"></div>
+    <div class="hero-bg-hover" id="hero-bg-1"></div>
+    <div class="hero-bg-hover" id="hero-bg-2"></div>
+    <div class="hero-overlay"></div>
+    <canvas id="lines-canvas"></canvas>
+
+    <div class="hero-scroll-fade" id="hero-scroll-fade"></div>
+
+    <div class="hero-info" id="hero-info">
+      <div class="hero-info-title" id="hero-info-title"></div>
+      <div class="hero-info-divider"></div>
+      <p class="hero-info-text" id="hero-info-text"></p>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-line"></div>
+        <span>Building Homes for the Future</span>
+      </div>
+
+      <h1 class="hero-title">
+        Turner<br>
+        <span class="italic-gold">Design</span> Ltd.
+      </h1>
+
+      <p class="hero-description">
+        Building Homes for the Future. A specialized practice dedicated to the architectural precision of high-end residential monoliths.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#" class="btn-primary">View Photo Gallery</a>
+        <div class="hero-contact">
+          <span class="hero-contact-label">Direct Line</span>
+          <span class="hero-contact-number">250-951-7003</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT / MASTERY SECTION — inside wrapper so it occupies same viewport position -->
+  <section class="about">
+    <div class="about-images">
+      <img class="about-img-main"
+           src="turnerPictures/dillon-kydd-XGvwt544g8k-unsplash.jpg"
+           alt="Architectural columns" />
+      <img class="about-img-secondary"
+           src="turnerPictures/lotus-design-n-print--Vfa35ueUCo-unsplash.jpg"
+           alt="Design detail" />
+    </div>
+
+    <div class="about-content">
+      <h2 class="about-title">
+        Mastery in
+        <span class="italic-gold">Every Detail.</span>
+      </h2>
+      <div class="about-divider"></div>
+      <p class="about-description">
+        Our approach is rooted in the intersection of traditional craftsmanship
+        and modernist theory. We don't just build structures; we curate
+        environments that stand as a testament to durability and aesthetic silence.
+      </p>
+      <div class="about-services">
+        <div class="about-service">
+          <div class="about-service-number">01</div>
+          <div class="about-service-label">Conceptual Design</div>
+        </div>
+        <div class="about-service">
+          <div class="about-service-number">02</div>
+          <div class="about-service-label">Structural Integrity</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div><!-- /hero-wrapper -->
+
+  <script>
+    const canvas = document.getElementById('lines-canvas');
+    const ctx = canvas.getContext('2d');
+    const hero = document.getElementById('hero');
+    const heroWrapper = document.getElementById('hero-wrapper');
+    const heroContent = hero.querySelector('.hero-content');
+    const scrollFade = document.getElementById('hero-scroll-fade');
+    const aboutSection = document.querySelector('.about');
+
+    let mouse = { x: -9999, y: -9999 };
+    let targetMouse = { x: -9999, y: -9999 };
+
+    // ── SCROLL PARALLAX ──
+    let scrollProgress = 0;
+
+    function onScroll() {
+      // stickyRange = the scrollable distance while hero is pinned (wrapper - viewport)
+      const stickyRange = heroWrapper.offsetHeight - window.innerHeight;
+      scrollProgress = Math.min(1, Math.max(0, window.scrollY / stickyRange));
+
+      // Text floats up and fades out (complete by 35%)
+      const textP = Math.min(1, scrollProgress / 0.35);
+      heroContent.style.transform = `translateY(${-textP * 70}px)`;
+      heroContent.style.opacity   = Math.max(0, 1 - textP * 1.8).toString();
+
+      // Hero background dissolves to dark (complete by 50%)
+      scrollFade.style.opacity = Math.min(1, scrollProgress / 0.50).toString();
+
+      // Once hero is fully black, lift about above the hero and fade it in (45% → 80%)
+      if (scrollProgress >= 0.45) {
+        aboutSection.style.zIndex = '3';
+        aboutSection.style.opacity = Math.max(0, (scrollProgress - 0.45) / 0.35).toString();
+      } else {
+        aboutSection.style.zIndex = '1';
+        aboutSection.style.opacity = '0';
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Two diagonal gold lines matching the reference design —
+    // coordinates are fractions of canvas size, resolved each frame.
+    const LINES = [
+      { x1: -0.15, y1: 1.4, x2: 1.25, y2: -0.4 }, // bottom-left → upper-right
+      { x1: -0.15, y1: -0.4, x2: 1.05, y2: 1.4 }, // upper-left  → lower-right
+    ];
+
+    function resize() {
+      canvas.width  = hero.offsetWidth;
+      canvas.height = hero.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Triangle image swap — one div per image for smooth crossfade
+    const hoverBgs = [
+      document.getElementById('hero-bg-0'), // top
+      document.getElementById('hero-bg-1'), // right
+      document.getElementById('hero-bg-2'), // bottom
+    ];
+
+    const TRIANGLE_INFO = [
+      { title: 'Urban <span>Skylines</span>',    text: 'Contemporary high-rise design that redefines the city horizon with bold precision and architectural ambition.' },
+      { title: 'Residential <span>Mastery</span>', text: 'Bespoke private residences crafted with structural integrity, enduring materials, and a timeless aesthetic.' },
+      { title: 'Interior <span>Design</span>',   text: 'Curated interior environments where every surface, material, and proportion speaks to refined taste.' },
+      null, // left → default, no overlay
+    ];
+
+    const infoPanel = document.getElementById('hero-info');
+    const infoTitle = document.getElementById('hero-info-title');
+    const infoText  = document.getElementById('hero-info-text');
+    let currentTriangle = -1;
+
+    function getTriangle(px, py) {
+      const W = canvas.width, H = canvas.height;
+      const l1ax = 0.12*W, l1ay = 1.08*H, l1bx = 0.98*W, l1by = -0.08*H;
+      const l2ax = 0.12*W, l2ay = -0.08*H, l2bx = 0.78*W, l2by = 1.08*H;
+      const s1 = (l1bx-l1ax)*(py-l1ay) - (l1by-l1ay)*(px-l1ax);
+      const s2 = (l2bx-l2ax)*(py-l2ay) - (l2by-l2ay)*(px-l2ax);
+      if (s1 < 0 && s2 < 0) return 0; // top
+      if (s1 > 0 && s2 < 0) return 1; // right
+      if (s1 > 0 && s2 > 0) return 2; // bottom
+      return 3;                        // left
+    }
+
+    function setTriangle(tri) {
+      // Fade each bg div in/out independently
+      hoverBgs.forEach((el, i) => {
+        el.style.opacity = (i === tri) ? '1' : '0';
+      });
+
+      // Update info overlay
+      const info = TRIANGLE_INFO[tri];
+      if (info) {
+        infoTitle.innerHTML = info.title;
+        infoText.textContent = info.text;
+        infoPanel.classList.add('visible');
+      } else {
+        infoPanel.classList.remove('visible');
+      }
+    }
+
+    hero.addEventListener('mousemove', e => {
+      const r = hero.getBoundingClientRect();
+      const mx = e.clientX - r.left;
+      const my = e.clientY - r.top;
+      targetMouse.x = mx;
+      targetMouse.y = my;
+      const tri = getTriangle(mx, my);
+      if (tri !== currentTriangle) {
+        currentTriangle = tri;
+        setTriangle(tri);
+      }
+    });
+
+    hero.addEventListener('mouseleave', () => {
+      currentTriangle = -1;
+      targetMouse.x = -9999;
+      targetMouse.y = -9999;
+      hoverBgs.forEach(el => { el.style.opacity = '0'; });
+      infoPanel.classList.remove('visible');
+    });
+
+    // Smooth mouse follow so the glow trails slightly
+    function lerpMouse() {
+      const speed = 0.12;
+      mouse.x += (targetMouse.x - mouse.x) * speed;
+      mouse.y += (targetMouse.y - mouse.y) * speed;
+    }
+
+    // Closest point on a line segment to a given point
+    function closestPointOnSegment(ax, ay, bx, by, px, py) {
+      const dx = bx - ax, dy = by - ay;
+      const lenSq = dx * dx + dy * dy;
+      if (lenSq === 0) return { x: ax, y: ay, t: 0 };
+      const t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / lenSq));
+      return { x: ax + t * dx, y: ay + t * dy, t };
+    }
+
+    function drawLine(x1, y1, x2, y2) {
+      const W = canvas.width, H = canvas.height;
+      const p1 = { x: x1 * W, y: y1 * H };
+      const p2 = { x: x2 * W, y: y2 * H };
+
+      // ── Base dim line ──
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.strokeStyle = '#c9a84c';
+      ctx.lineWidth = 10;
+      ctx.stroke();
+
+      // ── Per-point glow driven by mouse distance ──
+      const STEPS = 400;
+      for (let i = 0; i <= STEPS; i++) {
+        const t  = i / STEPS;
+        const px = p1.x + (p2.x - p1.x) * t;
+        const py = p1.y + (p2.y - p1.y) * t;
+
+        const dx = px - mouse.x;
+        const dy = py - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        const MAX_DIST  = Math.min(canvas.width, canvas.height) * 0.35;
+        const intensity = Math.pow(Math.max(0, 1 - dist / MAX_DIST), 2.2);
+        if (intensity < 0.004) continue;
+
+        // Outer soft glow
+        const glowR = 18 + intensity * 28;
+        const glow  = ctx.createRadialGradient(px, py, 0, px, py, glowR);
+        glow.addColorStop(0,   `rgba(255, 255, 255, ${intensity * 0.55})`);
+        glow.addColorStop(0.3, `rgba(255, 255, 255, ${intensity * 0.20})`);
+        glow.addColorStop(1,   'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(px, py, glowR, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Tight bright core
+        const coreR = 1.5 + intensity * 3;
+        const core  = ctx.createRadialGradient(px, py, 0, px, py, coreR);
+        core.addColorStop(0,   `rgba(255, 255, 255, ${intensity * 0.95})`);
+        core.addColorStop(0.5, `rgba(255, 255, 255, ${intensity * 0.55})`);
+        core.addColorStop(1,   'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = core;
+        ctx.beginPath();
+        ctx.arc(px, py, coreR, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // ── Star-flare at the closest point on the line to mouse ──
+      const cp   = closestPointOnSegment(p1.x, p1.y, p2.x, p2.y, mouse.x, mouse.y);
+      const cpDx = cp.x - mouse.x, cpDy = cp.y - mouse.y;
+      const cpDist = Math.sqrt(cpDx * cpDx + cpDy * cpDy);
+      const flareI = Math.pow(Math.max(0, 1 - cpDist / (canvas.width * 0.2)), 3);
+
+      if (flareI > 0.01) {
+        // Horizontal streak
+        const streak = ctx.createLinearGradient(cp.x - 60, cp.y, cp.x + 60, cp.y);
+        streak.addColorStop(0,   'rgba(255,255,255,0)');
+        streak.addColorStop(0.5, `rgba(255, 255, 255, ${flareI * 0.6})`);
+        streak.addColorStop(1,   'rgba(255,255,255,0)');
+        ctx.strokeStyle = streak;
+        ctx.lineWidth   = flareI * 1.5;
+        ctx.beginPath();
+        ctx.moveTo(cp.x - 60, cp.y);
+        ctx.lineTo(cp.x + 60, cp.y);
+        ctx.stroke();
+
+        // Vertical streak
+        const streak2 = ctx.createLinearGradient(cp.x, cp.y - 40, cp.x, cp.y + 40);
+        streak2.addColorStop(0,   'rgba(255,255,255,0)');
+        streak2.addColorStop(0.5, `rgba(255, 255, 255, ${flareI * 0.4})`);
+        streak2.addColorStop(1,   'rgba(255,255,255,0)');
+        ctx.strokeStyle = streak2;
+        ctx.lineWidth   = flareI * 1.5;
+        ctx.beginPath();
+        ctx.moveTo(cp.x, cp.y - 40);
+        ctx.lineTo(cp.x, cp.y + 40);
+        ctx.stroke();
+      }
+    }
+
+    function frame() {
+      lerpMouse();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Scroll: line 0 slides down (+y), line 1 slides up (-y)
+      const lineShift = scrollProgress * 0.4;
+      LINES.forEach((l, i) => {
+        const dir = i === 0 ? 1 : -1;
+        drawLine(l.x1, l.y1 + dir * lineShift, l.x2, l.y2 + dir * lineShift);
+      });
+
+      requestAnimationFrame(frame);
+    }
+    frame();
+
+    // ── Page-level mouse glow orb ──
+    const glowEl = document.createElement('div');
+    glowEl.id = 'mouse-glow';
+    document.body.appendChild(glowEl);
+
+    let glowTargetX = 0, glowTargetY = 0;
+    let glowX = 0, glowY = 0;
+    let glowVisible = false;
+
+    document.addEventListener('mousemove', function(e) {
+      glowTargetX = e.clientX;
+      glowTargetY = e.clientY;
+      if (!glowVisible) {
+        glowEl.style.opacity = '1';
+        glowVisible = true;
+      }
+    });
+
+    document.addEventListener('mouseleave', function() {
+      glowEl.style.opacity = '0';
+      glowVisible = false;
+    });
+
+    (function animateGlow() {
+      glowX += (glowTargetX - glowX) * 0.08;
+      glowY += (glowTargetY - glowY) * 0.08;
+      glowEl.style.left = glowX + 'px';
+      glowEl.style.top  = glowY + 'px';
+      requestAnimationFrame(animateGlow);
+    })();
+  </script>
+</body>
+</html>

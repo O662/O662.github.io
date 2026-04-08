@@ -171,6 +171,24 @@
     opacity: 1;
 }
 
+/* Mouse glow orb */
+#mouse-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, transparent 65%);
+    filter: blur(45px);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 9998;
+    mix-blend-mode: screen;
+}
+
 /* Hide main content while loading */
 body.loading {
     overflow: hidden;

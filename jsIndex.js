@@ -1,4 +1,37 @@
 // jsIndex.js - Other site functionality can go here
+
+// ── Mouse glow orb ────────────────────────────────────────────────────
+(function () {
+    var glow = document.createElement('div');
+    glow.id = 'mouse-glow';
+    document.body.appendChild(glow);
+
+    var targetX = 0, targetY = 0;
+    var currentX = 0, currentY = 0;
+    var visible = false;
+
+    document.addEventListener('mousemove', function (e) {
+        targetX = e.clientX;
+        targetY = e.clientY;
+        if (!visible) {
+            glow.style.opacity = '1';
+            visible = true;
+        }
+    });
+
+    document.addEventListener('mouseleave', function () {
+        glow.style.opacity = '0';
+        visible = false;
+    });
+
+    (function animate() {
+        currentX += (targetX - currentX) * 0.08;
+        currentY += (targetY - currentY) * 0.08;
+        glow.style.left = currentX + 'px';
+        glow.style.top  = currentY + 'px';
+        requestAnimationFrame(animate);
+    })();
+})();
 // The project slider functionality is now handled inline in index.html
 
 // ── Hero slideshow ────────────────────────────────────────────────────
