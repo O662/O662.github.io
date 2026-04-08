@@ -1,6 +1,6 @@
-const MODEL_URL = "Images/architecture/Cottage.glb";
-const LOCAL_THREE_PATH = "./js/vendor/three/three.module.js";
-const LOCAL_GLTF_LOADER_PATH = "./js/vendor/three/GLTFLoader.js";
+const MODEL_URL = "/Images/architecture/Cottage.glb";
+const LOCAL_THREE_PATH = "/js/vendor/three/three.module.js";
+const LOCAL_GLTF_LOADER_PATH = "/js/vendor/three/GLTFLoader.js";
 const SCROLL_SPIN_PORTION = 0.65;
 const SCROLL_ZOOM_PORTION = 1 - SCROLL_SPIN_PORTION;
 

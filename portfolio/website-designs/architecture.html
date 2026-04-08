@@ -5,25 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Architecture - Malcolm Ferguson</title>
-    <link rel="icon" type="image/x-icon" href="Images/MLogo.ico">
-    <link rel="stylesheet" href="stylesNavBar.css">
-    <link rel="stylesheet" href="stylesFooter.css">
-    <link rel="stylesheet" href="stylesCustomSite.css">
-    <link rel="stylesheet" href="stylesArchitecture.css">
-    <script src="navbar.js" defer></script>
+    <link rel="icon" type="image/x-icon" href="/Images/MLogo.ico">
+    <link rel="stylesheet" href="/stylesNavBar.css">
+    <link rel="stylesheet" href="/stylesFooter.css">
+    <link rel="stylesheet" href="/stylesCustomSite.css">
+    <link rel="stylesheet" href="/stylesArchitecture.css">
+    <script src="/navbar.js" defer></script>
 </head>
 
 <body class="nav-on-light">
     <div id="navbar"></div>
     <script>
-        fetch('navbar.html?cache-bust=' + new Date().getTime())
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('navbar').innerHTML = data;
-            })
-            .catch(error => {
-                console.error('Navbar fetch error:', error);
-            });
+        fetch('/navbar.html?cache-bust=' + new Date().getTime())
+            .then(response => { if (!response.ok) throw new Error(response.status); return response.text(); })
+            .then(data => { document.getElementById('navbar').innerHTML = data; })
+            .catch(error => { console.error('Navbar fetch error:', error); });
     </script>
 
     <header class="architecture-hero">
@@ -143,18 +139,14 @@
 
     <footer id="footer"></footer>
     <script>
-        fetch('footer.html?cache-bust=' + new Date().getTime())
-            .then(response => response.text())
+        fetch('/footer.html?cache-bust=' + new Date().getTime())
+            .then(response => { if (!response.ok) throw new Error(response.status); return response.text(); })
             .then(data => {
                 document.getElementById('footer').innerHTML = data;
                 var year = document.getElementById('current-year');
-                if (year) {
-                    year.textContent = new Date().getFullYear();
-                }
+                if (year) year.textContent = new Date().getFullYear();
             })
-            .catch(error => {
-                console.error('Footer fetch error:', error);
-            });
+            .catch(error => { console.error('Footer fetch error:', error); });
     </script>
     <script type="module" src="jsArchitecture.js"></script>
 </body>

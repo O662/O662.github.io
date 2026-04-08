@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Café au lait - Malcolm Ferguson</title>
     <!-- Import General Head Settings-->
-    <link rel="icon" type="image/x-icon" href="../Images/MLogo.ico">
-    <link rel="stylesheet" href="../stylesNavBar.css">
-    <link rel="stylesheet" href="../stylesFooter.css">
-    <link rel="stylesheet" href="../stylesCustomSite.css">
+    <link rel="icon" type="image/x-icon" href="/Images/MLogo.ico">
+    <link rel="stylesheet" href="/stylesNavBar.css">
+    <link rel="stylesheet" href="/stylesFooter.css">
+    <link rel="stylesheet" href="/stylesCustomSite.css">
     <link rel="stylesheet" href="cafe-au-lait.css">
-    <script src="../navbar.js" defer></script>
+    <script src="/navbar.js" defer></script>
 
         <!-- Commented out mobile scanner - visitors won't be redirected for now
         document.addEventListener('DOMContentLoaded', function () {
@@ -30,24 +30,10 @@
 <body>
     <div id="navbar" class="navbar"></div> 
     <script>
-        fetch('../navbar.html?cache-bust=' + new Date().getTime())
-            .then(response => response.text())
-            .then(data => {
-                // Fix relative paths in navbar for subdirectory
-                const fixedData = data
-                    .replace(/href="index\.html"/g, 'href="../index.html"')
-                    .replace(/href="pProjects\.html"/g, 'href="../pProjects.html"')
-                    .replace(/href="pPortfolio\.html"/g, 'href="../pPortfolio.html"')
-                    .replace(/href="Professional-documents\//g, 'href="../Professional-documents/')
-                    .replace(/src="Images\//g, 'src="../Images/')
-                    .replace(/href="stylesNavBar\.css"/g, 'href="../stylesNavBar.css"')
-                    .replace(/href="stylesCustomSite\.css"/g, 'href="../stylesCustomSite.css"');
-                
-                document.getElementById('navbar').innerHTML = fixedData;
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
+        fetch('/navbar.html?cache-bust=' + new Date().getTime())
+            .then(response => { if (!response.ok) throw new Error(response.status); return response.text(); })
+            .then(data => { document.getElementById('navbar').innerHTML = data; })
+            .catch(error => { console.error('Navbar fetch error:', error); });
         
         window.addEventListener('scroll', function () {
             const navbar = document.getElementById('navbar');
@@ -760,15 +746,14 @@
     <footer id="footerIndex">
         <div id="theFooter"></div>
         <script>
-            fetch('../footer.html?cache-bust=' + new Date().getTime())
-                .then(response => response.text())
+            fetch('/footer.html?cache-bust=' + new Date().getTime())
+                .then(response => { if (!response.ok) throw new Error(response.status); return response.text(); })
                 .then(data => {
                     document.getElementById('theFooter').innerHTML = data;
-                    document.getElementById('current-year').textContent = new Date().getFullYear();
+                    var year = document.getElementById('current-year');
+                    if (year) year.textContent = new Date().getFullYear();
                 })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error);
-                });
+                .catch(error => { console.error('Footer fetch error:', error); });
         </script>
     </footer>
 

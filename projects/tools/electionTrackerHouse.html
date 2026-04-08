@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>2026 House Races — Prediction Market Odds</title>
+<link rel="icon" type="image/x-icon" href="/Images/MLogo.ico">
+<link rel="stylesheet" href="/stylesNavBar.css">
+<link rel="stylesheet" href="/stylesCustomSite.css">
+<script src="/navbar.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -635,6 +639,13 @@
 </style>
 </head>
 <body>
+<div id="navbar"></div>
+<script>
+    fetch('/navbar.html?cache-bust=' + new Date().getTime())
+        .then(r => r.text())
+        .then(data => { document.getElementById('navbar').innerHTML = data; })
+        .catch(err => console.error(err));
+</script>
 <div class="wrapper">
 
   <header>

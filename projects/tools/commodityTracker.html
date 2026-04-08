@@ -5,23 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Commodity Tracker - Malcolm Ferguson</title>
-    <link rel="icon" type="image/x-icon" href="Images/MLogo.ico">
-    <link rel="stylesheet" href="stylesNavBar.css">
-    <link rel="stylesheet" href="stylesIndex.css">
-    <link rel="stylesheet" href="stylesFooter.css">
-    <link rel="stylesheet" href="stylesCustomSite.css">
-    <link rel="stylesheet" href="stylesCommodityTracker.css">
+    <link rel="icon" type="image/x-icon" href="/Images/MLogo.ico">
+    <link rel="stylesheet" href="/stylesNavBar.css">
+    <link rel="stylesheet" href="/stylesIndex.css">
+    <link rel="stylesheet" href="/stylesFooter.css">
+    <link rel="stylesheet" href="/stylesCustomSite.css">
+    <link rel="stylesheet" href="/stylesCommodityTracker.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-    <script src="navbar.js" defer></script>
+    <script src="/navbar.js" defer></script>
 </head>
 
 <body>
     <!-- Navbar -->
     <div id="navbar"></div>
     <script>
-        fetch('navbar.html?cache-bust=' + new Date().getTime())
+        fetch('/navbar.html?cache-bust=' + new Date().getTime())
             .then(response => response.text())
             .then(data => {
                 document.getElementById('navbar').innerHTML = data;
@@ -104,7 +104,7 @@
     <!-- Footer -->
     <footer id="footer"></footer>
     <script>
-        fetch('footer.html?cache-bust=' + new Date().getTime())
+        fetch('/footer.html?cache-bust=' + new Date().getTime())
             .then(response => response.text())
             .then(data => {
                 document.getElementById('footer').innerHTML = data;
