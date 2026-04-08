@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malcolm Ferguson — Personal</title>
+    <link rel="icon" type="image/x-icon" href="/Images/MLogo.ico">
+    <link rel="stylesheet" href="/stylesNavBar.css">
+    <link rel="stylesheet" href="/stylesCustomSite.css">
+    <script src="/navbar.js" defer></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #1a1f5e;
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #navbar {
+            position: relative;
+            z-index: 100;
+        }
+
+        #graph-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        #graph-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .node-label {
+            fill: #ffffff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            pointer-events: none;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+        }
+
+        .link {
+            stroke: rgba(255, 255, 255, 0.35);
+            stroke-width: 1px;
+        }
+
+        .node circle {
+            cursor: grab;
+            transition: filter 0.2s;
+        }
+
+        .node circle:active {
+            cursor: grabbing;
+        }
+
+        .node:hover circle {
+            filter: brightness(1.3);
+        }
+
+        #tooltip {
+            position: fixed;
+            background: rgba(20, 25, 80, 0.92);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #fff;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s;
+            z-index: 200;
+            max-width: 220px;
+        }
+
+        #tooltip.visible {
+            opacity: 1;
+        }
+
+        #tooltip .tooltip-title {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        #tooltip .tooltip-desc {
+            color: rgba(255,255,255,0.65);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        #hint {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.3);
+            font-size: 12px;
+            z-index: 10;
+            pointer-events: none;
+            letter-spacing: 0.4px;
+        }
+
+        /* ── Info Panel ───────────────────────────────── */
+        /* Navbar: top 15px + height 60px + 15px gap = 90px from top */
+        #info-panel {
+            position: fixed;
+            top: 90px;
+            right: 15px;
+            bottom: 15px;
+            width: 260px;
+            z-index: 50;
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Slide right until only the 28px toggle tab remains visible */
+        #info-panel.collapsed {
+            transform: translateX(calc(100% - 28px));
+        }
+
+        #panel-toggle {
+            flex-shrink: 0;
+            width: 28px;
+            background: rgba(55, 55, 65, 0.95);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-right: none;
+            border-radius: 10px 0 0 10px;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        #panel-toggle:hover {
+            background: rgba(75, 75, 85, 0.95);
+            color: #fff;
+        }
+
+        #panel-toggle svg {
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* When expanded, chevron points right (→) = close panel */
+        #panel-toggle svg {
+            transform: rotate(0deg);
+        }
+
+        /* When collapsed, chevron points left (←) = open panel */
+        #info-panel.collapsed #panel-toggle svg {
+            transform: rotate(180deg);
+        }
+
+        #panel-body {
+            flex: 1;
+            background: rgba(50, 50, 60, 0.96);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-left: none;
+            border-radius: 0 10px 10px 0;
+            padding: 20px 16px;
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+        }
+
+        #panel-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: rgba(255,255,255,0.35);
+            margin-bottom: 4px;
+        }
+
+        #panel-node-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        #panel-node-desc {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.5;
+        }
+
+        #panel-idle {
+            font-size: 13px;
+            color: rgba(255,255,255,0.3);
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        #panel-node-info {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar"></div>
+    <script>
+        fetch('/navbar.html?cache-bust=' + new Date().getTime())
+            .then(r => r.text())
+            .then(data => { document.getElementById('navbar').innerHTML = data; })
+            .catch(err => console.error(err));
+    </script>
+
+    <div id="graph-container"></div>
+    <div id="tooltip"><div class="tooltip-title"></div><div class="tooltip-desc"></div></div>
+    <div id="hint">Drag nodes · Scroll to zoom · Hover to explore</div>
+
+    <div id="info-panel">
+        <button type="button" id="panel-toggle" aria-label="Toggle info panel">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="5,2 9,6 5,10"></polyline>
+            </svg>
+        </button>
+        <div id="panel-body">
+            <div id="panel-label">Node Info</div>
+            <div id="panel-idle">Hover over a node to explore</div>
+            <div id="panel-node-info">
+                <div id="panel-node-title"></div>
+                <div id="panel-node-desc"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        const nodes = [
+            // Core
+            { id: "Malcolm",        group: "core",        r: 36, desc: "Engineer, designer, and builder." },
+
+            // Primary domains
+            { id: "Robotics",       group: "primary",     r: 24, desc: "Autonomous systems and embedded hardware." },
+            { id: "Programming",    group: "primary",     r: 22, desc: "Software across the full stack." },
+            { id: "Design",         group: "primary",     r: 20, desc: "Visual and architectural design." },
+            { id: "Research",       group: "primary",     r: 18, desc: "Academic and technical investigation." },
+            { id: "Writing",        group: "primary",     r: 16, desc: "Fiction, essays, and technical prose." },
+            { id: "Engineering",    group: "primary",     r: 22, desc: "Mechanical and electrical systems." },
+
+            // Robotics branches
+            { id: "TURTLE",         group: "robotics",    r: 14, desc: "Experimental embedded testbed platform." },
+            { id: "GERM",           group: "robotics",    r: 14, desc: "Ground exploration and terrain mapping." },
+            { id: "FRC",            group: "robotics",    r: 12, desc: "FIRST Robotics Competition." },
+            { id: "Embedded C++",   group: "robotics",    r: 11, desc: "Low-level firmware and microcontrollers." },
+            { id: "Sensors",        group: "robotics",    r: 10, desc: "IMUs, LiDAR, encoders, and camera feeds." },
+
+            // Programming branches
+            { id: "Python",         group: "code",        r: 14, desc: "Data, automation, and scripting." },
+            { id: "JavaScript",     group: "code",        r: 14, desc: "Web interfaces and interactive tools." },
+            { id: "C++",            group: "code",        r: 13, desc: "Performance-critical systems code." },
+            { id: "Web Dev",        group: "code",        r: 13, desc: "HTML, CSS, and modern web stacks." },
+            { id: "D3.js",          group: "code",        r: 10, desc: "Data-driven visualisations." },
+
+            // Design branches
+            { id: "Architecture",   group: "design",      r: 14, desc: "Spatial and structural concept design." },
+            { id: "Blender",        group: "design",      r: 13, desc: "3D modelling and animation." },
+            { id: "UI / UX",        group: "design",      r: 12, desc: "Interfaces that feel intuitive." },
+            { id: "Typography",     group: "design",      r: 9,  desc: "Type as a design element." },
+
+            // Research branches
+            { id: "Publications",   group: "research",    r: 13, desc: "Journal articles and conference papers." },
+            { id: "Data Analysis",  group: "research",    r: 12, desc: "Statistical methods and visualisation." },
+            { id: "Commodity Data", group: "research",    r: 11, desc: "Markets, prices, and economic trends." },
+            { id: "Election Data",  group: "research",    r: 11, desc: "Prediction markets and political data." },
+
+            // Writing branches
+            { id: "Fiction",        group: "writing",     r: 11, desc: "Short stories and longer narratives." },
+            { id: "Essays",         group: "writing",     r: 10, desc: "Technical and personal essays." },
+            { id: "Technical Docs", group: "writing",     r: 10, desc: "Clear documentation for complex systems." },
+
+            // Engineering branches
+            { id: "Mechanical",     group: "engineering", r: 13, desc: "Structural design and manufacturing." },
+            { id: "Electrical",     group: "engineering", r: 12, desc: "Circuit design and power systems." },
+            { id: "CAD",            group: "engineering", r: 11, desc: "Solid models and technical drawings." },
+            { id: "3D Printing",    group: "engineering", r: 10, desc: "Rapid prototyping and custom parts." },
+
+            // Cross-cutting interests
+            { id: "Maps",           group: "interest",    r: 10, desc: "Geographic data and spatial thinking." },
+            { id: "Photography",    group: "interest",    r: 9,  desc: "Landscape and documentary." },
+            { id: "Music",          group: "interest",    r: 9,  desc: "Listening and occasional making." },
+            { id: "Coffee",         group: "interest",    r: 8,  desc: "Serious about the brew." },
+            { id: "HEB PLUs",       group: "interest",    r: 10, desc: "A personal grocery price-lookup tool." },
+        ];
+
+        const links = [
+            // Core → primary
+            { source: "Malcolm",      target: "Robotics" },
+            { source: "Malcolm",      target: "Programming" },
+            { source: "Malcolm",      target: "Design" },
+            { source: "Malcolm",      target: "Research" },
+            { source: "Malcolm",      target: "Writing" },
+            { source: "Malcolm",      target: "Engineering" },
+            { source: "Malcolm",      target: "Photography" },
+            { source: "Malcolm",      target: "Music" },
+            { source: "Malcolm",      target: "Coffee" },
+            { source: "Malcolm",      target: "Maps" },
+
+            // Robotics
+            { source: "Robotics",     target: "TURTLE" },
+            { source: "Robotics",     target: "GERM" },
+            { source: "Robotics",     target: "FRC" },
+            { source: "Robotics",     target: "Embedded C++" },
+            { source: "Robotics",     target: "Sensors" },
+            { source: "TURTLE",       target: "Embedded C++" },
+            { source: "GERM",         target: "Sensors" },
+
+            // Programming
+            { source: "Programming",  target: "Python" },
+            { source: "Programming",  target: "JavaScript" },
+            { source: "Programming",  target: "C++" },
+            { source: "Programming",  target: "Web Dev" },
+            { source: "Programming",  target: "D3.js" },
+            { source: "JavaScript",   target: "Web Dev" },
+            { source: "JavaScript",   target: "D3.js" },
+            { source: "Python",       target: "Data Analysis" },
+            { source: "C++",          target: "Embedded C++" },
+
+            // Design
+            { source: "Design",       target: "Architecture" },
+            { source: "Design",       target: "Blender" },
+            { source: "Design",       target: "UI / UX" },
+            { source: "Design",       target: "Typography" },
+            { source: "UI / UX",      target: "Web Dev" },
+            { source: "Typography",   target: "UI / UX" },
+            { source: "Blender",      target: "3D Printing" },
+
+            // Research
+            { source: "Research",     target: "Publications" },
+            { source: "Research",     target: "Data Analysis" },
+            { source: "Research",     target: "Commodity Data" },
+            { source: "Research",     target: "Election Data" },
+            { source: "Data Analysis",target: "Election Data" },
+            { source: "Data Analysis",target: "Commodity Data" },
+            { source: "Maps",         target: "Election Data" },
+
+            // Writing
+            { source: "Writing",      target: "Fiction" },
+            { source: "Writing",      target: "Essays" },
+            { source: "Writing",      target: "Technical Docs" },
+            { source: "Technical Docs", target: "Publications" },
+
+            // Engineering
+            { source: "Engineering",  target: "Mechanical" },
+            { source: "Engineering",  target: "Electrical" },
+            { source: "Engineering",  target: "CAD" },
+            { source: "Engineering",  target: "3D Printing" },
+            { source: "Mechanical",   target: "CAD" },
+            { source: "Electrical",   target: "Embedded C++" },
+            { source: "CAD",          target: "3D Printing" },
+            { source: "Robotics",     target: "Engineering" },
+
+            // Interests
+            { source: "HEB PLUs",     target: "Programming" },
+            { source: "HEB PLUs",     target: "Research" },
+            { source: "Photography",  target: "Design" },
+            { source: "Maps",         target: "Design" },
+        ];
+
+        const colorMap = {
+            core:        "#c0365a",
+            primary:     "#d4527a",
+            robotics:    "#e07090",
+            code:        "#e07090",
+            design:      "#e07090",
+            research:    "#e07090",
+            writing:     "#e07090",
+            engineering: "#e07090",
+            interest:    "#ffffff",
+        };
+
+        // Nodes the user marked as "primary" get a slightly larger, pinker colour
+        const strokeMap = {
+            core:    "#ff6b8a",
+            primary: "#ff6b8a",
+        };
+
+        const width  = window.innerWidth;
+        const height = window.innerHeight;
+
+        const svg = d3.select("#graph-container")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        // Zoomable group
+        const g = svg.append("g");
+
+        // Track mouse position in graph-space (accounting for zoom/pan)
+        let mouseX = null, mouseY = null;
+        const REPEL_RADIUS = 160;
+        const REPEL_STRENGTH = 3.5;
+
+        function mouseRepelForce() {
+            for (const d of nodes) {
+                if (mouseX === null || d.fx != null) continue;
+                const dx = d.x - mouseX;
+                const dy = d.y - mouseY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < REPEL_RADIUS && dist > 0) {
+                    const force = (REPEL_RADIUS - dist) / REPEL_RADIUS * REPEL_STRENGTH;
+                    d.vx += (dx / dist) * force;
+                    d.vy += (dy / dist) * force;
+                }
+            }
+        }
+
+        const simulation = d3.forceSimulation(nodes)
+            .force("link",   d3.forceLink(links).id(d => d.id).distance(d => {
+                const src = d.source.group || (typeof d.source === "object" ? d.source.group : "");
+                return src === "core" ? 160 : 90;
+            }).strength(0.6))
+            .force("charge", d3.forceManyBody().strength(-320))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collide", d3.forceCollide().radius(d => d.r + 12))
+            .force("mouse",  mouseRepelForce);
+
+        const link = g.append("g")
+            .selectAll("line")
+            .data(links)
+            .join("line")
+            .attr("class", "link");
+
+        const node = g.append("g")
+            .selectAll(".node")
+            .data(nodes)
+            .join("g")
+            .attr("class", "node")
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag",  dragged)
+                .on("end",   dragended)
+            );
+
+        node.append("circle")
+            .attr("r", d => d.r)
+            .attr("fill", d => colorMap[d.group] || "#ffffff")
+            .attr("stroke", d => strokeMap[d.group] || "rgba(255,255,255,0.15)")
+            .attr("stroke-width", d => (d.group === "core" || d.group === "primary") ? 2 : 1);
+
+        node.append("text")
+            .attr("class", "node-label")
+            .attr("text-anchor", "middle")
+            .attr("dy", d => d.r > 18 ? "0.35em" : -(d.r + 5) + "px")
+            .attr("font-size", d => {
+                if (d.r >= 30) return "18px";
+                if (d.r >= 18) return "14px";
+                if (d.r >= 12) return "11px";
+                return "10px";
+            })
+            .attr("font-weight", d => d.r >= 18 ? "700" : "400")
+            .text(d => d.id);
+
+        // Tooltip
+        const tooltip   = document.getElementById("tooltip");
+        const tipTitle  = tooltip.querySelector(".tooltip-title");
+        const tipDesc   = tooltip.querySelector(".tooltip-desc");
+
+        // Info panel
+        const infoPanel     = document.getElementById("info-panel");
+        const panelToggle   = document.getElementById("panel-toggle");
+        const panelIdle     = document.getElementById("panel-idle");
+        const panelNodeInfo = document.getElementById("panel-node-info");
+        const panelTitle    = document.getElementById("panel-node-title");
+        const panelDesc     = document.getElementById("panel-node-desc");
+
+        panelToggle.addEventListener("click", () => {
+            infoPanel.classList.toggle("collapsed");
+        });
+
+        function showPanelNode(d) {
+            panelTitle.textContent = d.id;
+            panelDesc.textContent  = d.desc || "";
+            panelIdle.style.display     = "none";
+            panelNodeInfo.style.display = "block";
+            if (infoPanel.classList.contains("collapsed")) {
+                infoPanel.classList.remove("collapsed");
+            }
+        }
+
+        function clearPanelNode() {
+            panelIdle.style.display     = "";
+            panelNodeInfo.style.display = "none";
+        }
+
+        node.on("mouseenter", function (event, d) {
+            tipTitle.textContent = d.id;
+            tipDesc.textContent  = d.desc || "";
+            tooltip.classList.add("visible");
+            showPanelNode(d);
+        }).on("mousemove", function (event) {
+            tooltip.style.left = (event.clientX + 16) + "px";
+            tooltip.style.top  = (event.clientY - 10) + "px";
+        }).on("mouseleave", function () {
+            tooltip.classList.remove("visible");
+            clearPanelNode();
+        });
+
+        simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            node.attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+
+        // Convert page mouse coords → graph coords (accounts for zoom/pan)
+        let currentTransform = d3.zoomIdentity;
+        svg.call(d3.zoom()
+            .scaleExtent([0.25, 4])
+            .on("zoom", (event) => {
+                currentTransform = event.transform;
+                g.attr("transform", currentTransform);
+            })
+        );
+
+        let mouseIdleTimer;
+        svg.on("mousemove", function (event) {
+            const [px, py] = d3.pointer(event);
+            const inv = currentTransform.invert([px, py]);
+            mouseX = inv[0];
+            mouseY = inv[1];
+            simulation.alphaTarget(0.25).restart();
+            clearTimeout(mouseIdleTimer);
+            mouseIdleTimer = setTimeout(() => {
+                mouseX = null;
+                mouseY = null;
+                simulation.alphaTarget(0);
+            }, 120);
+        });
+
+        svg.on("mouseleave", function () {
+            mouseX = null;
+            mouseY = null;
+            simulation.alphaTarget(0);
+        });
+
+        window.addEventListener("resize", () => {
+            svg.attr("width", window.innerWidth).attr("height", window.innerHeight);
+            simulation.force("center", d3.forceCenter(window.innerWidth / 2, window.innerHeight / 2));
+            simulation.alpha(0.3).restart();
+        });
+    })();
+    </script>
+</body>
+</html>

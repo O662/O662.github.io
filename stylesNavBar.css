@@ -20,6 +20,7 @@
    since position:fixed breaks normal :hover propagation up the DOM. */
 .navbar:hover,
 .navbar:has(.projects-dropdown:hover),
+.navbar:has(.portfolio-dropdown:hover),
 .navbar:has(.mega-menu:hover) {
     background-color: rgba(40, 40, 40, 1) !important;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5) !important;
@@ -262,7 +263,8 @@
 
     /* Mobile dropdowns: click-toggled, not hover */
     .dropdown-content,
-    .projects-dropdown .dropdown-content {
+    .projects-dropdown .dropdown-content,
+    .portfolio-dropdown .dropdown-content {
         position: static !important;
         width: 100% !important;
         top: unset !important;
@@ -277,7 +279,8 @@
         display: block;
     }
 
-    .projects-dropdown:hover .dropdown-content {
+    .projects-dropdown:hover .dropdown-content,
+    .portfolio-dropdown:hover .dropdown-content {
         display: none;
     }
 
@@ -302,13 +305,14 @@
     display: inline-block;
 }
 
-.projects-dropdown .dropdown-content {
+.projects-dropdown .dropdown-content,
+.portfolio-dropdown .dropdown-content {
     display: none;
     position: fixed;
     background-color: #282828;
     box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.35);
     z-index: 999;
-    top: 90px; /* 15px gap + 60px navbar + 15px breathing room */
+    top: 82px;
     left: 15px;
     width: calc(100vw - 30px);
     box-sizing: border-box;
@@ -316,9 +320,14 @@
     overflow: visible; /* must be visible so the ::before bridge isn't clipped */
 }
 
+.portfolio-dropdown .dropdown-content {
+    width: calc(100vw - 45px);
+}
+
 /* Invisible bridge that fills the gap between the navbar and the mega menu,
    so the mouse never enters a dead zone while travelling between the two. */
-.projects-dropdown .dropdown-content::before {
+.projects-dropdown .dropdown-content::before,
+.portfolio-dropdown .dropdown-content::before {
     content: '';
     position: absolute;
     top: -32px;
@@ -328,8 +337,23 @@
 }
 
 .projects-dropdown:hover .dropdown-content,
-.projects-dropdown.active .dropdown-content {
+.projects-dropdown.active .dropdown-content,
+.portfolio-dropdown:hover .dropdown-content,
+.portfolio-dropdown.active .dropdown-content {
     display: block;
+}
+
+/* Portfolio mega menu: preview=1/3, 3 content columns share remaining 2/3 */
+.mega-menu-grid.portfolio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    flex: 1;
+    align-items: start;
+}
+
+.mega-menu-grid.portfolio-grid .grid-cell {
+    min-width: 0;
 }
 
 .mega-menu {
@@ -347,9 +371,10 @@
     min-width: 0;
 }
 
-/* Preview column — 1/3 of mega menu */
+/* Preview column — 1/3 of the portfolio mega menu width */
 .preview-column {
-    flex: 0 0 calc(33.33% - 11px);
+    flex: 0 0 33.333%;
+    max-width: 33.333%;
     padding: 0;
     overflow: hidden;
     border-radius: 12px;
@@ -360,10 +385,12 @@
     min-height: 180px;
 }
 
-/* Robotics column — 1/4 of mega menu */
+/* Robotics column — takes up more width and stretches full height */
 .robotics-column {
-    flex: 0 0 calc(25% - 12px);
+    flex: 0 0 calc(50% - 12px);
     padding: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
 /* 2×2 grid — takes the remaining ~42% of width */
@@ -405,6 +432,7 @@
     display: flex;
     gap: 8px;
     margin-top: 4px;
+    flex: 1;
 }
 
 .robot-cards-vertical {
@@ -431,7 +459,7 @@
 .robot-card-name {
     font-weight: bold;
     color: #fff;
-    font-size: 13px;
+    font-size: 17px;
 }
 
 .robot-card-visit {
@@ -452,14 +480,15 @@
 
 .robot-card-desc {
     color: #aaa;
-    font-size: 11px;
+    font-size: 13px;
     margin: 0;
     line-height: 1.4;
 }
 
 .robot-card-img {
     width: 100%;
-    height: 70px;
+    flex: 1;
+    min-height: 0;
     object-fit: cover;
     border-radius: 8px;
     display: block;
@@ -473,11 +502,20 @@
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
     z-index: 999;
-    right: 0;
     width: auto;
     box-sizing: border-box;
     border-radius: 14px;
     overflow: hidden;
+}
+
+.Professional-documents-dropdown {
+    position: relative;
+}
+
+.Professional-documents-dropdown .dropdown-content {
+    top: calc(100% + 15px);
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .dropdown:hover .dropdown-content,

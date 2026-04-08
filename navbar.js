@@ -45,11 +45,20 @@
             });
 
             // Desktop: hover with delay so the gap between the pill and dropdown doesn't close it
+            var megaDropdowns = Array.from(menu.querySelectorAll('.projects-dropdown, .portfolio-dropdown'));
+
             menu.querySelectorAll('.dropdown').forEach(function (dropdown) {
                 var hideTimer;
+                var isMega = megaDropdowns.indexOf(dropdown) !== -1;
 
                 function showDropdown() {
                     clearTimeout(hideTimer);
+                    // Immediately close the other mega menu when this one opens
+                    if (isMega) {
+                        megaDropdowns.forEach(function (other) {
+                            if (other !== dropdown) other.classList.remove('active');
+                        });
+                    }
                     dropdown.classList.add('active');
                 }
 
