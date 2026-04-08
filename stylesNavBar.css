@@ -188,6 +188,16 @@
     background-color: rgba(255, 255, 255, 0.12);
 }
 
+/* Close button - hidden on desktop */
+.menu-close {
+    display: none;
+}
+
+/* Mobile search bar - hidden on desktop */
+.mobile-search-container {
+    display: none;
+}
+
 /* Hamburger button - hidden on desktop */
 .hamburger {
     display: none;
@@ -219,49 +229,133 @@
 /* Mobile styles */
 @media (max-width: 768px) {
     .navbar {
-        flex-wrap: wrap;
-        height: auto;
-        min-height: 60px;
-        align-items: flex-start;
+        height: 60px;
+        align-items: center;
         padding: 0;
         border-radius: 24px;
         top: 10px;
         left: 10px;
         width: calc(100% - 20px);
-        overflow: hidden; /* clip menu to pill shape */
+        z-index: 1002;
     }
 
     .logo {
-        height: 60px;
         flex: 1;
+        display: flex;
+        align-items: center;
     }
 
     .hamburger {
         display: flex;
-        height: 60px;
         align-items: center;
+    }
+
+    .search-container {
+        display: none;
     }
 
     .menu {
         display: none;
         flex-direction: column;
-        width: 100%;
-        background-color: rgba(28, 28, 28, 0.97);
-        padding: 10px 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(28, 28, 28, 0.98);
+        padding: 80px 0 20px;
         gap: 0;
+        z-index: 1001;
+        overflow-y: auto;
     }
 
     .menu.open {
         display: flex;
     }
 
-    .menu a {
-        padding: 12px 20px;
-        justify-content: flex-start;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
+    .menu-close {
+        display: none;
     }
 
-    /* Mobile dropdowns: click-toggled, not hover */
+    .menu.open .menu-close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: sticky;
+        top: 20px;
+        align-self: flex-end;
+        margin-right: 20px;
+        margin-bottom: 10px;
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        border-radius: 50%;
+        color: #efefef;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    .menu.open .menu-close:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Mobile search bar */
+    .mobile-search-container {
+        padding: 16px 20px 8px;
+        position: relative;
+    }
+
+    .mobile-search-inner {
+        display: flex;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 0 16px;
+        gap: 10px;
+    }
+
+    .mobile-search-icon {
+        color: rgba(255, 255, 255, 0.5);
+        flex-shrink: 0;
+    }
+
+    .mobile-search-input {
+        flex: 1;
+        background: none;
+        border: none;
+        color: #efefef;
+        font-size: 15px;
+        outline: none;
+        padding: 14px 0;
+    }
+
+    .mobile-search-input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .mobile-search-results {
+        display: none;
+        margin-top: 8px;
+        background-color: rgba(50, 50, 50, 0.98);
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .mobile-search-results.visible {
+        display: block;
+    }
+
+    .menu a {
+        padding: 18px 30px;
+        justify-content: flex-start;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        font-size: 1.1em;
+    }
+
+    /* Mobile dropdowns: click-toggled, not hover.
+       !important beats the global hover/active rules that appear later in the sheet. */
     .dropdown-content,
     .projects-dropdown .dropdown-content,
     .portfolio-dropdown .dropdown-content {
@@ -269,19 +363,16 @@
         width: 100% !important;
         top: unset !important;
         left: unset !important;
-        display: none;
+        transform: none !important;
+        display: none !important;
         box-shadow: none;
         border-radius: 0 !important;
         background-color: rgba(50, 50, 50, 0.97);
     }
 
+    /* mobile-open overrides the !important above with higher specificity */
     .dropdown.mobile-open > .dropdown-content {
-        display: block;
-    }
-
-    .projects-dropdown:hover .dropdown-content,
-    .portfolio-dropdown:hover .dropdown-content {
-        display: none;
+        display: block !important;
     }
 
     .mega-menu .row {
@@ -318,10 +409,6 @@
     box-sizing: border-box;
     border-radius: 20px;
     overflow: visible; /* must be visible so the ::before bridge isn't clipped */
-}
-
-.portfolio-dropdown .dropdown-content {
-    width: calc(100vw - 45px);
 }
 
 /* Invisible bridge that fills the gap between the navbar and the mega menu,

@@ -192,116 +192,152 @@ body {
     transform: scale(1.1) translateX(5vw) translateY(-20vh);
 }
 
-/* Mobile/Tablet Responsive Design */
+/* ── Mobile / Tablet: full-page slideshow (≤ 1000px) ─────────────── */
 @media (max-width: 1000px) {
+
     #hero {
-        padding: 16px;
+        position: relative;
+        margin-top: -90px; /* pull up behind the fixed navbar */
+        height: 100vh;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    /* Top gradient — fades from black under the navbar to transparent */
+    #hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 160px;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.82) 0%, transparent 100%);
+        z-index: 5;
+        pointer-events: none;
     }
 
     .hero-container {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
         flex-direction: column;
-        gap: 20px;
+        gap: 0;
     }
 
+    /* Image block becomes the full-screen slide stage */
     .hero-image {
+        position: absolute;
+        inset: 0;
         max-width: 100%;
-        order: 1;
+        height: 100%;
         flex: none;
-        height: auto;
+        overflow: hidden;
     }
 
-    .hero-text {
-        max-width: 100%;
-        order: 2;
-        flex: none;
-        padding-bottom: 20px;
-        justify-content: center;
-        text-align: center;
+    /* Rows are invisible layout wrappers — let them fill the stage */
+    .hero-image .row {
+        position: absolute;
+        inset: 0;
+        display: block;
     }
 
-    /* Adjust text sizes for tablets */
-    .hero-title {
-        font-size: 5vw;
-    }
-
-    .hero-subtitle {
-        font-size: 3.5vw;
-    }
-
-    .hero-description {
-        font-size: 2.5vw;
-    }
-
-    /* Adjust image sizes for tablets */
+    /* Every image is a full-screen slide, hidden by default */
     .transform-image-1,
     .transform-image-2,
     .transform-image-3,
     .transform-image-4,
     .transform-image-5 {
-        width: 28vw;
-        height: 22vh;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        border-radius: 0 !important;
         transform: none !important;
+        margin: 0 !important;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+        z-index: 1 !important;
     }
 
+    /* Active slide */
+    .transform-image-1.slide-active,
+    .transform-image-2.slide-active,
+    .transform-image-3.slide-active,
+    .transform-image-4.slide-active,
+    .transform-image-5.slide-active {
+        opacity: 1;
+        z-index: 2 !important;
+    }
+
+    /* Hover effects disabled on touch */
     .transform-image-1:hover,
     .transform-image-2:hover,
     .transform-image-3:hover,
     .transform-image-4:hover,
     .transform-image-5:hover {
-        transform: scale(1.05) !important;
+        transform: none !important;
     }
-}
 
-/* Mobile (≤ 768px) */
-@media (max-width: 768px) {
-    #hero {
+    /* Text overlays at the bottom with a dark gradient scrim */
+    .hero-text {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-width: 100%;
+        flex: none;
         height: auto;
-        min-height: calc(100vh - 60px);
-        padding: 16px;
+        padding: 60px 28px 52px;
+        background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 50%, transparent 100%);
+        z-index: 10;
+        text-align: left;
+        justify-content: flex-end;
+        padding-bottom: 52px;
     }
 
-    .hero-title {
-        font-size: 7.5vw;
-    }
+    .hero-title       { font-size: 7vw;   color: #fff; }
+    .hero-subtitle    { font-size: 5vw;   color: rgba(255,255,255,0.85); }
+    .hero-description { font-size: 3.5vw; color: rgba(255,255,255,0.7); }
 
-    .hero-subtitle {
-        font-size: 5.5vw;
-    }
-
-    .hero-description {
-        font-size: 4vw;
-    }
-
-    .transform-image-1,
-    .transform-image-2,
-    .transform-image-3,
-    .transform-image-4,
-    .transform-image-5 {
-        width: 26vw;
-        height: 18vh;
+    /* Slideshow navigation dots — shown only inside this media query */
+    .hero-slideshow-dots {
+        display: flex !important;
     }
 }
 
-/* Small mobile (≤ 480px) */
+/* Dots hidden on desktop (default state, overridden above on mobile) */
+.hero-slideshow-dots {
+    display: none;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 10px;
+    z-index: 11;
+}
+
+.hero-slideshow-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.35);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.hero-slideshow-dot.active {
+    background: #fff;
+    transform: scale(1.35);
+}
+
+/* Narrower phones — slightly larger text */
 @media (max-width: 480px) {
-    .hero-title {
-        font-size: 9vw;
-    }
-
-    .hero-subtitle {
-        font-size: 6.5vw;
-    }
-
-    .hero-description {
-        font-size: 4.5vw;
-    }
-
-    .transform-image-1,
-    .transform-image-2,
-    .transform-image-3,
-    .transform-image-4,
-    .transform-image-5 {
-        width: 24vw;
-        height: 15vh;
-    }
+    .hero-title       { font-size: 9vw; }
+    .hero-subtitle    { font-size: 6.5vw; }
+    .hero-description { font-size: 4.5vw; }
 }

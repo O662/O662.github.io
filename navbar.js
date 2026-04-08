@@ -25,11 +25,25 @@
         var menu = document.getElementById('nav-menu');
 
         if (hamburger && menu) {
+            function closeMenu() {
+                hamburger.classList.remove('open');
+                menu.classList.remove('open');
+                menu.querySelectorAll('.dropdown.mobile-open').forEach(function (d) {
+                    d.classList.remove('mobile-open');
+                });
+            }
+
             // Hamburger toggle
             hamburger.addEventListener('click', function () {
                 hamburger.classList.toggle('open');
                 menu.classList.toggle('open');
             });
+
+            // Close button
+            var closeBtn = document.getElementById('menu-close-btn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeMenu);
+            }
 
             // Mobile: click-to-expand dropdowns
             menu.querySelectorAll('.dropdown').forEach(function (dropdown) {
@@ -141,6 +155,47 @@
                 searchResults.classList.remove('visible');
             }
         });
+
+        // Mobile search
+        var mobileInput = document.getElementById('mobile-navbar-search');
+        var mobileResults = document.getElementById('mobile-search-results');
+
+        if (mobileInput && mobileResults) {
+            function performMobileSearch(query) {
+                var q = query.toLowerCase().trim();
+                if (!q) {
+                    mobileResults.classList.remove('visible');
+                    mobileResults.innerHTML = '';
+                    return;
+                }
+
+                var results = searchIndex.filter(function (item) {
+                    return item.title.toLowerCase().includes(q) ||
+                        item.description.toLowerCase().includes(q) ||
+                        item.keywords.some(function (k) { return k.includes(q); });
+                });
+
+                if (results.length === 0) {
+                    mobileResults.innerHTML = '<div class="search-no-results">No results found</div>';
+                } else {
+                    mobileResults.innerHTML = results.map(function (item) {
+                        return '<div class="search-result-item" onclick="window.location.href=\'' + item.url + '\'">' +
+                            '<div class="search-result-title">' + item.title + '</div>' +
+                            '<div class="search-result-desc">' + item.description + '</div>' +
+                            '</div>';
+                    }).join('');
+                }
+                mobileResults.classList.add('visible');
+            }
+
+            mobileInput.addEventListener('input', function () {
+                performMobileSearch(this.value);
+            });
+
+            mobileInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') performMobileSearch(this.value);
+            });
+        }
     }
 
     // Self-initialize: watch for navbar HTML to be injected via fetch/innerHTML

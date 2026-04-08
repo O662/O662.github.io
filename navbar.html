@@ -23,6 +23,17 @@
         <div class="search-results" id="search-results"></div>
     </div>
     <div class="menu" id="nav-menu">
+        <button type="button" class="menu-close" id="menu-close-btn" aria-label="Close menu">&#10005;</button>
+        <div class="mobile-search-container">
+            <div class="mobile-search-inner">
+                <svg class="mobile-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" class="mobile-search-input" id="mobile-navbar-search" placeholder="Search..." autocomplete="off">
+            </div>
+            <div class="mobile-search-results" id="mobile-search-results"></div>
+        </div>
         <a href="/index.html">Home</a>
         <div class="dropdown projects-dropdown">
             <a href="/pProjects.html" class="dropbtn">Projects</a>
@@ -53,6 +64,10 @@
                         <div class="grid-cell">
                             <h3>Personal</h3>
                             <a href="/projects/personal.html">Personal Website</a>
+                            <a href="#">Photography</a>
+                            <a href="#">Blog</a>
+                            <a href="#">Music</a>
+                            <a href="#">Travel</a>
                         </div>
                         <div class="grid-cell">
                             <h3>Tools</h3>
@@ -66,7 +81,7 @@
                             <a href="/pPublications.html">Journal Articles</a>
                         </div>
                         <div class="grid-cell">
-                            <h3>Archived Robots</h3>
+                            <h3>Past Robot Projects</h3>
                             <a href="#">RAD LAB</a>
                             <a href="#">TURTLE Robots</a>
                             <a href="#">FIRST Robotics Challenge</a>
@@ -123,11 +138,25 @@
         const menu = document.getElementById('nav-menu');
 
         if (hamburger && menu) {
+            function closeMenu() {
+                hamburger.classList.remove('open');
+                menu.classList.remove('open');
+                menu.querySelectorAll('.dropdown.mobile-open').forEach(function (d) {
+                    d.classList.remove('mobile-open');
+                });
+            }
+
             // ── Hamburger toggle ──────────────────────────────────
             hamburger.addEventListener('click', function () {
                 hamburger.classList.toggle('open');
                 menu.classList.toggle('open');
             });
+
+            // ── Menu close button ─────────────────────────────────
+            const closeBtn = document.getElementById('menu-close-btn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeMenu);
+            }
 
             // ── Mobile: click-to-expand dropdowns ─────────────────
             menu.querySelectorAll('.dropdown').forEach(function (dropdown) {
@@ -146,8 +175,10 @@
             //    floating pill and the fixed dropdown doesn't close it ──
             menu.querySelectorAll('.dropdown').forEach(function (dropdown) {
                 let hideTimer;
+                let manualClose = false;
 
                 function showDropdown() {
+                    if (manualClose) return;
                     clearTimeout(hideTimer);
                     dropdown.classList.add('active');
                 }
@@ -157,6 +188,23 @@
                     hideTimer = setTimeout(function () {
                         dropdown.classList.remove('active');
                     }, 400);
+                }
+
+                // Desktop: click toggles the mega menu open/closed
+                const btn = dropdown.querySelector('.dropbtn');
+                if (btn) {
+                    btn.addEventListener('click', function (e) {
+                        if (window.innerWidth > 768) {
+                            e.preventDefault();
+                            if (dropdown.classList.contains('active')) {
+                                dropdown.classList.remove('active');
+                                manualClose = true;
+                                setTimeout(function () { manualClose = false; }, 400);
+                            } else {
+                                dropdown.classList.add('active');
+                            }
+                        }
+                    });
                 }
 
                 // Hovering the trigger button
