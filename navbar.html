@@ -10,6 +10,18 @@
         <span></span>
         <span></span>
     </div>
+    <div class="search-container">
+        <div class="search-inner">
+            <input type="text" class="search-input" placeholder="Looking for something?" id="navbar-search" autocomplete="off">
+            <button type="button" class="search-btn" id="navbar-search-btn" aria-label="Search">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="search-results" id="search-results"></div>
+    </div>
     <div class="menu" id="nav-menu">
         <a href="index.html">Home</a>
         <div class="dropdown projects-dropdown">
@@ -17,28 +29,56 @@
             <div class="dropdown-content mega-menu">
                 <!--<img src="Images/hero_images/uzair-kashif-RX3EZEGOzp4-unsplash.jpg" alt="Menu Image" class="menu-image">-->
                 <div class="row">
-                    <div class="column">
-                        <img src="Images/hero_images/uzair-kashif-RX3EZEGOzp4-unsplash.jpg" alt="Menu Image" class="project-menu-image">
+                    <div class="column preview-column">
+                        <iframe class="project-menu-preview" src="about:blank" scrolling="no" frameborder="0" tabindex="-1" onload="try{var d=this.contentDocument||this.contentWindow.document;d.body.style.margin='0';d.body.style.padding='0';}catch(e){}"></iframe>
                     </div>
-                    <div class="column">
+                    <div class="column robotics-column">
                         <h3>Robotics</h3>
-                        <a href="#">DRON</a>
-                        <a href="#">GERM</a>
-                        <a href="#">POBS</a>
+                        <div class="robot-cards robot-cards-vertical">
+                            <div class="robot-card">
+                                <div class="robot-card-header">
+                                    <span class="robot-card-name">GERM</span>
+                                    <a href="#" class="robot-card-visit">Visit &#8594;</a>
+                                </div>
+                                <p class="robot-card-desc">A ground exploration robot built for autonomous terrain mapping.</p>
+                                <img src="Images/hero_images/uzair-kashif-RX3EZEGOzp4-unsplash.jpg" alt="GERM" class="robot-card-img">
+                            </div>
+                            <div class="robot-card">
+                                <div class="robot-card-header">
+                                    <span class="robot-card-name">ROBOT</span>
+                                    <a href="#" class="robot-card-visit">Visit &#8594;</a>
+                                </div>
+                                <p class="robot-card-desc">Placeholder description for the second active robotics project.</p>
+                                <img src="Images/hero_images/uzair-kashif-RX3EZEGOzp4-unsplash.jpg" alt="Robot" class="robot-card-img">
+                            </div>
+                        </div>
                     </div>
-                    <div class="column">
-                        <h3>Personal</h3>
-                        <a href="#">Personal Website</a>
-                        <a href="#">w_o App</a>
-                        <a href="#">Folder 9</a>
-                        <a href="pArchitecture.html">Architecture</a>
+                    <div class="mega-menu-grid">
+                        <div class="grid-cell">
+                            <h3>Personal</h3>
+                            <a href="#">Personal Website</a>
+                            <a href="pArchitecture.html" onmouseenter="var f=this.closest('.mega-menu').querySelector('.project-menu-preview'),c=f&&f.parentElement;if(c){var s=c.offsetWidth/1280;f.style.width='1280px';f.style.height=(c.offsetHeight/s)+'px';f.style.transform='scale('+s+')';f.style.display='block';f.src=this.getAttribute('href');}">Architecture</a>
+                        </div>
+                        <div class="grid-cell">
+                            <h3>Tools</h3>
+                            <a href="pCommodityTracker.html" onmouseenter="var f=this.closest('.mega-menu').querySelector('.project-menu-preview'),c=f&&f.parentElement;if(c){var s=c.offsetWidth/1280;f.style.width='1280px';f.style.height=(c.offsetHeight/s)+'px';f.style.transform='scale('+s+')';f.style.display='block';f.src=this.getAttribute('href');}">Commodity Tracker</a>
+                            <a href="pElectionTrackerSenate.html" onmouseenter="var f=this.closest('.mega-menu').querySelector('.project-menu-preview'),c=f&&f.parentElement;if(c){var s=c.offsetWidth/1280;f.style.width='1280px';f.style.height=(c.offsetHeight/s)+'px';f.style.transform='scale('+s+')';f.style.display='block';f.src=this.getAttribute('href');}">Senate Election Tracker</a>
+                            <a href="pElectionTrackerHouse.html" onmouseenter="var f=this.closest('.mega-menu').querySelector('.project-menu-preview'),c=f&&f.parentElement;if(c){var s=c.offsetWidth/1280;f.style.width='1280px';f.style.height=(c.offsetHeight/s)+'px';f.style.transform='scale('+s+')';f.style.display='block';f.src=this.getAttribute('href');}">House Election Tracker</a>
+                        </div>
+                        <div class="grid-cell">
+                            <h3>Recreation</h3>
+                            <a href="#">Animations / Blender</a>
+                            <a href="#">Writings</a>
+                        </div>
+                        <div class="grid-cell">
+                            <h3>Archived Robots</h3>
+                            <a href="#">DRON</a>
+                            <a href="#">POBS</a>
+                            <a href="#">AMPS</a>
+                            <a href="#">Firestorm</a>
+                        </div>
                     </div>
-                    <div class="column">
-                        <h3>Tools</h3>
-                        <a href="pCommodityTracker.html">Commodity Tracker</a>
-                        <a href="writings/pElectionTracker.html">Election Tracker</a>
-                    </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -54,6 +94,8 @@
     </div>
 </nav>
 
+<!-- Navbar behaviour is handled by navbar.js (loaded in each page's <head>).
+     Scripts inside innerHTML-injected HTML do not execute in browsers. -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const hamburger = document.getElementById('hamburger-menu');
@@ -93,7 +135,7 @@
                     clearTimeout(hideTimer);
                     hideTimer = setTimeout(function () {
                         dropdown.classList.remove('active');
-                    }, 180);
+                    }, 400);
                 }
 
                 // Hovering the trigger button
@@ -120,3 +162,73 @@
 </script>
 
 <!-- Run "python -m http.server 8000" in the terminal and open "http://localhost:8000" in a browser to see the webpage.-->
+
+<script>
+    const searchIndex = [
+        { title: 'Home', url: 'index.html', description: 'Malcolm Ferguson\'s personal website', keywords: ['home', 'malcolm', 'ferguson'] },
+        { title: 'Projects', url: 'pProjects.html', description: 'Explore all projects', keywords: ['projects', 'work'] },
+        { title: 'Architecture: House Design', url: 'pArchitecture.html', description: 'A modern, light-filled home focused on calm materials, passive ventilation, and flexible living spaces.', keywords: ['architecture', 'house', 'design', 'courtyard', 'concept', 'building'] },
+        { title: 'Commodity Tracker', url: 'pCommodityTracker.html', description: 'Real-time commodity prices and trends', keywords: ['commodity', 'tracker', 'prices', 'trends', 'finance', 'markets'] },
+        { title: '2026 Senate Races', url: 'pElectionTrackerSenate.html', description: 'Prediction market odds for 2026 Senate races', keywords: ['senate', 'election', 'tracker', 'prediction', 'market', 'politics', '2026'] },
+        { title: '2026 House Races', url: 'pElectionTrackerHouse.html', description: 'Prediction market odds for 2026 House races', keywords: ['house', 'election', 'tracker', 'prediction', 'market', 'politics', '2026', 'representative'] },
+        { title: 'Portfolio', url: 'pPortfolio.html', description: 'Website designs and creative projects', keywords: ['portfolio', 'design', 'website', 'creative', 'work'] },
+        { title: 'Publications', url: 'pPublications.html', description: 'Journal articles and conference papers', keywords: ['publications', 'journal', 'articles', 'papers', 'research', 'academic'] },
+        { title: 'Contact', url: 'pContact.html', description: 'Get in touch', keywords: ['contact', 'about', 'email', 'reach'] },
+        { title: 'TURTLE', url: 'pTURTLE.html', description: 'TURTLE robotics project', keywords: ['turtle', 'robot', 'robotics'] },
+        { title: 'Cover Letter', url: 'Professional-documents/pCoverLetter.html', description: 'Professional cover letter', keywords: ['cover letter', 'professional', 'documents', 'job'] },
+        { title: 'Resume', url: 'Professional-documents/pResume.html', description: 'Professional resume', keywords: ['resume', 'professional', 'documents', 'cv', 'job'] },
+        { title: 'CV', url: 'Professional-documents/pCV.html', description: 'Curriculum vitae', keywords: ['cv', 'curriculum vitae', 'professional', 'documents', 'academic'] },
+        { title: 'Writings Viewer', url: 'writings-viewer.html', description: 'Customizable reader for writings with font and color controls', keywords: ['writings', 'viewer', 'reader', 'articles', 'text'] },
+    ];
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('navbar-search');
+        const searchBtn = document.getElementById('navbar-search-btn');
+        const searchResults = document.getElementById('search-results');
+
+        function performSearch(query) {
+            const q = query.toLowerCase().trim();
+            if (!q) {
+                searchResults.classList.remove('visible');
+                searchResults.innerHTML = '';
+                return;
+            }
+
+            const results = searchIndex.filter(function (item) {
+                return item.title.toLowerCase().includes(q) ||
+                    item.description.toLowerCase().includes(q) ||
+                    item.keywords.some(function (k) { return k.includes(q); });
+            });
+
+            if (results.length === 0) {
+                searchResults.innerHTML = '<div class="search-no-results">No results found</div>';
+            } else {
+                searchResults.innerHTML = results.map(function (item) {
+                    return '<div class="search-result-item" onclick="window.location.href=\'' + item.url + '\'">' +
+                        '<div class="search-result-title">' + item.title + '</div>' +
+                        '<div class="search-result-desc">' + item.description + '</div>' +
+                        '</div>';
+                }).join('');
+            }
+            searchResults.classList.add('visible');
+        }
+
+        searchInput.addEventListener('input', function () {
+            performSearch(this.value);
+        });
+
+        searchInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') performSearch(this.value);
+        });
+
+        searchBtn.addEventListener('click', function () {
+            performSearch(searchInput.value);
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.search-container')) {
+                searchResults.classList.remove('visible');
+            }
+        });
+    });
+</script>
