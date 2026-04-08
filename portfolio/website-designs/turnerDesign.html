@@ -427,12 +427,23 @@
     }
 
     .methodology-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 14px;
       font-size: 0.65rem;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: var(--white);
       margin-bottom: 16px;
+    }
+    .methodology-eyebrow::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      flex-shrink: 0;
     }
 
     .methodology-title {
@@ -446,7 +457,7 @@
 
     .methodology-title em {
       font-style: italic;
-      color: var(--white);
+      color: var(--gold);
     }
 
     .methodology-grid {
@@ -514,12 +525,23 @@
     }
 
     .archive-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 14px;
       font-size: 0.65rem;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: var(--white);
       margin-bottom: 14px;
+    }
+    .archive-eyebrow::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      flex-shrink: 0;
     }
 
     .archive-title {
@@ -528,6 +550,11 @@
       font-size: clamp(2.8rem, 4.5vw, 4.2rem);
       line-height: 1.0;
       color: var(--white);
+    }
+
+    .archive-title em {
+      font-style: italic;
+      color: var(--gold);
     }
 
     .archive-subtitle {
@@ -633,17 +660,28 @@
     }
 
     .excellence-header {
-      text-align: center;
+      text-align: left;
       margin-bottom: 64px;
     }
 
     .excellence-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 14px;
       font-size: 0.65rem;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: var(--white);
       margin-bottom: 16px;
+    }
+    .excellence-eyebrow::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      flex-shrink: 0;
     }
 
     .excellence-title {
@@ -656,6 +694,7 @@
 
     .excellence-title em {
       font-style: italic;
+      color: var(--gold);
     }
 
     .excellence-grid {
@@ -742,12 +781,23 @@
     }
 
     .contact-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 14px;
       font-size: 0.65rem;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: var(--white);
       margin-bottom: 14px;
+    }
+    .contact-eyebrow::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      flex-shrink: 0;
     }
 
     .contact-title {
@@ -758,7 +808,7 @@
       line-height: 1.05;
     }
 
-    .contact-title em { font-style: italic; }
+    .contact-title em { font-style: italic; color: var(--gold); }
 
     .contact-divider {
       width: 80px;
@@ -940,77 +990,65 @@
       border-top: 1px solid rgba(255,255,255,0.07);
     }
 
-    /* Partners bar */
-    .footer-partners {
-      display: flex;
-      align-items: center;
-      gap: 40px;
-      padding: 40px 48px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .footer-partners-label {
-      font-size: 0.6rem;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
-      white-space: nowrap;
-    }
-
-    .footer-partners-logos {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-    }
-
-    .footer-partner {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      opacity: 0.75;
-      transition: opacity 0.2s;
-    }
-
-    .footer-partner:hover { opacity: 1; }
-
-    .footer-partner-svg {
-      width: 40px;
-      height: 40px;
-      flex-shrink: 0;
-    }
-
-    .footer-partner-svg--shield {
-      width: 34px;
-      height: 40px;
-    }
-
-    .footer-partner-name {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      color: rgba(255,255,255,0.7);
-    }
-
-    .footer-partner-divider {
-      width: 1px;
-      height: 36px;
-      background: rgba(255,255,255,0.1);
-    }
-
     /* Footer bar */
     .footer-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 28px 48px;
+      padding: 32px 48px;
+      gap: 24px;
+    }
+
+    /* Partners */
+    .footer-partners {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 14px;
+    }
+
+    .footer-partners-label {
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .footer-partners-logos {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .footer-partner {
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .footer-partner:hover { opacity: 1; }
+
+    .footer-partner-img {
+      height: 36px;
+      width: auto;
+      display: block;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+
+    .footer-partner:hover .footer-partner-img { opacity: 1; }
+
+    .footer-partner-divider {
+      width: 1px;
+      height: 30px;
+      background: rgba(255,255,255,0.12);
     }
 
     .footer-logo {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
       font-weight: 400;
-      font-size: 1.1rem;
+      font-size: 1.6rem;
       color: var(--gold);
       text-decoration: none;
       display: block;
@@ -1028,17 +1066,23 @@
       color: rgba(255,255,255,0.25);
     }
 
+    .footer-bottom {
+      display: flex;
+      justify-content: center;
+      padding: 0 48px 24px;
+    }
+
     .footer-links {
       display: flex;
-      gap: 36px;
+      gap: 20px;
     }
 
     .footer-links a {
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       font-weight: 600;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.3);
       text-decoration: none;
       transition: color 0.2s;
     }
@@ -1046,9 +1090,8 @@
     .footer-links a:hover { color: var(--gold); }
 
     @media (max-width: 768px) {
-      .footer-partners { flex-direction: column; align-items: flex-start; padding: 32px 24px; }
-      .footer-bar { flex-direction: column; align-items: flex-start; gap: 24px; padding: 28px 24px; }
-      .footer-links { flex-wrap: wrap; gap: 20px; }
+      .footer-bar { flex-direction: column; align-items: flex-start; gap: 28px; padding: 28px 24px; }
+      .footer-partners { align-items: flex-start; }
     }
 
     /* ── Mouse glow orb ── */
@@ -1168,7 +1211,7 @@
       <div class="methodology-eyebrow">Methodology</div>
       <h2 class="methodology-title">
         Our Architectural<br>
-        <em>Genesis</em>
+        <em>Process</em>
       </h2>
     </div>
     <div class="methodology-grid">
@@ -1200,7 +1243,7 @@
     <div class="archive-header">
       <div class="archive-left">
         <div class="archive-eyebrow">Archive</div>
-        <h2 class="archive-title">Curated<br>Excellence</h2>
+        <h2 class="archive-title">Curated<br><em>Excellence</em></h2>
       </div>
       <p class="archive-subtitle">A showcase of our most ambitious monolithic structures and interior landscapes.</p>
     </div>
@@ -1234,7 +1277,7 @@
   <section class="excellence">
     <div class="excellence-header">
       <div class="excellence-eyebrow">Our Methodology</div>
-      <h2 class="excellence-title"><em>Built for Excellence</em></h2>
+      <h2 class="excellence-title">Built for<br><em>Excellence</em></h2>
     </div>
 
     <div class="excellence-grid">
@@ -1288,7 +1331,7 @@
   <section class="contact">
     <div class="contact-left">
       <div class="contact-eyebrow">Contact</div>
-      <h2 class="contact-title"><em>Get in Touch</em></h2>
+      <h2 class="contact-title">Get in <em>Touch</em></h2>
       <div class="contact-divider"></div>
 
       <div class="contact-info">
@@ -1337,7 +1380,7 @@
 
         <div class="contact-field">
           <label class="contact-field-label" for="cf-message">Your Message</label>
-          <textarea class="contact-textarea" id="cf-message" rows="6" placeholder="Tell us about your project goals and location..."></textarea>
+          <textarea class="contact-textarea" id="cf-message" rows="6" placeholder="Tell us about your project location and goals..."></textarea>
         </div>
 
         <button type="submit" class="contact-submit">Send Inquiry</button>
@@ -1364,6 +1407,12 @@
             <img src="turnerPictures/pacifichomewarranty.png" alt="Pacific Home Warranty" class="footer-partner-img" />
           </div>
         </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-links">
+        <a href="#">Terms of Service</a>
+        <a href="#">Privacy Policy</a>
       </div>
     </div>
   </footer>
